@@ -1,0 +1,55 @@
+@import "../../styles/vars";
+
+.button {
+    outline: none;
+    border: none;
+    height: 50px;
+    min-height: 50px;
+    width: fit-content;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 150px;
+    font-size: 18px;
+    background-color: $secondary;
+    font-family: "Circular Std" roboto "sans-serif";
+    border-radius: 5px;
+    color: white;
+    font-weight: 800;
+
+    &--small {
+        width: 100px;
+        min-width: 100px;
+        height: 40px;
+        min-height: 40px;
+        font-size: 16px;
+    }
+
+    &--dynamic-width {
+
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+
+    &--full-width {
+        width: 100%;
+    }
+
+    &--danger {
+        background-color: $danger;
+    }
+
+    &--disabled {
+        background-color: $light-grey;
+        cursor: not-allowed;
+        filter: none !important;
+    }
+
+
+    &:hover {
+        filter: brightness(1.1);
+
+
+    }
+}

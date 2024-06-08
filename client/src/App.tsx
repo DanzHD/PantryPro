@@ -1,8 +1,9 @@
-import "./styles/index.scss"
+import "./styles/_index.scss"
+import Text from "./Components/Text/Text.tsx";
 
 function App() {
 
-  return <div>Hello World</div>
+  return <Text italicize bold danger heading centered>Hello World</Text>
 
 }
 

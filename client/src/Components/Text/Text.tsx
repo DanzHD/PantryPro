@@ -13,7 +13,8 @@ function Text({
     subheading,
     className,
     centered,
-    bold
+    bold,
+    styles
 
 }: {
     children?: React.ReactNode,
@@ -25,13 +26,15 @@ function Text({
     subheading?: boolean,
     className?: string,
     centered?: boolean,
-    bold?: boolean
+    bold?: boolean,
+    styles?: React.CSSProperties
 }) {
 
     const textStyles: React.CSSProperties = {
         textAlign: centered ? "center" : "start",
         textOverflow: ellipsis ? "ellipsis" : "none",
-        fontStyle: italicize ? "italic" : "normal"
+        fontStyle: italicize ? "italic" : "normal",
+        ...styles
     }
 
     const computedClasses = cx(

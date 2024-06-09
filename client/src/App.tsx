@@ -1,18 +1,31 @@
 import "./styles/_index.scss"
-import Text from "./Components/Text/Text.tsx";
-import Button from "./Components/Button/Button.tsx";
+import {
+  createBrowserRouter,
+  RouterProvider
+} from "react-router-dom";
+import Home from "./pages/Home/Home.tsx";
 
 function App() {
-
   return (
-      <>
-        <Text italicize bold danger heading centered>Hello World</Text>
-        <div style={{display: "flex", justifyContent: "center", alignContent: 'center'}}>
+    <>
+      <Router />
 
-          <Button> Button </Button>
-        </div>
-      </>
+    </>
   )
+
+}
+
+const Router = () => {
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />,
+      errorElement: <Home />
+    }
+  ])
+
+  return <RouterProvider router={router} />
 
 
 }

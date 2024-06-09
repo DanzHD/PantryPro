@@ -3,8 +3,8 @@
 .button {
     outline: none;
     border: none;
-    height: 50px;
-    min-height: 50px;
+    height: 40px;
+    min-height: 40px;
     width: fit-content;
     cursor: pointer;
     display: flex;
@@ -14,9 +14,10 @@
     font-size: 18px;
     background-color: $secondary;
     font-family: "Circular Std" roboto "sans-serif";
-    border-radius: 5px;
+    border-radius: 10px;
     color: white;
     font-weight: 800;
+    padding: 15px;
 
     &--small {
         width: 100px;

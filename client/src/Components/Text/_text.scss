@@ -1,9 +1,10 @@
 @import "../../styles/vars";
+@import "../../styles/typography";
 
 @mixin text {
     color: $text;
     font-weight: 400;
-    font-family: "Segue UI", Robot, sans-serif;
+    font-family: "Circular Std", "roboto", "sans-serif"
 }
 
 @mixin header {

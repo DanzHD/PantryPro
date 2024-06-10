@@ -5,6 +5,10 @@ export enum ScrollDirection {
   DOWN = "DOWN"
 }
 
+/**
+ * Detects when the user is scrolling on the webpage
+ * Returns the scroll direction and scroll position of the scroll
+ */
 function useScroll() {
 
   const [scrollPosition, setScrollPosition] = useState(window.scrollY)

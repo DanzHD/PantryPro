@@ -1,5 +1,5 @@
-import "./_card.scss"
-import Text from "../../Components/Text/Text.tsx";
+import "../Styles/_card.scss"
+import Text from "../../../Components/Text/Text.tsx";
 
 function Card({
   image,

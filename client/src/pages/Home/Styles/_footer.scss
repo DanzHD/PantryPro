@@ -1,0 +1,9 @@
+@import "../../../styles/vars";
+@import "home";
+
+.footer {
+    @include section-spacing;
+    min-height: 5rem;
+    background-color: $secondary;
+    justify-content: center;
+}

@@ -1,8 +1,8 @@
-import "./_header.scss"
+import "../Styles/_header.scss"
 import cx from "classnames";
-import Text from "../../Components/Text/Text.tsx";
-import Button from "../../Components/Button/Button.tsx";
-import useScroll, {ScrollDirection} from "../../hooks/useScrollPosition/useScroll.tsx";
+import Text from "../../../Components/Text/Text.tsx";
+import Button from "../../../Components/Button/Button.tsx";
+import useScroll, {ScrollDirection} from "../../../hooks/useScrollPosition/useScroll.tsx";
 
 function Header({
   classNames,

@@ -1,9 +1,10 @@
 import Header from "./Header.tsx";
-import "../Home/_home.scss"
-import "../../styles/_index.scss"
-import Text from "../../Components/Text/Text.tsx";
-import Button from "../../Components/Button/Button.tsx";
+import "../Styles/_home.scss"
+import "../../../styles/_index.scss"
+import Text from "../../../Components/Text/Text.tsx";
+import Button from "../../../Components/Button/Button.tsx";
 import Card from "./Card.tsx";
+import Footer from "./Footer.tsx";
 
 /**
  *
@@ -19,8 +20,8 @@ function Home() {
         <section className="home__intro">
 
 
-          <Text centered heading>Your All-In-One Advanced Food Tracking Application</Text>
-          <Text styles={{color: "white"}} centered >A food tracking application to reduce food wastage, leveraging AI
+          <Text styles={{fontSize: '40px'}} centered heading >Your All-In-One Advanced Food Tracking Application</Text>
+          <Text styles={{color: "white", fontSize: '26px'}} centered >A food tracking application to reduce food wastage, leveraging AI
             technologies for smart food tracking and meal creation
           </Text>
 
@@ -31,7 +32,7 @@ function Home() {
         <section className="home__features">
           <div className="heading">
 
-            <Text heading>Features</Text>
+            <Text styles={{fontSize: '40px'}} heading>Features</Text>
           </div>
           <span className="cards">
 
@@ -56,7 +57,11 @@ function Home() {
           </span>
         </section>
 
+
+        <Footer />
+
       </div>
+
 
 
     </>

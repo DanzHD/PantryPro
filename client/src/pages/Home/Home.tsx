@@ -36,19 +36,19 @@ function Home() {
           <span className="cards">
 
             <Card
-              image="image"
+              image="https://plus.unsplash.com/premium_photo-1670963025556-c2d4dc880a45?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Recipe creation"
               descriptionHeading="Recipe Creation"
               descriptionText="Automatically generates recipes with available ingredients"
             />
             <Card
-              image="image"
+              image="https://plus.unsplash.com/premium_photo-1661317288946-157b70e2edab?q=80&w=2081&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Food Tracking"
               descriptionHeading="Food Tracking"
               descriptionText= "Automatically track your available foods with computer vision technologies"
             />
             <Card
-              image="image"
+              image="https://plus.unsplash.com/premium_photo-1679086008007-dded8f7d26a5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Alert"
               descriptionHeading="Expiry Alerts"
               descriptionText="Receive alerts when your food is about to expire"

@@ -10,11 +10,19 @@
 
     &__image {
         width: 100%;
-        min-height: 7.5rem;
+        height: 7.5rem;
+        max-height: 7.5rem;
         background-color: black;
 
         @media (max-width: $mobile-width) {
             min-height: 5rem;
+        }
+
+        > img {
+            object-fit: cover;
+
+            height: 100%;
+            width: 100%;
         }
     }
 

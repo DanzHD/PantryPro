@@ -1,6 +1,9 @@
 import Header from "./Header.tsx";
-import Text from "../../Components/Text/Text.tsx";
+import "../Home/_home.scss"
 import "../../styles/_index.scss"
+import Text from "../../Components/Text/Text.tsx";
+import Button from "../../Components/Button/Button.tsx";
+import Card from "./Card.tsx";
 
 /**
  *
@@ -10,96 +13,52 @@ function Home() {
 
   return (
     <>
-      <Header sticky />
+      <div className="home">
 
-      <Text heading >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-        molestiae quas vel sint commodi repudiandae consequuntur voluptatum
-        laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga
-        praesentium optio, eaque rerum! Provident similique accusantium nemo
-        autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto
-        voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit
-        sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas
-        aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa
-        laudantium molestias eos sapiente officiis modi at sunt excepturi expedita
-        sint? Sed quibusdam recusandae alias error harum maxime adipisci amet
-        laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum
-        voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius
-        fugit doloribus tenetur fugiat, temporibus enim commodi iusto libero magni
-        deleniti quod quam consequuntur! Commodi minima excepturi repudiandae
-        velit hic maxime doloremque. Quaerat provident commodi consectetur veniam
-        similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur
-        est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia
-        maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non
-        architecto ab laudantium modi minima sunt esse temporibus sint culpa,
-        recusandae aliquam numquam totam ratione voluptas quod exercitationem
-        fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui
-        corporis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-        mollitia, molestiae quas vel sint commodi repudiandae consequuntur
-        voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat
-        iusto fuga praesentium optio, eaque rerum! Provident similique accusantium
-        nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias
-        architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut!
-        Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum
-        debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae
-        fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt
-        excepturi expedita sint? Sed quibusdam recusandae alias error harum maxime
-        adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure
-        rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum
-        ab, eius fugit doloribus tenetur fugiat, temporibus enim commodi iusto
-        libero magni deleniti quod quam consequuntur! Commodi minima excepturi
-        repudiandae velit hic maxime doloremque. Quaerat provident commodi
-        consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic
-        voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate
-        excepturi mollitia maiores labore suscipit quas? Nulla, placeat.
-        Voluptatem quaerat non architecto ab laudantium modi minima sunt esse
-        temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas
-        quod exercitationem fuga. Possimus quis earum veniam quasi aliquam
-        eligendi, placeat qui corporis!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-        molestiae quas vel sint commodi repudiandae consequuntur voluptatum
-        laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga
-        praesentium optio, eaque rerum! Provident similique accusantium nemo
-        autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto
-        voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit
-        sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas
-        aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa
-        laudantium molestias eos sapiente officiis modi at sunt excepturi expedita
-        sint? Sed quibusdam recusandae alias error harum maxime adipisci amet
-        laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum
-        voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius
-        fugit doloribus tenetur fugiat, temporibus enim commodi iusto libero magni
-        deleniti quod quam consequuntur! Commodi minima excepturi repudiandae
-        velit hic maxime doloremque. Quaerat provident commodi consectetur veniam
-        similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur
-        est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia
-        maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non
-        architecto ab laudantium modi minima sunt esse temporibus sint culpa,
-        recusandae aliquam numquam totam ratione voluptas quod exercitationem
-        fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui
-        corporis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-        mollitia, molestiae quas vel sint commodi repudiandae consequuntur
-        voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat
-        iusto fuga praesentium optio, eaque rerum! Provident similique accusantium
-        nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias
-        architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut!
-        Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum
-        debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae
-        fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt
-        excepturi expedita sint? Sed quibusdam recusandae alias error harum maxime
-        adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure
-        rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum
-        ab, eius fugit doloribus tenetur fugiat, temporibus enim commodi iusto
-        libero magni deleniti quod quam consequuntur! Commodi minima excepturi
-        repudiandae velit hic maxime doloremque. Quaerat provident commodi
-        consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic
-        voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate
-        excepturi mollitia maiores labore suscipit quas? Nulla, placeat.
-        Voluptatem quaerat non architecto ab laudantium modi minima sunt esse
-        temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas
-        quod exercitationem fuga. Possimus quis earum veniam quasi aliquam
-        eligendi, placeat qui corporis!
-      </Text>
+        <Header sticky />
+        <section className="home__intro">
+
+
+          <Text centered heading>Your All-In-One Advanced Food Tracking Application</Text>
+          <Text styles={{color: "white"}} centered >A food tracking application to reduce food wastage, leveraging AI
+            technologies for smart food tracking and meal creation
+          </Text>
+
+          <Button>Get Started</Button>
+
+        </section>
+
+        <section className="home__features">
+          <div className="heading">
+
+            <Text heading>Features</Text>
+          </div>
+          <span className="cards">
+
+            <Card
+              image="image"
+              alt="Recipe creation"
+              descriptionHeading="Recipe Creation"
+              descriptionText="Automatically generates recipes with available ingredients"
+            />
+            <Card
+              image="image"
+              alt="Food Tracking"
+              descriptionHeading="Food Tracking"
+              descriptionText= "Automatically track your available foods with computer vision technologies"
+            />
+            <Card
+              image="image"
+              alt="Alert"
+              descriptionHeading="Expiry Alerts"
+              descriptionText="Receive alerts when your food is about to expire"
+            />
+          </span>
+        </section>
+
+      </div>
+
+
     </>
   )
 

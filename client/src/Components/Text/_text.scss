@@ -3,6 +3,7 @@
 
 @mixin text {
     color: $text;
+    white-space: initial;
     font-weight: 400;
     font-family: "Circular Std", "roboto", "sans-serif"
 }

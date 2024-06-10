@@ -1,0 +1,46 @@
+@import "../../styles/vars";
+
+.home {
+    background-color: $primary;
+    min-height: 100vh;
+
+    > section {
+        padding-top: 10rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+
+        @media (max-width: $mobile-width) {
+            padding: 5rem 40px 0 40px;
+        }
+    }
+    &__intro {
+        max-width: 600px;
+        > .button {
+            margin-top: 20px;
+        }
+
+    }
+
+    &__features {
+        > .heading {
+            padding-bottom: 25px;
+        }
+
+        @media (min-width: $mobile-width) {
+            max-width: 1200px;
+            padding-top: 10rem;
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+        width: 100%;
+    }
+}

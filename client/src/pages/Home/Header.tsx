@@ -11,7 +11,7 @@ function Header({
   classNames?: string,
   sticky?: boolean
 }) {
-  const {scrollDirection, scrollPosition} = useScroll()
+  const {scrollDirection} = useScroll()
   const computedClasses = cx(
     "header",
     {

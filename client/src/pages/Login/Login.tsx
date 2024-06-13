@@ -3,20 +3,35 @@ import "./_login.scss"
 import Input from "../../Components/Input/Input.tsx";
 import Button from "../../Components/Button/Button.tsx";
 import GoogleSignInButton from "../../Components/GoogleSignInButton.tsx";
+import {Link} from "react-router-dom";
+import {loginRoute, signupRoute} from "../../App.tsx";
 
-function Login() {
+function Login({
+  loggingIn
+}: {
+  loggingIn?: boolean
+}) {
 
   return (
     <>
       <div className="login">
         <div className="login__container">
           <div className="login__container__logo">
-
             <Text centered heading>PantryPro</Text>
           </div>
           <div className="login__container__description">
             <Text centered >
-              Login to track your food
+              {
+                loggingIn ?
+                  <div>
+
+                    Login to track your food
+                  </div>
+                  :
+                  <div>
+                    Sign up now for automated food tracking!
+                  </div>
+              }
             </Text>
 
           </div>
@@ -24,11 +39,12 @@ function Login() {
           <Input type="password" placeholder="Password" />
           <Button small fullWidth>Login</Button>
           <GoogleSignInButton />
-
-
-          <div className="g-signin2" data-onsuccess="onSignIn"></div>
-
-
+          {
+            loggingIn ?
+              <Text centered>Don't have an account? <Link to={signupRoute} >Sign Up</Link></Text>
+              :
+              <Text centered>Already have an account? <Link to={loginRoute}>Login </Link></Text>
+          }
 
         </div>
       </div>

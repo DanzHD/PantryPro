@@ -3,6 +3,8 @@ import cx from "classnames";
 import Text from "../../../Components/Text/Text.tsx";
 import Button from "../../../Components/Button/Button.tsx";
 import useScroll, {ScrollDirection} from "../../../hooks/useScrollPosition/useScroll.tsx";
+import {Link, useNavigate} from "react-router-dom";
+import {loginRoute} from "../../../App.tsx";
 
 function Header({
   classNames,
@@ -11,6 +13,9 @@ function Header({
   classNames?: string,
   sticky?: boolean
 }) {
+
+  const navigate = useNavigate()
+
   const {scrollDirection} = useScroll()
   const computedClasses = cx(
     "header",
@@ -24,12 +29,12 @@ function Header({
   return <>
     <div className={computedClasses}>
       <div className="header__logo">
-        <Text heading><a>PantryPro</a></Text>
+        <Text heading><Link to={"/"}>PantryPro</Link></Text>
 
       </div>
       <div className="header__right-items">
-        <Text styles={{color: 'white'}}><a>Log in</a></Text>
-        <Button small>Sign up</Button>
+        <Text styles={{color: 'white'}}><Link to={loginRoute}>Log in</Link></Text>
+        <Button small onClick={() => navigate(loginRoute)}>Sign up</Button>
       </div>
 
     </div>

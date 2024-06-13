@@ -4,6 +4,9 @@ import {
   RouterProvider
 } from "react-router-dom";
 import Home from "./pages/Home/Components/Home.tsx";
+import Login from "./pages/Login/Login.tsx";
+
+export const loginRoute: string = "/login"
 
 function App() {
   return (
@@ -22,6 +25,10 @@ const Router = () => {
       path: "/",
       element: <Home />,
       errorElement: <Home />
+    },
+    {
+      path: loginRoute,
+      element: <Login />
     }
   ])
 

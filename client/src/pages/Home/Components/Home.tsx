@@ -5,12 +5,18 @@ import Text from "../../../Components/Text/Text.tsx";
 import Button from "../../../Components/Button/Button.tsx";
 import Card from "./Card.tsx";
 import Footer from "./Footer.tsx";
+import {NavigateFunction, useNavigate} from "react-router-dom";
+import {loginRoute} from "../../../App.tsx";
+
+
 
 /**
  *
  * The landing page of the web app
  */
 function Home() {
+
+  const navigate: NavigateFunction = useNavigate()
 
   return (
     <>
@@ -25,7 +31,7 @@ function Home() {
             technologies for smart food tracking and meal creation
           </Text>
 
-          <Button>Get Started</Button>
+          <Button onClick={() => navigate(loginRoute)}>Get Started</Button>
 
         </section>
 

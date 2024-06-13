@@ -1,0 +1,41 @@
+@import "../../styles/vars";
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    height: 100%;
+    padding: 0 30rem 0 30rem;
+    background-color: $light-grey;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+
+        height: 30rem;
+        min-width: 20rem;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 0 5px lightgray;
+        gap: 20px;
+
+        &__logo {
+            padding-bottom: 20px;
+        }
+
+        &__description {
+            padding: 0 5px;
+
+        }
+
+        &__google-login {
+            flex: 1;
+            flex-basis: 100%;
+        }
+
+
+    }
+
+
+}

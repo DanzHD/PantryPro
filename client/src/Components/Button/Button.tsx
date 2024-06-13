@@ -23,7 +23,7 @@ function Button({
     disabled?: boolean,
     id?: string,
     small?: boolean,
-    onClick?: () => null
+    onClick?: () => void
 
 
 }) {

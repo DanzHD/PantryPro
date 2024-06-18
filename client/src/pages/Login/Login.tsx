@@ -23,21 +23,23 @@ function Login({
             <Text centered >
               {
                 loggingIn ?
-                  <div>
-
-                    Login to track your food
-                  </div>
+                    "Login to track your food"
                   :
-                  <div>
-                    Sign up now for automated food tracking!
-                  </div>
+                    "Sign up now for automated food tracking!"
               }
             </Text>
 
           </div>
           <Input type="email" placeholder="Email" />
           <Input type="password" placeholder="Password" />
-          <Button small fullWidth>Login</Button>
+          <Button small fullWidth>
+            {
+              loggingIn ?
+                "Login"
+                :
+                "Sign up"
+            }
+          </Button>
           <GoogleSignInButton />
           {
             loggingIn ?

@@ -1,4 +1,4 @@
-package service;
+package pantrypro.Server.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "VNEIycAXGywFn8BZMrJVPEj3lcpoWfvZ";
+    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -33,7 +33,7 @@ public class JwtService {
             .setClaims(extractClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 & 24))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }

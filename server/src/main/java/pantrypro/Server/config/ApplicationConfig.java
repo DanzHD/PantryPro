@@ -19,6 +19,10 @@ public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
+    /**
+     *
+     * Configures the username to use for the AuthenticationProvider
+     */
     @Bean
     public UserDetailsService userDetailsService() {
 
@@ -26,6 +30,10 @@ public class ApplicationConfig {
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    /**
+     *
+     * Setting up the authentication provider to be used for the jwt authentication
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -35,11 +43,19 @@ public class ApplicationConfig {
 
     }
 
+    /**
+     * Configures the authentication manager
+
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
+    /**
+     *
+     * Returns a bcrypt encoder for encoding passwords
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

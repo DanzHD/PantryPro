@@ -19,15 +19,25 @@ public class JwtService {
 
     private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
+    /**
+     *
+     * Gets the username from an access token
+     */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    /**
+     * Extracts a particular claim from the access token
+     */
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    /**
+     * Creates a new jwt token
+     */
     public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
         return Jwts.builder()
             .setClaims(extractClaims)
@@ -38,24 +48,39 @@ public class JwtService {
             .compact();
     }
 
+    /**
+     *
+     * Creates new jwt token
+     */
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    /**
+     * Validates that an access token has not expired and matches the user
+     */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
+    /**
+     * Checks whether an access token is expired
+     */
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    /**
+     * Gets the expiration date from the access token
+     */
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-
+    /**
+     * Gets all claims within the token
+     */
     private Claims extractAllClaims(String token) {
         return Jwts
             .parserBuilder()
@@ -66,6 +91,10 @@ public class JwtService {
 
     }
 
+    /**
+     *
+     * Creates a signing key
+     */
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
 

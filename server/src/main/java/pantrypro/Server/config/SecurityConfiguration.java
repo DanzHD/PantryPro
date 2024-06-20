@@ -18,6 +18,11 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    /**
+     *
+     *
+     * Configures the REST API endpoint permissions, csrf, session management, authenticationProvider and filter ordering
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

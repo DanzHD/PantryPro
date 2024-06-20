@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.repository.UserRepository;
+import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
 
 import java.util.Optional;
@@ -28,10 +29,19 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) throws UserAlreadyExistsException {
+    /**
+     * Registers a new user into the database and returns an access token if registration is successful
+     * Throws an exception if user email is already taken or password is too weak
+     */
+    public AuthenticationResponse register(RegisterRequest request)
+            throws UserAlreadyExistsException, PasswordTooWeakException {
 
         if (userExists(request.getEmail())) {
             throw new UserAlreadyExistsException();
+        }
+
+        if (!passwordIsValid(request.getPassword())) {
+            throw new PasswordTooWeakException();
         }
 
         var user = User.builder()
@@ -48,6 +58,10 @@ public class AuthenticationService {
 
     }
 
+    /**
+     * Validates that the user's password and email matches.
+     * If matches, returns the access token
+     */
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -65,6 +79,9 @@ public class AuthenticationService {
             .build();
     }
 
+    /**
+     * Checks that an email exists within the database
+     */
     public boolean userExists(String email) {
         Optional<User> userContainer = userRepository.findByEmail(email);
         return userContainer.isPresent();

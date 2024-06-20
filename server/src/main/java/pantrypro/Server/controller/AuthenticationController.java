@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pantrypro.Server.service.AuthenticationService;
+import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
 
 @RestController
@@ -20,6 +21,11 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
+    /**
+     *
+     * Registers a new user account, taking in the user's email and password
+     * if registration is successful, sends back access token
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
@@ -29,12 +35,19 @@ public class AuthenticationController {
             return ResponseEntity.ok(service.register(request));
         } catch (UserAlreadyExistsException exception) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        } catch (PasswordTooWeakException exception) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (Exception exception) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
 
+    /**
+     * Authenticates the user using the email and password
+     * If successful, sends back the access token
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request

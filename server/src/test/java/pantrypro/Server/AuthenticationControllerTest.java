@@ -1,11 +1,21 @@
 package pantrypro.Server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pantrypro.Server.controller.AuthenticationController;
+import pantrypro.Server.dto.RegisterRequest;
 import pantrypro.Server.service.AuthenticationService;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 public class AuthenticationControllerTest {
@@ -14,6 +24,15 @@ public class AuthenticationControllerTest {
     AuthenticationController controller;
     @Autowired
     AuthenticationService authenticationService;
+    @Autowired
+    ObjectMapper objectMapper;
+
+    MockMvc mockMvc;
+
+    @BeforeEach
+    void setup() {
+        this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
 
     @Test
     void passwordIsValid_True_ValidPassword() {
@@ -57,6 +76,21 @@ public class AuthenticationControllerTest {
         String password = "1@eR fdwadwa";
         Assertions.assertFalse(authenticationService.passwordIsValid(password));
     }
+
+    @Test
+    void register_Ok_ValidUserRegistration() throws Exception {
+        RegisterRequest request = new RegisterRequest("test@gmail.com", "Abc@20dwax");
+
+        mockMvc.perform(post("/api/v1/auth/register").accept(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpectAll(
+                status().isOk(),
+                content().contentType("application/json;"));
+
+    }
+
+
 
 
 }

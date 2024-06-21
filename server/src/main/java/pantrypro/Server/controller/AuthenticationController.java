@@ -1,6 +1,10 @@
 package pantrypro.Server.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import pantrypro.Server.dto.AuthenticationRequest;
@@ -9,9 +13,13 @@ import pantrypro.Server.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pantrypro.Server.repository.UserRepository;
 import pantrypro.Server.service.AuthenticationService;
+import pantrypro.Server.service.JwtService;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -20,6 +28,8 @@ import pantrypro.Server.util.UserAlreadyExistsException;
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     /**
      *
@@ -55,5 +65,13 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(service.authenticate(request));
     }
+
+    @PostMapping("/refresh-token")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        service.refreshToken(request, response);
+
+
+    }
+
 
 }

@@ -1,8 +1,9 @@
 package pantrypro.Server.service;
 
-import org.apache.coyote.Response;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import pantrypro.Server.Enums.Role;
 import pantrypro.Server.dto.AuthenticationRequest;
 import pantrypro.Server.dto.AuthenticationResponse;
@@ -17,6 +18,7 @@ import pantrypro.Server.repository.UserRepository;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -50,10 +52,12 @@ public class AuthenticationService {
             .role(Role.USER)
             .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         return AuthenticationResponse
             .builder()
-            .token(jwtToken)
+            .accessToken(jwtToken)
+            .refreshToken(refreshToken)
             .build();
 
     }
@@ -72,10 +76,12 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
             .orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         return AuthenticationResponse
             .builder()
-            .token(jwtToken)
+            .accessToken(jwtToken)
+            .refreshToken(refreshToken)
             .build();
     }
 
@@ -103,6 +109,36 @@ public class AuthenticationService {
                 + "(?=\\S+$).{8,20}$");
 
         return pattern.matcher(password).matches();
+    }
+
+    /**
+     * Sends back a new access token with the refresh token
+     */
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String userEmail;
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            return;
+        }
+        refreshToken = authHeader.substring(7);
+
+        userEmail = jwtService.extractUsername(refreshToken);
+        if (userEmail != null) {
+            var user = this.userRepository.findByEmail(userEmail)
+                .orElseThrow();
+            if (jwtService.isTokenValid(refreshToken, user)) {
+                var accessToken = jwtService.generateAccessToken(user);
+                var authResponse = AuthenticationResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+
+            }
+        }
+
+
     }
 
 }

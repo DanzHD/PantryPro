@@ -17,6 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+
     private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
     /**
@@ -38,23 +39,28 @@ public class JwtService {
     /**
      * Creates a new jwt token
      */
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails, long expiration) {
         return Jwts.builder()
             .setClaims(extractClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+            .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }
 
     /**
      *
-     * Creates new jwt token
+     * Creates new jwt access token
      */
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, 1000 * 24 * 7);
     }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails, 1000000000);
+    }
+
 
     /**
      * Validates that an access token has not expired and matches the user

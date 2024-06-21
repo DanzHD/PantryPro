@@ -20,7 +20,6 @@ public class SecurityConfiguration {
 
     /**
      *
-     *
      * Configures the REST API endpoint permissions, csrf, session management, authenticationProvider and filter ordering
      */
     @Bean

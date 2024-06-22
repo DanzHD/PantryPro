@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home/Components/Home.tsx";
 import Login from "./pages/Login/Login.tsx";
+import {AuthContextProvider} from "./Context/AuthContext/AuthContext.tsx";
 
 export const loginRoute: string = "/login"
 export const signupRoute: string = "/sign-up"
@@ -12,7 +13,10 @@ export const signupRoute: string = "/sign-up"
 function App() {
   return (
     <>
-      <Router />
+      <AuthContextProvider>
+
+        <Router />
+      </AuthContextProvider>
 
     </>
   )

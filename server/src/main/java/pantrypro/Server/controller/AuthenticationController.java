@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import pantrypro.Server.repository.UserRepository;
 import pantrypro.Server.service.AuthenticationService;
 import pantrypro.Server.service.JwtService;
+import pantrypro.Server.util.InvalidTokenException;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
 
@@ -28,8 +29,7 @@ import java.io.IOException;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
+
 
     /**
      *
@@ -62,16 +62,20 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-
         return ResponseEntity.ok(service.authenticate(request));
     }
 
     @PostMapping("/refresh-token")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        service.refreshToken(request, response);
+    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
 
+            return ResponseEntity.ok(service.refreshToken(request, response));
+        } catch (InvalidTokenException exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(401));
+        }
 
     }
+
 
 
 }

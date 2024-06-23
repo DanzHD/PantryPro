@@ -4,7 +4,7 @@ import Text from "../../../Components/Text/Text.tsx";
 import Button from "../../../Components/Button/Button.tsx";
 import useScroll, {ScrollDirection} from "../../../hooks/useScrollPosition/useScroll.tsx";
 import {Link, useNavigate} from "react-router-dom";
-import {loginRoute} from "../../../App.tsx";
+import {loginRoute, signupRoute} from "../../../App.tsx";
 
 function Header({
   classNames,
@@ -34,7 +34,7 @@ function Header({
       </div>
       <div className="header__right-items">
         <Text styles={{color: 'white'}}><Link to={loginRoute}>Log in</Link></Text>
-        <Button small onClick={() => navigate(loginRoute)}>Sign up</Button>
+        <Button small onClick={() => navigate(signupRoute)}>Sign up</Button>
       </div>
 
     </div>

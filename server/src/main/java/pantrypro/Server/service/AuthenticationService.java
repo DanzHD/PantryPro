@@ -1,6 +1,5 @@
 package pantrypro.Server.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.repository.UserRepository;
+import pantrypro.Server.util.InvalidTokenException;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
 
@@ -51,9 +51,11 @@ public class AuthenticationService {
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
             .build();
+
         userRepository.save(user);
         var jwtToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
+
         return AuthenticationResponse
             .builder()
             .accessToken(jwtToken)
@@ -113,15 +115,19 @@ public class AuthenticationService {
 
     /**
      * Sends back a new access token with the refresh token
+     *
+     * @return
      */
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
+        System.out.println(authHeader);
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
+            throw new InvalidTokenException();
         }
         refreshToken = authHeader.substring(7);
+
 
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
@@ -129,14 +135,15 @@ public class AuthenticationService {
                 .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateAccessToken(user);
-                var authResponse = AuthenticationResponse.builder()
+                return AuthenticationResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
 
             }
         }
+
+        throw new InvalidTokenException();
 
 
     }

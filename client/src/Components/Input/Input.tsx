@@ -1,7 +1,14 @@
 import "./_input.scss"
 import cx from "classnames";
+import {forwardRef} from "react";
 
-function Input({
+type content = {
+  className?: string,
+  placeholder?: string,
+  type?: string
+}
+
+const Input = forwardRef<HTMLInputElement, content>(function Input({
   className,
   placeholder,
   type
@@ -9,7 +16,7 @@ function Input({
   className?: string,
   placeholder?: string,
   type?: string
-}) {
+}, ref) {
 
   const computedClasses = cx(
     "input",
@@ -17,7 +24,7 @@ function Input({
 
   )
 
-  return <input className={computedClasses} placeholder={placeholder} type={type} />
-}
+  return <input className={computedClasses} placeholder={placeholder} type={type} ref={ref} />
+})
 
 export default Input

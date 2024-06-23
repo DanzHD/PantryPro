@@ -40,13 +40,15 @@ public class JwtService {
      * Creates a new jwt token
      */
     public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails, long expiration) {
-        return Jwts.builder()
+
+        String accessToken = Jwts.builder()
             .setClaims(extractClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
+        return accessToken;
     }
 
     /**

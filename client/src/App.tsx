@@ -1,21 +1,34 @@
 import "./styles/_index.scss"
 import {
-  createBrowserRouter,
-  RouterProvider
+   Route, BrowserRouter as Router, Routes
 } from "react-router-dom";
 import Home from "./pages/Home/Components/Home.tsx";
 import Login from "./pages/Login/Login.tsx";
 import {AuthContextProvider} from "./Context/AuthContext/AuthContext.tsx";
+import Dashboard from "./pages/Dashboard/Dashboard.tsx";
+import ProtectedRoute from "./util/ProtectedRoute.tsx";
 
 export const loginRoute: string = "/login"
 export const signupRoute: string = "/sign-up"
+export const dashboardRoute: string = "/dashboard"
 
 function App() {
+
+
   return (
     <>
       <AuthContextProvider>
 
-        <Router />
+        <Router>
+          <Routes>
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Dashboard />} path={dashboardRoute} />
+            </Route>
+            <Route element={<Login loggingIn />} path={loginRoute} />
+            <Route element={<Login />} path={signupRoute} />
+            <Route errorElement={<Home />} element={<Home /> } path={"/"} />
+          </Routes>
+        </Router>
       </AuthContextProvider>
 
     </>
@@ -23,27 +36,6 @@ function App() {
 
 }
 
-const Router = () => {
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-      errorElement: <Home />
-    },
-    {
-      path: loginRoute,
-      element: <Login loggingIn />
-    },
-    {
-      path: signupRoute,
-      element: <Login />
-    }
-  ])
-
-  return <RouterProvider router={router} />
-
-
-}
 
 export default App

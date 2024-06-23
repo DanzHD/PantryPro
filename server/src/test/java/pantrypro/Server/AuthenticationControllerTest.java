@@ -10,9 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pantrypro.Server.Enums.Role;
 import pantrypro.Server.controller.AuthenticationController;
 import pantrypro.Server.dto.RegisterRequest;
+import pantrypro.Server.model.User;
 import pantrypro.Server.service.AuthenticationService;
+import pantrypro.Server.service.JwtService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,6 +29,9 @@ public class AuthenticationControllerTest {
     AuthenticationService authenticationService;
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    JwtService jwtService;
 
     MockMvc mockMvc;
 
@@ -88,6 +94,19 @@ public class AuthenticationControllerTest {
                 status().isOk(),
                 content().contentType("application/json;"));
 
+    }
+
+    @Test
+    void generateToken_Ok_SuccessfulTokenGeneration() {
+        User user = User.builder()
+            .email("Testuser@gmail.com")
+            .password("adwadaw1dwa@!Db")
+            .role(Role.USER)
+            .build();
+
+        String accessToken = jwtService.generateAccessToken(user);
+
+        Assertions.assertNotNull(accessToken);
     }
 
 

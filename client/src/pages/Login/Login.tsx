@@ -3,14 +3,58 @@ import "./_login.scss"
 import Input from "../../Components/Input/Input.tsx";
 import Button from "../../Components/Button/Button.tsx";
 import GoogleSignInButton from "../../Components/GoogleSignInButton.tsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {loginRoute, signupRoute} from "../../App.tsx";
+import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
+import {useRef} from "react";
 
 function Login({
   loggingIn
 }: {
   loggingIn?: boolean
 }) {
+
+  const {loginUser, registerUser} = useAuthContext()
+  const navigate = useNavigate()
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null)
+
+  const onLogin = async () => {
+    try {
+      const email = emailRef.current?.value
+      const password = passwordRef.current?.value
+      if (!email || !password) {
+        return
+      }
+
+      const success = await loginUser({email: email, password: password})
+      if (success) {
+        navigate("/dashboard")
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const onSignUp = async () => {
+    try {
+      const email = emailRef.current?.value
+      const password = passwordRef.current?.value
+
+      if (!email || !password) {
+        return
+      }
+
+      const success = await registerUser({email: email, password: password})
+
+      if (success) {
+        navigate("/dashboard")
+      }
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
 
   return (
@@ -31,9 +75,14 @@ function Login({
             </Text>
 
           </div>
-          <Input type="email" placeholder="Email" />
-          <Input type="password" placeholder="Password" />
-          <Button small fullWidth>
+          <Input type="email" placeholder="Email" ref={emailRef} />
+          <Input type="password" placeholder="Password" ref={passwordRef} />
+          <Button
+            small
+            fullWidth
+            onClick={loggingIn ? onLogin : onSignUp}
+          >
+
             {
               loggingIn ?
                 "Login"

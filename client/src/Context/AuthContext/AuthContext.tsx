@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, useState} from "react";
 import {apiClient} from "../../api/client.tsx";
 import {TokenResponseData} from "./loginResponse.tsx";
 import {REFRESH_TOKEN_KEY} from "../../util/constants.tsx";
@@ -50,7 +50,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
 
     } catch (error) {
       console.error(error)
-      throw new Error("Failed to login user")
+      throw new Error("Failed to Register user")
     }
   }
 

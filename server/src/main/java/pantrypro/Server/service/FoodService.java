@@ -3,6 +3,8 @@ package pantrypro.Server.service;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.dto.FoodRequest;
 import pantrypro.Server.model.Food;
@@ -22,13 +24,17 @@ public class FoodService {
 
     private final FoodRepository foodRepository;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     /**
      *
      * Gets all the food items from a user
      */
-    public Set<Food> getFoods(String authHeader) {
-        User user = jwtService.getUserFromToken(authHeader);
+    public Set<Food> getFoods() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
 
         return foodRepository.findByOwner(user);
 
@@ -36,8 +42,11 @@ public class FoodService {
 
     }
 
-    public List<Food> addFoods(List<FoodRequest> foodRequests, String authHeader) {
-        User user = jwtService.getUserFromToken(authHeader);
+    public List<Food> addFoods(List<FoodRequest> foodRequests) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
         List<Food> foods = new ArrayList<>();
         for (FoodRequest foodRequest: foodRequests) {
             foods.add(
@@ -55,6 +64,7 @@ public class FoodService {
 
         return foods;
     }
+
 
 
 

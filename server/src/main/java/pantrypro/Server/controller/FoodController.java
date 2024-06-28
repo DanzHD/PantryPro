@@ -6,6 +6,7 @@ import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pantrypro.Server.dto.FoodRequest;
 import pantrypro.Server.model.Food;
@@ -28,17 +29,22 @@ public class FoodController {
      * GET request for getting all the foods associated with a user
      */
     @GetMapping("/me")
-    public ResponseEntity<Set<Food>> getFoods(HttpServletRequest request) {
-        return ResponseEntity.ok(foodService.getFoods(request.getHeader(HttpHeaders.AUTHORIZATION)));
+    public ResponseEntity<Set<Food>> getFoods() {
+        return ResponseEntity.ok(foodService.getFoods());
     }
 
     @PostMapping("/me")
     public ResponseEntity<List<Food>> addFoods(
-        HttpServletRequest request,
         @RequestBody List<FoodRequest> foods
     ) {
 
-        return ResponseEntity.ok(foodService.addFoods(foods, request.getHeader(HttpHeaders.AUTHORIZATION)));
+        return ResponseEntity.ok(foodService.addFoods(foods));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteFoods(@RequestBody List<String> foodIds) {
+
+        return ResponseEntity.ok("Items deleted");
     }
 
 

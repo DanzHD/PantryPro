@@ -116,24 +116,8 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**
-     *
-     * Finds the user within the database associated with the access token
-     *
-     */
-    public User getUserFromToken(String authorizationHeader) {
 
-        String accessToken = authorizationHeader.substring(7);
-        String userEmail = extractUsername(accessToken);
 
-        if (userEmail == null) {
-
-            throw new InvalidTokenException();
-        }
-        return userRepository.findByEmail(userEmail)
-            .orElseThrow();
-
-    }
 
 
 }

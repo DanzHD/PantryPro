@@ -56,7 +56,8 @@ public class JwtService {
      * Creates new jwt access token
      */
     public String generateAccessToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, 1000 * 24 * 7);
+        /* Access token lasts 30 minutes */
+        return generateToken(new HashMap<>(), userDetails, 1800000);
     }
 
     public String generateRefreshToken(UserDetails userDetails) {

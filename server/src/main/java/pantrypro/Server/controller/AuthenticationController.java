@@ -40,7 +40,6 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) {
-
         try {
             return ResponseEntity.ok(service.register(request));
         } catch (UserAlreadyExistsException exception) {

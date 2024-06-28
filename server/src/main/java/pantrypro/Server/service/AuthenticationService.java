@@ -108,7 +108,7 @@ public class AuthenticationService {
         Pattern pattern = Pattern.compile("^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
                 + "(?=.*[@#$%^&+=])"
-                + "(?=\\S+$).{8,20}$");
+                + "(?=\\S+$).{8,100}$");
 
         return pattern.matcher(password).matches();
     }
@@ -122,7 +122,6 @@ public class AuthenticationService {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
-        System.out.println(authHeader);
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             throw new InvalidTokenException();
         }

@@ -53,6 +53,7 @@ public class AuthenticationService {
             .build();
 
         userRepository.save(user);
+
         var jwtToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 

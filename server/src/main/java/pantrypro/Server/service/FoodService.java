@@ -1,11 +1,13 @@
 package pantrypro.Server.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pantrypro.Server.dto.FoodDeleteRequest;
 import pantrypro.Server.dto.FoodRequest;
 import pantrypro.Server.model.Food;
 import pantrypro.Server.model.User;
@@ -44,7 +46,6 @@ public class FoodService {
 
     public List<Food> addFoods(List<FoodRequest> foodRequests) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow();
         List<Food> foods = new ArrayList<>();
@@ -61,9 +62,21 @@ public class FoodService {
             );
         }
         foodRepository.saveAll(foods);
-
-        return foods;
+       return foods;
     }
+
+    @Transactional
+    public void deleteFood(FoodDeleteRequest foodDeleteRequest) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        foodRepository.deleteUsersWithIds(foodDeleteRequest.getFoodIds(), user);
+    }
+
+
+
+
 
 
 

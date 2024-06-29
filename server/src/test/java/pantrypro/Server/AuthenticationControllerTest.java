@@ -1,15 +1,27 @@
 package pantrypro.Server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import pantrypro.Server.Enums.Role;
 import pantrypro.Server.controller.AuthenticationController;
 import pantrypro.Server.dto.RegisterRequest;
@@ -17,10 +29,13 @@ import pantrypro.Server.model.User;
 import pantrypro.Server.service.AuthenticationService;
 import pantrypro.Server.service.JwtService;
 
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@AutoConfigureWebTestClient
 public class AuthenticationControllerTest {
 
     @Autowired
@@ -33,11 +48,33 @@ public class AuthenticationControllerTest {
     @Autowired
     JwtService jwtService;
 
+    static final MySQLContainer mySQLContainer;
+    static {
+        mySQLContainer = new MySQLContainer("mysql:latest");
+        mySQLContainer.start();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+        registry.add("spring.jpa.hibernate.ddl-auto", () ->"create");
+
+
+    }
+
     MockMvc mockMvc;
 
     @BeforeEach
     void setup() {
+
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
+
+    @AfterAll
+    static void cleanUp() {
+        mySQLContainer.stop();
     }
 
     @Test
@@ -73,7 +110,7 @@ public class AuthenticationControllerTest {
 
     @Test
     void passwordIsValid_False_TooLong() {
-        String password = "1!bCDdawdwankjn@#@#!#nnjdwakjnknkWNdkJWJD@#@";
+        String password = "1!bCDdawdwankjn@#@#!#nnjdwakjnknkWNdkJWJD@#@dwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         Assertions.assertFalse(authenticationService.passwordIsValid(password));
     }
 
@@ -85,14 +122,19 @@ public class AuthenticationControllerTest {
 
     @Test
     void register_Ok_ValidUserRegistration() throws Exception {
-        RegisterRequest request = new RegisterRequest("test@gmail.com", "Abc@20dwax");
+        RegisterRequest registerRequest = new RegisterRequest("test@gmail.com", "Abc@20dwax");
 
-        mockMvc.perform(post("/api/v1/auth/register").accept(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request))
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpectAll(
-                status().isOk(),
-                content().contentType("application/json;"));
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/auth/register")
+            .content(objectMapper.writeValueAsString(registerRequest))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON);
+        mockMvc.perform(request)
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.access_token").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.refresh_token").exists());
+
+
+
 
     }
 

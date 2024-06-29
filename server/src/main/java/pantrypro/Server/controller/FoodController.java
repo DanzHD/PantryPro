@@ -1,18 +1,14 @@
 package pantrypro.Server.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import pantrypro.Server.dto.FoodDeleteRequest;
 import pantrypro.Server.dto.FoodRequest;
 import pantrypro.Server.model.Food;
 import pantrypro.Server.service.FoodService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +29,10 @@ public class FoodController {
         return ResponseEntity.ok(foodService.getFoods());
     }
 
+    /**
+     *
+     * Adds a list of foods to the user
+     */
     @PostMapping("/me")
     public ResponseEntity<List<Food>> addFoods(
         @RequestBody List<FoodRequest> foods
@@ -42,9 +42,16 @@ public class FoodController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<String> deleteFoods(@RequestBody List<String> foodIds) {
+    public ResponseEntity<HttpStatus> deleteFoods(@RequestBody FoodDeleteRequest foodIds) {
+        try {
+            foodService.deleteFood(foodIds);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
 
-        return ResponseEntity.ok("Items deleted");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 

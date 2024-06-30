@@ -1,0 +1,53 @@
+@import "../../styles/vars";
+
+.app__header {
+    background-image: linear-gradient(to right, #3187A2, #7CC1D7);
+
+}
+
+@media (min-width: $mobile-width) {
+
+    .app__header {
+        display: flex;
+        align-items: flex-start;
+        min-width: 100vw;
+        min-height: 7rem;
+
+        color: lightgray;
+
+        &__text {
+            color: lightgray;
+
+            &.link {
+                font-size: 18px;
+            }
+
+
+            &.selected {
+                color: white;
+            }
+        }
+
+        .left-links {
+            padding: 1.5rem 0 0 5rem;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .right-links {
+            padding: 1.5rem 5rem 0 0;
+            margin-left: auto;
+
+            > .material-symbols-outlined {
+                font-size: 50px;
+                color: black;
+            }
+        }
+    }
+
+    .icon-name-pair {
+        display: flex;
+        gap: 5px;
+    }
+}

@@ -1,9 +1,13 @@
-import Text from "../../Components/Text/Text.tsx";
+import Header from "./Header.tsx";
 
 function Dashboard() {
 
 
-  return <Text>Hello from protected route</Text>
+  return (
+    <>
+      <Header />
+    </>
+  )
 }
 
 export default Dashboard

@@ -1,0 +1,13 @@
+.select {
+    box-sizing: border-box;
+    border: none;
+    border-left: lightgray;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    padding: 9px;
+
+}
+
+.select:focus {
+    border: none;
+    outline: none;
+}

@@ -3,6 +3,9 @@ package pantrypro.Server.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,20 +29,20 @@ import java.util.Set;
 public class FoodService {
 
     private final FoodRepository foodRepository;
-    private final JwtService jwtService;
     private final UserRepository userRepository;
 
     /**
      *
      * Gets all the food items from a user
      */
-    public Set<Food> getFoods(int offset, int limit) {
+    public List<Food> getFoods(int offset, int limit) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow();
+        Pageable pageable = PageRequest.of(offset, limit);
 
-        return foodRepository.findByOwner(user);
+        return foodRepository.findFoodByOwner(user, pageable);
 
 
 

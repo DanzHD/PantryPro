@@ -1,6 +1,7 @@
 package pantrypro.Server.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,8 @@ public class FoodController {
      * GET request for getting all the foods associated with a user
      */
     @GetMapping("/me")
-    public ResponseEntity<Set<Food>> getFoods(@RequestParam int offset, @RequestParam int limit) {
+    public ResponseEntity<List<Food>> getFoods(@RequestParam int offset, @RequestParam int limit) {
+
         return ResponseEntity.ok(foodService.getFoods(offset, limit));
     }
 

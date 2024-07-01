@@ -1,0 +1,109 @@
+@import "../../styles/vars";
+
+.table {
+    padding-left: 5rem;
+    padding-right: 5rem;
+
+    &__setting {
+
+        box-sizing: border-box;
+
+        margin-top: -2rem;
+        background-color: white;
+        height: 6rem;
+        box-shadow: 0 0 10px lightgray;
+        -webkit-box-shadow: 0 0 10px lightgray;
+        border-radius: 0 5px 5px 5px;
+
+
+
+        &__tabs {
+            position: absolute;
+            display: flex;
+
+        }
+
+        &__tab {
+            position: relative;
+            bottom: 2.5rem;
+            height: 2.5rem;
+            width: 7.5rem;
+            box-shadow: 0 -10px 10px -10px lightgray;
+            -webkit-box-shadow: 0 -10px 10px -10px lightgray;
+            z-index: 1;
+            border-radius: 5px 0 0 0;
+            display: flex;
+            justify-content: flex-start;
+            padding-left: 20px;
+            align-items: center;
+            clip-path: polygon(0 0, 75% 0%, 100% 100%, 0 100%);
+            background-color: lightblue;
+        }
+
+        .selected-tab {
+            background-color: white;
+        }
+
+        .add-food {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 20px;
+            z-index: 5;
+            padding-top: 20px;
+            position: relative;
+        }
+    }
+
+    #add-button__override {
+        background-color: #4169EF;
+        border-radius: 0;
+        font-size: 12px;
+        min-width: 0;
+        min-height: 20px;
+        height: 20px;
+
+    }
+
+    &__filter {
+        height: 5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    &__data {
+        width: 100%;
+        border-collapse: collapse;
+
+        td, th {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F7F7FF;
+        }
+
+        thead > tr:nth-child(1) {
+            border: 1px solid #dddddd;
+
+        }
+
+        td:nth-child(1), th:nth-child(1) {
+            border-right: 1px solid #dddddd;
+
+        }
+
+
+
+        tr:nth-child(odd) {
+            background-color: white;
+        }
+
+        .th__checkbox {
+            min-width: fit-content;
+            width: 1%;
+        }
+    }
+
+}

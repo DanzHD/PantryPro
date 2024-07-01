@@ -1,9 +1,8 @@
-import {Navigate, Outlet, useNavigate} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import {useAuthContext} from "../Context/AuthContext/useAuthContext.tsx";
 import {useEffect, useState} from "react";
 
 const ProtectedRoutes = () => {
-  const navigate = useNavigate()
   const [loggedIn, setLoggedIn] = useState(true)
   const [loading, setLoading] = useState(false)
 
@@ -12,7 +11,6 @@ const ProtectedRoutes = () => {
   /* Try to refresh the access token every 30 minutes, if fail at refreshing access token, logout  */
 
   useEffect(() => {
-
     const refresh = async () => {
       try {
         setLoading(true)
@@ -33,7 +31,7 @@ const ProtectedRoutes = () => {
     }
 
 
-  }, [getNewAccessToken, navigate]);
+  }, [getNewAccessToken]);
 
   if (loading) {
     return <div>loading...</div>

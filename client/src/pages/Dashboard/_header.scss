@@ -79,6 +79,7 @@
             display: flex;
             gap: 10px;
             padding: 5px 20px 5px 20px ;
+            cursor: pointer;
 
 
         }
@@ -86,5 +87,9 @@
         &__item:hover {
             background-color: lightgray;
         }
+    }
+
+    .logout-container--invisible {
+        visibility: hidden;
     }
 }

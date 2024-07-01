@@ -7,7 +7,7 @@ const ProtectedRoutes = () => {
   const [loggedIn, setLoggedIn] = useState(true)
   const [loading, setLoading] = useState(false)
 
-  const {getNewAccessToken, logout} = useAuthContext()
+  const {getNewAccessToken} = useAuthContext()
 
   /* Try to refresh the access token every 30 minutes, if fail at refreshing access token, logout  */
 
@@ -33,7 +33,7 @@ const ProtectedRoutes = () => {
     }
 
 
-  }, [getNewAccessToken, logout, navigate]);
+  }, [getNewAccessToken, navigate]);
 
   if (loading) {
     return <div>loading...</div>

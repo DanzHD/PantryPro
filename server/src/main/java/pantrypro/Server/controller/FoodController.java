@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pantrypro.Server.dto.FoodCountResponse;
 import pantrypro.Server.dto.FoodDeleteRequest;
 import pantrypro.Server.dto.FoodRequest;
 import pantrypro.Server.model.Food;
@@ -25,8 +26,8 @@ public class FoodController {
      * GET request for getting all the foods associated with a user
      */
     @GetMapping("/me")
-    public ResponseEntity<Set<Food>> getFoods() {
-        return ResponseEntity.ok(foodService.getFoods());
+    public ResponseEntity<Set<Food>> getFoods(@RequestParam int offset, @RequestParam int limit) {
+        return ResponseEntity.ok(foodService.getFoods(offset, limit));
     }
 
     /**
@@ -53,6 +54,14 @@ public class FoodController {
         }
 
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<FoodCountResponse> getTotalFood() {
+
+        return ResponseEntity.ok(foodService.getFoodCount());
+    }
+
+
 
 
 

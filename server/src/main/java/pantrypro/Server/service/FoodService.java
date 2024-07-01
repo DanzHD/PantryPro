@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pantrypro.Server.dto.FoodCountResponse;
 import pantrypro.Server.dto.FoodDeleteRequest;
 import pantrypro.Server.dto.FoodRequest;
 import pantrypro.Server.model.Food;
@@ -32,7 +33,7 @@ public class FoodService {
      *
      * Gets all the food items from a user
      */
-    public Set<Food> getFoods() {
+    public Set<Food> getFoods(int offset, int limit) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(userEmail)
@@ -72,6 +73,15 @@ public class FoodService {
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow();
         foodRepository.deleteUsersWithIds(foodDeleteRequest.getFoodIds(), user);
+    }
+
+    public FoodCountResponse getFoodCount() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        int foodCount = foodRepository.findNumberOfFood(user);
+
+        return new FoodCountResponse(foodCount);
     }
 
 

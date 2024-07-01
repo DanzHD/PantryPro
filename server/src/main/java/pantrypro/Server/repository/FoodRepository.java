@@ -17,6 +17,9 @@ import java.util.Set;
 public interface FoodRepository extends JpaRepository<Food, Long> {
     Set<Food> findByOwner(User owner);
 
+    @Query("select count(*) from Food f where f.owner = ?1")
+    int findNumberOfFood(User owner);
+
     @Modifying
     @Query("delete from Food f where f.id in (?1) and f.owner = ?2")
     void deleteUsersWithIds(List<Long> ids, User user);

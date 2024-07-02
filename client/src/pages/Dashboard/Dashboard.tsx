@@ -2,7 +2,12 @@ import Header from "./Header.tsx";
 import Table from "./Table.tsx";
 import "./_dashboard.scss"
 
+
 function Dashboard() {
+
+
+
+
 
 
   return (

@@ -11,6 +11,7 @@ const ProtectedRoutes = () => {
   /* Try to refresh the access token every 30 minutes, if fail at refreshing access token, logout  */
 
   useEffect(() => {
+
     const refresh = async () => {
       try {
         setLoading(true)
@@ -22,7 +23,9 @@ const ProtectedRoutes = () => {
         setLoading(false)
       }
     }
+
     refresh()
+      .then()
     /* Refresh every 30 minutes */
     const refreshInterval = setInterval(refresh, 1800000)
 

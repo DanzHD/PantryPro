@@ -1,14 +1,17 @@
 import "./_select.scss"
+import {ChangeEvent} from "react";
 
 function Select({
-  options
+  options,
+  onChange
 }: {
-  options: string[]
+  options: string[],
+  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }) {
 
   return (
     <>
-      <select className="select">
+      <select onChange={onChange} className="select">
         <option value="" >Filter</option>
         {
           options.map(option => {

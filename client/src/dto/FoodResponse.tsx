@@ -1,7 +1,8 @@
 import FoodGroups from "../enum/foodGroups.tsx";
 
 interface FoodResponse {
-  data: Food[]
+  foods: Food[],
+  count: number
 }
 
 export interface Food {

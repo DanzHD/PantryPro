@@ -1,30 +1,35 @@
 import {apiClient} from "./client.tsx";
-import {Food} from "../dto/FoodResponse.tsx";
-import {FoodCountResponse} from "../dto/FoodCountResponse.tsx";
+import FoodResponse from "../dto/FoodResponse.tsx";
+import FoodGroups from "../enum/foodGroups.tsx";
 
-export async function getUserFood({ limit, pageNumber, token }: {limit: number, pageNumber: number, token: string | null}) {
+export async function getUserFood({ limit, pageNumber, foodGroup, token }:
+  {limit: number, pageNumber: number, token?: string | null, foodGroup?: FoodGroups}) {
   if (!token) {
-    return
+    throw new Error("Invalid Token")
+  }
+  const searchParams = new URLSearchParams()
+  searchParams.append("limit", limit.toString())
+  searchParams.append("page", pageNumber.toString())
+
+  if (foodGroup) {
+
+    searchParams.append("foodGroup", foodGroup.toUpperCase())
   }
 
-  const response = await apiClient.get<Food[]>(`/food/me?limit=${limit}&offset=${pageNumber}`,
-    {headers: { Authorization: `Bearer ${token}`}}
+
+  const response = await apiClient.get<FoodResponse>(`/food/me`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      params: searchParams
+    }
   )
 
-  return response.data
+  const {foods, count } = response.data
+
+  return {foods: foods, count: count}
 }
 
-export async function getUserFoodCount({ token}: {token: string | null}) {
-  if (!token) {
-    return
-  }
 
-  const response = await apiClient.get<FoodCountResponse>(`/food/count`, {
-    headers: { Authorization: `Bearer ${token}`}
-  })
-  const {foodCount} = response.data
-
-  return foodCount
-
-}
 

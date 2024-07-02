@@ -10,9 +10,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pantrypro.Server.Enums.FoodGroup;
 import pantrypro.Server.dto.FoodCountResponse;
 import pantrypro.Server.dto.FoodDeleteRequest;
 import pantrypro.Server.dto.FoodRequest;
+import pantrypro.Server.dto.FoodResponse;
 import pantrypro.Server.model.Food;
 import pantrypro.Server.model.User;
 import pantrypro.Server.repository.FoodRepository;
@@ -35,18 +37,43 @@ public class FoodService {
      *
      * Gets all the food items from a user
      */
-    public List<Food> getFoods(int offset, int limit) {
+    public FoodResponse getFoods(int page, int limit) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow();
-        Pageable pageable = PageRequest.of(offset, limit);
+        Pageable pageable = PageRequest.of(page, limit);
 
-        return foodRepository.findFoodByOwner(user, pageable);
+        List<Food> foods = foodRepository.findFoodByOwner(user, pageable);
+        int count = foodRepository.findNumberOfFood(user);
+
+        return FoodResponse
+            .builder()
+            .foods(foods)
+            .count(count)
+            .build();
 
 
 
     }
+
+    public FoodResponse getFoodWithFilter(int page, int limit, FoodGroup foodGroup) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        Pageable pageable = PageRequest.of(page, limit);
+
+        List<Food> foods = foodRepository.findFoodByOwnerAndFoodGroup(user, foodGroup, pageable);
+        int count = foodRepository.countFoodsByOwnerAndFoodGroup(user, foodGroup);
+        return FoodResponse
+            .builder()
+            .foods(foods)
+            .count(count)
+            .build();
+    }
+
+
 
     public List<Food> addFoods(List<FoodRequest> foodRequests) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();

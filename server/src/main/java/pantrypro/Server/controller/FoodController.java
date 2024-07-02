@@ -1,18 +1,19 @@
 package pantrypro.Server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pantrypro.Server.Enums.FoodGroup;
 import pantrypro.Server.dto.FoodCountResponse;
 import pantrypro.Server.dto.FoodDeleteRequest;
 import pantrypro.Server.dto.FoodRequest;
+import pantrypro.Server.dto.FoodResponse;
 import pantrypro.Server.model.Food;
 import pantrypro.Server.service.FoodService;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/food")
@@ -23,17 +24,22 @@ public class FoodController {
     private final FoodService foodService;
 
     /**
-     *
      * GET request for getting all the foods associated with a user
      */
     @GetMapping("/me")
-    public ResponseEntity<List<Food>> getFoods(@RequestParam int offset, @RequestParam int limit) {
+    public ResponseEntity<FoodResponse> getFoods(
+        @RequestParam int page,
+        @RequestParam int limit,
+        @RequestParam Optional<FoodGroup> foodGroup) {
 
-        return ResponseEntity.ok(foodService.getFoods(offset, limit));
+        if (foodGroup.isPresent()) {
+            return ResponseEntity.ok(foodService.getFoodWithFilter(page, limit, foodGroup.get()));
+        }
+
+        return ResponseEntity.ok(foodService.getFoods(page, limit));
     }
 
     /**
-     *
      * Adds a list of foods to the user
      */
     @PostMapping("/me")
@@ -44,6 +50,9 @@ public class FoodController {
         return ResponseEntity.ok(foodService.addFoods(foods));
     }
 
+    /**
+     * HTTP request for deleting a food from a user's account
+     */
     @DeleteMapping("/me")
     public ResponseEntity<HttpStatus> deleteFoods(@RequestBody FoodDeleteRequest foodIds) {
         try {
@@ -57,18 +66,14 @@ public class FoodController {
 
     }
 
+    /**
+     * HTTP request for getting number of foods in user account
+     */
     @GetMapping("/count")
     public ResponseEntity<FoodCountResponse> getTotalFood() {
 
         return ResponseEntity.ok(foodService.getFoodCount());
     }
-
-
-
-
-
-
-
 
 
 }

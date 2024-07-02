@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pantrypro.Server.Enums.FoodGroup;
 import pantrypro.Server.model.Food;
 import pantrypro.Server.model.User;
 
@@ -26,7 +27,12 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     @Query("select count(*) from Food f where f.owner = ?1")
     int findNumberOfFood(User owner);
 
+    int countFoodsByOwnerAndFoodGroup(User owner, FoodGroup foodGroup);
+
     @Modifying
     @Query("delete from Food f where f.id in (?1) and f.owner = ?2")
     void deleteUsersWithIds(List<Long> ids, User user);
+
+    @Query
+    List<Food> findFoodByOwnerAndFoodGroup(User owner, FoodGroup foodGroup, Pageable pageable);
 }

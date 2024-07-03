@@ -39,10 +39,7 @@ function Table() {
       })
   }, [accessToken]);
   async function onPageChange(page: number) {
-    if (selectAllCheckBoxRef.current) {
 
-      selectAllCheckBoxRef.current.checked = false
-    }
     setPageSelected(page)
     await queryFoodData({
       pageNumber: page,
@@ -94,6 +91,12 @@ function Table() {
 
       const foodIds = Array.from(foodsChecked.keys())
       await deleteFood({foodIds: foodIds, token: accessToken})
+      setPageSelected(0)
+      await queryFoodData({
+        pageNumber: 0,
+        foodGroup: foodGroupFilter,
+        accessToken: accessToken
+      })
       
     } catch (err) {
       console.error(err)
@@ -112,6 +115,10 @@ function Table() {
     setFood(foods)
     setTotalFoodCount(count)
     setFoodsChecked(new Map())
+    if (selectAllCheckBoxRef.current) {
+
+      selectAllCheckBoxRef.current.checked = false
+    }
   }
 
 

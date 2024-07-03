@@ -33,6 +33,15 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     @Query("delete from Food f where f.id in (?1) and f.owner = ?2")
     void deleteUsersWithIds(List<Long> ids, User user);
 
-    @Query
+
     List<Food> findFoodByOwnerAndFoodGroup(User owner, FoodGroup foodGroup, Pageable pageable);
+
+    List<Food> findFoodByOwnerAndFoodGroupAndNameContaining(User owner, FoodGroup foodGroup, String name, Pageable pageable);
+
+
+    int countFoodsByOwnerAndFoodGroupAndNameContaining(User owner, FoodGroup foodGroup, String name);
+
+    List<Food> findFoodByOwnerAndNameContaining(User owner, String name, Pageable pageable);
+    int countFoodsByOwnerAndNameContaining(User owner, String name);
+
 }

@@ -30,10 +30,18 @@ public class FoodController {
     public ResponseEntity<FoodResponse> getFoods(
         @RequestParam int page,
         @RequestParam int limit,
-        @RequestParam Optional<FoodGroup> foodGroup) {
+        @RequestParam Optional<FoodGroup> foodGroup,
+        @RequestParam Optional<String> foodName
+    ) {
 
+        if (foodGroup.isPresent() && foodName.isEmpty()) {
+            return ResponseEntity.ok(foodService.getFoods(page, limit, foodGroup.get()));
+        }
         if (foodGroup.isPresent()) {
-            return ResponseEntity.ok(foodService.getFoodWithFilter(page, limit, foodGroup.get()));
+            return ResponseEntity.ok(foodService.getFoods(page, limit, foodGroup.get(), foodName.get()));
+        }
+        if (foodName.isPresent()) {
+            return ResponseEntity.ok(foodService.getFoods(page, limit, foodName.get()));
         }
 
         return ResponseEntity.ok(foodService.getFoods(page, limit));
@@ -66,14 +74,7 @@ public class FoodController {
 
     }
 
-    /**
-     * HTTP request for getting number of foods in user account
-     */
-    @GetMapping("/count")
-    public ResponseEntity<FoodCountResponse> getTotalFood() {
 
-        return ResponseEntity.ok(foodService.getFoodCount());
-    }
 
 
 }

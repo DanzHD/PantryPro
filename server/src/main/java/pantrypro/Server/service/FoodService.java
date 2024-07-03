@@ -1,13 +1,9 @@
 package pantrypro.Server.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.Enums.FoodGroup;
@@ -19,12 +15,9 @@ import pantrypro.Server.model.Food;
 import pantrypro.Server.model.User;
 import pantrypro.Server.repository.FoodRepository;
 import pantrypro.Server.repository.UserRepository;
-import pantrypro.Server.util.InvalidTokenException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -53,11 +46,9 @@ public class FoodService {
             .count(count)
             .build();
 
-
-
     }
 
-    public FoodResponse getFoodWithFilter(int page, int limit, FoodGroup foodGroup) {
+    public FoodResponse getFoods(int page, int limit, FoodGroup foodGroup) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(userEmail)
@@ -73,7 +64,41 @@ public class FoodService {
             .build();
     }
 
+    public FoodResponse getFoods(int page, int limit, FoodGroup foodGroup, String foodSearchQuery) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        Pageable pageable = PageRequest.of(page, limit);
+
+        List<Food> foods = foodRepository.findFoodByOwnerAndFoodGroupAndNameContaining(user, foodGroup, foodSearchQuery, pageable);
+        int count = foodRepository.countFoodsByOwnerAndFoodGroupAndNameContaining(user, foodGroup, foodSearchQuery);
+
+        return FoodResponse
+            .builder()
+            .foods(foods)
+            .count(count)
+            .build();
+
+    }
+
+    public FoodResponse getFoods(int page, int limit, String foodSearchQuery) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        Pageable pageable = PageRequest.of(page, limit);
+
+        List<Food> foods = foodRepository.findFoodByOwnerAndNameContaining(user, foodSearchQuery, pageable);
+        int count = foodRepository.countFoodsByOwnerAndNameContaining(user, foodSearchQuery);
+
+        return FoodResponse
+            .builder()
+            .foods(foods)
+            .count(count)
+            .build();
+
+    }
 
     public List<Food> addFoods(List<FoodRequest> foodRequests) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();

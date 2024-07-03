@@ -10,7 +10,6 @@ import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {deleteFood, getUserFood} from "../../api/food.tsx";
 import cx from "classnames";
 import FoodGroups from "../../enum/foodGroups.tsx";
-import Button from "../../Components/Button/Button.tsx";
 import Dropdown, {DropdownMenuOption} from "../../Components/Dropdown/Dropdown.tsx";
 
 
@@ -24,7 +23,7 @@ function Table() {
   const [pageSelected, setPageSelected] = useState(0)
   const [foodsChecked, setFoodsChecked] = useState(new Map<number, boolean>())
   const [foodGroupFilter, setFoodGroupFilter] = useState<FoodGroups>()
-
+  const [foodSearch, setFoodSearch] = useState<string>("")
 
 
   useEffect(() => {
@@ -46,6 +45,7 @@ function Table() {
     await queryFoodData({
       pageNumber: page,
       foodGroup: foodGroupFilter,
+      foodSearchName: foodSearch,
       accessToken: accessToken
     })
   }
@@ -84,6 +84,7 @@ function Table() {
     await queryFoodData({
       pageNumber: 0,
       foodGroup: event.target.value.toUpperCase() as FoodGroups,
+      foodSearchName: foodSearch,
       accessToken: accessToken
     })
   }
@@ -97,6 +98,7 @@ function Table() {
       await queryFoodData({
         pageNumber: 0,
         foodGroup: foodGroupFilter,
+        foodSearchName: foodSearch,
         accessToken: accessToken
       })
       
@@ -105,13 +107,34 @@ function Table() {
     }
     
   }
+
+  let filterFoodSearchTimeout: ReturnType<typeof setTimeout>
+  function handleFoodSearch(event: ChangeEvent<HTMLInputElement>) {
+    try {
+      clearTimeout(filterFoodSearchTimeout)
+
+      filterFoodSearchTimeout = setTimeout(async () => {
+        setFoodSearch(event.target.value)
+        await queryFoodData({
+          pageNumber: 0,
+          foodGroup: foodGroupFilter,
+          foodSearchName: event.target.value,
+          accessToken: accessToken
+        })
+      }, 500)
+
+    } catch (err) {
+      console.error(err)
+    }
+  }
   
-  async function queryFoodData({ pageNumber, foodGroup, accessToken }:
-    {pageNumber: number, foodGroup: FoodGroups | undefined, accessToken: string | null}) {
+  async function queryFoodData({ pageNumber, foodGroup, foodSearchName, accessToken }:
+    {pageNumber: number, foodGroup: FoodGroups | undefined, foodSearchName?: string | null, accessToken: string | null}) {
     const {foods, count} = await getUserFood({
       limit: ROWS_PER_PAGE,
       pageNumber: pageNumber,
       foodGroup: foodGroup,
+      foodName: foodSearchName,
       token: accessToken
     })
     setFood(foods)
@@ -123,14 +146,15 @@ function Table() {
     }
   }
 
+
+
   return (
     <div className="table">
       <TableSettings />
-      <Button onClick={handleDeleteFood}>Delete</Button>
       <div className="table__filter">
         <div>
 
-          <SearchBar placeholder={"Search"}/>
+          <SearchBar onChange={handleFoodSearch} placeholder={"Search"}/>
           <div className="search-icon__container">
             <span className="material-symbols-outlined">
               search
@@ -146,7 +170,7 @@ function Table() {
           </Select>
 
           <Dropdown placeholder="Choose Action">
-            <DropdownMenuOption option="Delete" danger />
+            <DropdownMenuOption onClick={handleDeleteFood} option="Delete" danger />
           </Dropdown>
 
 

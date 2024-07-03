@@ -2,8 +2,8 @@ import {apiClient} from "./client.tsx";
 import FoodResponse from "../dto/FoodResponse.tsx";
 import FoodGroups from "../enum/foodGroups.tsx";
 
-export async function getUserFood({ limit, pageNumber, foodGroup, token }:
-  {limit: number, pageNumber: number, token?: string | null, foodGroup?: FoodGroups}) {
+export async function getUserFood({ limit, pageNumber, foodGroup, token, foodName }:
+  {limit: number, pageNumber: number, token?: string | null, foodGroup?: FoodGroups, foodName?: string | null}) {
   if (!token) {
     throw new Error("Invalid Token")
   }
@@ -14,6 +14,9 @@ export async function getUserFood({ limit, pageNumber, foodGroup, token }:
   if (foodGroup) {
 
     searchParams.append("foodGroup", foodGroup.toUpperCase())
+  }
+  if (foodName) {
+    searchParams.append("foodName", foodName)
   }
 
 

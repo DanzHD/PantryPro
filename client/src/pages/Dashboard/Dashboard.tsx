@@ -5,11 +5,6 @@ import "./_dashboard.scss"
 
 function Dashboard() {
 
-
-
-
-
-
   return (
     <>
       <div id="dashboard">

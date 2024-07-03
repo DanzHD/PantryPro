@@ -146,7 +146,7 @@ function Table() {
           </Select>
 
           <Dropdown placeholder="Choose Action">
-            <DropdownMenuOption option="Delete" />
+            <DropdownMenuOption option="Delete" danger />
           </Dropdown>
 
 

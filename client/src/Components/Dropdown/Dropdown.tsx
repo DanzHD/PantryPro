@@ -51,17 +51,23 @@ export default function Dropdown({
 
 export function DropdownMenuOption({
   onClick,
-  option
+  option,
+  className,
+  danger
 }:
 {
   onClick?: () => void,
-  option?: string
+  option?: string,
+  className?: string,
+  danger?: boolean
 }) {
+
+  const computedClasses = cx("dropdown-content__option", className)
 
   return (
     <>
-      <div className="dropdown-content__option" onClick={onClick}>
-        <Text>{option}</Text>
+      <div className={computedClasses} onClick={onClick}>
+        <Text danger={danger} bold={danger}>{option}</Text>
       </div>
     </>
   )

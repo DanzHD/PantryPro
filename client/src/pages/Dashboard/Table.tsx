@@ -86,6 +86,7 @@ function Table() {
       .then(({foods, count}) => {
         setFood(foods)
         setTotalFoodCount(count)
+        setFoodsChecked(new Map())
     })
   }
 

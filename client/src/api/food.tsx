@@ -31,5 +31,21 @@ export async function getUserFood({ limit, pageNumber, foodGroup, token }:
   return {foods: foods, count: count}
 }
 
+export async function deleteFood({ token, foodIds }: { token?: string | null, foodIds: number[] | null}) {
+  if (!token) {
+    throw new Error("Invalid Token")
+  }
+
+  await apiClient.delete(`/food/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    data: {
+      foodIds: foodIds
+    }
+  })
+
+}
+
 
 

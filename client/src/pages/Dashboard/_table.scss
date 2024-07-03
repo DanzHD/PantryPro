@@ -53,6 +53,15 @@
             padding-top: 20px;
             position: relative;
         }
+
+        &__title {
+            width: 200px;
+
+            position: absolute;
+            top: 50%;
+            padding-left: 2rem;
+
+        }
     }
 
     #add-button__override {

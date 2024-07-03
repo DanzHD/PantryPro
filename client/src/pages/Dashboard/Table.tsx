@@ -7,9 +7,10 @@ import TableSettings from "./TableSettings.tsx";
 import { Food } from "../../dto/FoodResponse.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {getUserFood} from "../../api/food.tsx";
+import {deleteFood, getUserFood} from "../../api/food.tsx";
 import cx from "classnames";
 import FoodGroups from "../../enum/foodGroups.tsx";
+import Button from "../../Components/Button/Button.tsx";
 
 const ROWS_PER_PAGE = 15
 
@@ -37,13 +38,17 @@ function Table() {
         console.error(err)
       })
   }, [accessToken]);
-  function onPageChange(page: number) {
-    getUserFood({ limit: ROWS_PER_PAGE, pageNumber: page, token: accessToken, foodGroup: foodGroupFilter})
-      .then(({foods}) => {
-        setFood(foods)
-      })
-    setFoodsChecked(new Map())
+  async function onPageChange(page: number) {
+    if (selectAllCheckBoxRef.current) {
+
+      selectAllCheckBoxRef.current.checked = false
+    }
     setPageSelected(page)
+    await queryFoodData({
+      pageNumber: page,
+      foodGroup: foodGroupFilter,
+      accessToken: accessToken
+    })
   }
 
   function handleCheckChange(id: number) {
@@ -73,22 +78,42 @@ function Table() {
     }
   }
 
-  function handleFilterSelect(event: ChangeEvent<HTMLSelectElement>) {
+  async function handleFilterSelect(event: ChangeEvent<HTMLSelectElement>) {
     setFoodGroupFilter(event.target.value.toUpperCase() as FoodGroups)
 
     setPageSelected(0)
-    getUserFood({
-      limit: ROWS_PER_PAGE,
-      pageNumber: pageSelected,
-      foodGroup: event.target.value.toUpperCase() as  FoodGroups,
-      token: accessToken
-    })
-      .then(({foods, count}) => {
-        setFood(foods)
-        setTotalFoodCount(count)
-        setFoodsChecked(new Map())
+    await queryFoodData({
+      pageNumber: 0,
+      foodGroup: event.target.value.toUpperCase() as FoodGroups,
+      accessToken: accessToken
     })
   }
+
+  async function handleDeleteFood() {
+    try {
+
+      const foodIds = Array.from(foodsChecked.keys())
+      await deleteFood({foodIds: foodIds, token: accessToken})
+      
+    } catch (err) {
+      console.error(err)
+    }
+    
+  }
+  
+  async function queryFoodData({ pageNumber, foodGroup, accessToken }:
+    {pageNumber: number, foodGroup: FoodGroups | undefined, accessToken: string | null}) {
+    const {foods, count} = await getUserFood({
+      limit: ROWS_PER_PAGE,
+      pageNumber: pageNumber,
+      foodGroup: foodGroup,
+      token: accessToken
+    })
+    setFood(foods)
+    setTotalFoodCount(count)
+    setFoodsChecked(new Map())
+  }
+
 
 
 
@@ -97,7 +122,7 @@ function Table() {
   return (
     <div className="table">
       <TableSettings />
-
+      <Button onClick={handleDeleteFood}>Delete</Button>
       <div className="table__filter">
         <div>
 

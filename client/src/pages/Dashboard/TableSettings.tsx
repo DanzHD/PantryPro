@@ -10,6 +10,10 @@ function TableSettings() {
         <Text>Food</Text>
       </div>
 
+
+      <Text className="table__setting__title" subheading>Food Database</Text>
+
+
     </div>
 
     <div className="add-food">

@@ -20,6 +20,7 @@ function Table() {
   const [foodCount, setFoodCount] = useState(0)
   const [pageSelected, setPageSelected] = useState(0)
   const [foodsChecked, setFoodsChecked] = useState(new Map<number, boolean>())
+  const [foodGroupFilter, setFoodGroupFilter] = useState<FoodGroups>()
 
 
 
@@ -37,7 +38,7 @@ function Table() {
       })
   }, [accessToken]);
   function onPageChange(page: number) {
-    getUserFood({ limit: ROWS_PER_PAGE, pageNumber: page, token: accessToken})
+    getUserFood({ limit: ROWS_PER_PAGE, pageNumber: page, token: accessToken, foodGroup: foodGroupFilter})
       .then(({foods}) => {
         setFood(foods)
       })
@@ -64,11 +65,13 @@ function Table() {
   }
 
   function handleFilterSelect(event: ChangeEvent<HTMLSelectElement>) {
-    setPageSelected(page => 0)
+    setFoodGroupFilter(event.target.value.toUpperCase() as FoodGroups)
+
+    setPageSelected(0)
     getUserFood({
       limit: ROWS_PER_PAGE,
       pageNumber: pageSelected,
-      foodGroup: event.target.value as FoodGroups,
+      foodGroup: event.target.value.toUpperCase() as  FoodGroups,
       token: accessToken
     })
       .then(({foods, count}) => {

@@ -3,7 +3,8 @@ import {ChangeEvent} from "react";
 
 function Select({
   options,
-  onChange
+  onChange,
+
 }: {
   options: string[],
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void

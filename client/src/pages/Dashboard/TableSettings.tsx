@@ -19,9 +19,9 @@ function TableSettings() {
     <div className="add-food">
 
       <Button id="add-button__override" onClick={() => console.log("Success")}>
-            <span className="material-symbols-outlined">
-              add
-            </span>
+        <span className="material-symbols-outlined">
+          add
+        </span>
         New Food
       </Button>
     </div>

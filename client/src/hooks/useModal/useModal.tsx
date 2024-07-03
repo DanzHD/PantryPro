@@ -4,17 +4,14 @@ import { RefObject, useEffect, useState} from "react";
  *
  * Returns a open boolean for whether the modal should be opened or closed.
  */
-function useModal(button: RefObject<HTMLDivElement>, modalContainer: RefObject<HTMLDivElement>) {
+function useModal(openModalDiv: RefObject<HTMLDivElement>) {
 
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
     function closeModal(e: Event) {
-      if (modalContainer?.current?.contains(e.target as Node)) {
-        return
-      }
 
-      if (button?.current === e.target) {
+      if (openModalDiv?.current?.contains( e.target as Node)) {
         setOpen(open => !open)
         return
       }
@@ -30,7 +27,7 @@ function useModal(button: RefObject<HTMLDivElement>, modalContainer: RefObject<H
       document.removeEventListener('click', closeModal)
     }
 
-  }, [button]);
+  }, [openModalDiv]);
 
   return { open }
 

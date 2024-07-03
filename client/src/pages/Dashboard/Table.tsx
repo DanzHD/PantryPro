@@ -11,6 +11,8 @@ import {deleteFood, getUserFood} from "../../api/food.tsx";
 import cx from "classnames";
 import FoodGroups from "../../enum/foodGroups.tsx";
 import Button from "../../Components/Button/Button.tsx";
+import Dropdown, {DropdownMenuOption} from "../../Components/Dropdown/Dropdown.tsx";
+
 
 const ROWS_PER_PAGE = 15
 
@@ -121,11 +123,6 @@ function Table() {
     }
   }
 
-
-
-
-
-
   return (
     <div className="table">
       <TableSettings />
@@ -134,12 +131,26 @@ function Table() {
         <div>
 
           <SearchBar placeholder={"Search"}/>
-          <Select onChange={handleFilterSelect} options={Object.values(FoodGroups)}/>
           <div className="search-icon__container">
             <span className="material-symbols-outlined">
               search
             </span>
           </div>
+          <Select onChange={handleFilterSelect} placeholder="Filter">
+            {
+
+              Object.values(FoodGroups).map(option => {
+                return <option key={option} value={option}>{option}</option>
+              })
+            }
+          </Select>
+
+          <Dropdown placeholder="Choose Action">
+            <DropdownMenuOption option="Delete" />
+          </Dropdown>
+
+
+
         </div>
         <div className="pagination">
           {

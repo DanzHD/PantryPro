@@ -10,7 +10,7 @@ function Header() {
   const logoutMenuContainerRef = useRef<HTMLDivElement>(null)
   const modalContainer = useRef<HTMLDivElement>(null)
 
-  const {open} = useModal(logoutMenuContainerRef, modalContainer)
+  const {open} = useModal(logoutMenuContainerRef)
   const {logout} = useAuthContext();
 
 

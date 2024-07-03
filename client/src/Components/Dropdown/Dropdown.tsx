@@ -1,0 +1,69 @@
+import "./_dropdown.scss"
+import {ReactNode, useRef} from "react";
+import useModal from "../../hooks/useModal/useModal.tsx";
+import cx from "classnames";
+import Text from "../Text/Text.tsx";
+
+export default function Dropdown({
+  children,
+  className,
+  placeholder
+}: {
+  children?: ReactNode,
+  className?: string,
+  placeholder?: string
+}) {
+  const computedClasses = cx(
+    className,
+    "dropdown"
+  )
+
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const {open} = useModal(dropdownRef)
+
+
+  return (
+    <>
+      {
+        open &&
+          <div className="dropdown-content-container">
+
+            <div className="dropdown-content">
+              {children}
+            </div>
+          </div>
+
+      }
+      <div className={computedClasses} ref={dropdownRef}>
+        <div className="dropdown__title" >
+
+          <Text small>{placeholder}</Text>
+          <span className="material-symbols-outlined">
+            unfold_more
+          </span>
+        </div>
+      </div>
+    </>
+  )
+
+}
+
+export function DropdownMenuOption({
+  onClick,
+  option
+}:
+{
+  onClick?: () => void,
+  option?: string
+}) {
+
+  return (
+    <>
+      <div className="dropdown-content__option" onClick={onClick}>
+        <Text>{option}</Text>
+      </div>
+    </>
+  )
+
+}

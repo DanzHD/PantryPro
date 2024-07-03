@@ -6,7 +6,7 @@ import TableSettings from "./TableSettings.tsx";
 
 import { Food } from "../../dto/FoodResponse.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {getUserFood} from "../../api/food.tsx";
 import cx from "classnames";
 import FoodGroups from "../../enum/foodGroups.tsx";
@@ -15,9 +15,9 @@ const ROWS_PER_PAGE = 15
 
 function Table() {
   const {accessToken} = useAuthContext()
-
+  const selectAllCheckBoxRef = useRef<HTMLInputElement>(null)
   const [foods, setFood] = useState<Food[] | undefined>()
-  const [foodCount, setFoodCount] = useState(0)
+  const [totalFoodCount, setTotalFoodCount] = useState(0)
   const [pageSelected, setPageSelected] = useState(0)
   const [foodsChecked, setFoodsChecked] = useState(new Map<number, boolean>())
   const [foodGroupFilter, setFoodGroupFilter] = useState<FoodGroups>()
@@ -32,7 +32,7 @@ function Table() {
     getUserFood({ limit: ROWS_PER_PAGE, pageNumber: 0, token: accessToken})
       .then(({foods, count}) => {
         setFood(foods)
-        setFoodCount(count)
+        setTotalFoodCount(count)
       }).catch(err => {
         console.error(err)
       })
@@ -42,6 +42,7 @@ function Table() {
       .then(({foods}) => {
         setFood(foods)
       })
+    setFoodsChecked(new Map())
     setPageSelected(page)
   }
 
@@ -51,7 +52,15 @@ function Table() {
       updatedFoodCheckState.delete(id)
     } else {
       updatedFoodCheckState.set(id, true)
+
     }
+
+    if (updatedFoodCheckState.size === foods?.length && selectAllCheckBoxRef.current !== null) {
+      selectAllCheckBoxRef.current.checked = true;
+    } else if (selectAllCheckBoxRef.current !== null) {
+      selectAllCheckBoxRef.current.checked = false
+    }
+
     setFoodsChecked(updatedFoodCheckState)
   }
 
@@ -76,7 +85,7 @@ function Table() {
     })
       .then(({foods, count}) => {
         setFood(foods)
-        setFoodCount(count)
+        setTotalFoodCount(count)
     })
   }
 
@@ -106,7 +115,7 @@ function Table() {
           }
 
           {
-            [...Array(Math.ceil(foodCount / ROWS_PER_PAGE)).keys()].map(i => {
+            [...Array(Math.ceil(totalFoodCount / ROWS_PER_PAGE)).keys()].map(i => {
               return (
                 <div key={i} onClick={() => onPageChange(i)} className={cx("pagination__index", {"selected": pageSelected === i})}>
                   <Text>{i+1}</Text>
@@ -115,7 +124,7 @@ function Table() {
             })
           }
           {
-            pageSelected !== (Math.ceil(foodCount / ROWS_PER_PAGE) - 1) && foodCount !== 0 &&
+            pageSelected !== (Math.ceil(totalFoodCount / ROWS_PER_PAGE) - 1) && totalFoodCount !== 0 &&
               <div onClick={() => onPageChange(pageSelected + 1)} className="material-symbols-outlined pagination__index">chevron_right</div>
           }
         </div>
@@ -128,7 +137,7 @@ function Table() {
 
         <thead>
           <tr>
-            <th className="th__checkbox"><input onChange={handleSelectDeselectAll} type="checkbox"/></th>
+            <th className="th__checkbox"><input ref={selectAllCheckBoxRef} onChange={handleSelectDeselectAll} type="checkbox"/></th>
             <th><Text bold>Name</Text></th>
             <th><Text bold>Quantity</Text></th>
             <th><Text bold>Food Group</Text> </th>

@@ -9,12 +9,7 @@ function TableSettings() {
       <div className="table__setting__tab selected-tab">
         <Text>Food</Text>
       </div>
-      <div className="table__setting__tab">
-        <Text>Database</Text>
-      </div>
-      <div className="table__setting__tab">
-        <Text>Database</Text>
-      </div>
+
     </div>
 
     <div className="add-food">

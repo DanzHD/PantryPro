@@ -10,18 +10,15 @@ function Header() {
   const logoutMenuContainerRef = useRef<HTMLDivElement>(null)
   const modalContainer = useRef<HTMLDivElement>(null)
 
-  const {open} = useModal(logoutMenuContainerRef)
+  const mobileHamburgerMenuRef = useRef<HTMLDivElement>(null)
+  const {open: logoutContainerOpen} = useModal(logoutMenuContainerRef)
+  const {open: hamburgerMenuOpen} = useModal(mobileHamburgerMenuRef)
   const {logout} = useAuthContext();
-
-
-
-
-
 
   return (
     <div className="app__header">
       <div className="left-links ">
-        <Text className="app__header__text logo \" heading>PantryPro </Text>
+        <Text className="app__header__text " heading>PantryPro </Text>
         <HeaderLink logo='database' name="Database" link='/dashboard' selected />
         <HeaderLink name="Meal Scheduler" logo="schedule" link="/" />
         <HeaderLink name="Setting" logo="settings" link="/" />
@@ -34,25 +31,52 @@ function Header() {
         </span>
 
 
-        <div className={cx("logout-menu-container", {"logout-container--invisible": !open})} ref={modalContainer}>
-            <div className="logout-menu">
-                <div onClick={logout} className="logout-menu__item">
-                    <span className="material-symbols-outlined">
-                        logout
-                    </span>
-                    <Text bold>Sign out</Text>
+        <div className={cx("logout-menu-container", {"logout-container--invisible": !logoutContainerOpen})} ref={modalContainer}>
+          <div className="logout-menu">
+            <div onClick={logout} className="logout-menu__item">
+              <span className="material-symbols-outlined">
+                  logout
+              </span>
+              <Text bold>Sign out</Text>
 
-                </div>
             </div>
+          </div>
 
         </div>
 
-
       </div>
 
-      <div>
+      <div className="mobile-header">
+          <Text heading>PantryPro</Text>
+          <div ref={mobileHamburgerMenuRef} className="material-symbols-outlined menu-icon">menu</div>
 
       </div>
+      <div className={cx("mobile-menu", {"invisible": !hamburgerMenuOpen})}>
+        <div className="mobile-menu__header">
+          <Text bold subheading>Menu</Text>
+          <div className="line-horizontal" />
+        </div>
+        <div className="mobile-menu__items">
+          <div className="selected">
+            <span className="material-symbols-outlined se">Database</span>
+            <div>Database</div>
+
+          </div>
+          <div>
+            <span className="material-symbols-outlined">schedule</span>
+            <div>Meal Scheduler</div>
+          </div>
+          <div>
+            <span className="material-symbols-outlined">settings</span>
+            <div>Settings</div>
+          </div>
+          <div onClick={logout} className="logout-menu__item">
+            <span className="material-symbols-outlined">logout</span>
+            <div>Logout</div>
+          </div>
+        </div>
+      </div>
+
 
     </div>
   )

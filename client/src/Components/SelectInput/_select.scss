@@ -1,13 +1,23 @@
+@import "../../styles/vars";
+
 .select {
     box-sizing: border-box;
     border: none;
     border-left: lightgray;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-    padding: 9px;
+    padding: 5px;
     background-color: white;
+    font-family: "Circular Std", roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
 
     option {
         padding: 100px;
+        color: black;
+    }
+
+    &--none {
+        color: darkgray;
     }
 }
 

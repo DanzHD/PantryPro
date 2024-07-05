@@ -129,7 +129,7 @@ public class FoodTests {
         calendar.set(Calendar.DAY_OF_MONTH, 25);
 
         List<FoodRequest> foodRequests = new ArrayList<>();
-        FoodRequest beef = new FoodRequest(new Date(calendar.getTimeInMillis()), FoodGroup.MEAT, "Beef", 500);
+        FoodRequest beef = new FoodRequest(new Date(calendar.getTimeInMillis()), FoodGroup.MEAT, "Beef");
         foodRequests.add(beef);
 
         RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/food/me")

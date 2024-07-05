@@ -20,7 +20,6 @@ public class FoodRequest {
     private Date expiryDate;
     private FoodGroup group;
     private String name;
-    private int quantity;
 
 
 

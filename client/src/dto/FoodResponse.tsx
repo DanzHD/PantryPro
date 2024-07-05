@@ -9,8 +9,7 @@ export interface Food {
   id: number,
   name: string,
   expiryDate: string,
-  foodGroup: FoodGroups,
-  quantity: number
+  foodGroup: FoodGroups
 }
 
 export default FoodResponse

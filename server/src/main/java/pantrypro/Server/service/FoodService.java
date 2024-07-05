@@ -110,7 +110,6 @@ public class FoodService {
                 Food
                 .builder()
                     .name(foodRequest.getName())
-                    .quantity(foodRequest.getQuantity())
                     .foodGroup(foodRequest.getGroup())
                     .owner(user)
                     .expiryDate(foodRequest.getExpiryDate())
@@ -130,14 +129,7 @@ public class FoodService {
         foodRepository.deleteUsersWithIds(foodDeleteRequest.getFoodIds(), user);
     }
 
-    public FoodCountResponse getFoodCount() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(userEmail)
-            .orElseThrow();
-        int foodCount = foodRepository.findNumberOfFood(user);
 
-        return new FoodCountResponse(foodCount);
-    }
 
 
 

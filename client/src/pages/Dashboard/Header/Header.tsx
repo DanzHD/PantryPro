@@ -1,10 +1,10 @@
 import "./_header.scss"
-import Text from "../../Components/Text/Text.tsx";
-import useModal from "../../hooks/useModal/useModal.tsx";
+import Text from "../../../Components/Text/Text.tsx";
+import useModal from "../../../hooks/useModal/useModal.tsx";
 import {useRef} from "react";
 import {Link} from "react-router-dom";
 import cx from "classnames";
-import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
+import {useAuthContext} from "../../../Context/AuthContext/useAuthContext.tsx";
 
 function Header() {
   const logoutMenuContainerRef = useRef<HTMLDivElement>(null)

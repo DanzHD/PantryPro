@@ -1,17 +1,18 @@
 import "./_table.scss"
-import Text from "../../Components/Text/Text.tsx";
-import SearchBar from "../../Components/SearchBar/SearchBar.tsx";
-import Select from "../../Components/SelectInput/Select.tsx";
+import Text from "../../../Components/Text/Text.tsx";
+import SearchBar from "../../../Components/SearchBar/SearchBar.tsx";
+import Select from "../../../Components/SelectInput/Select.tsx";
 import TableSettings from "./TableSettings.tsx";
 
-import { Food } from "../../dto/FoodResponse.tsx";
-import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
+import { Food } from "../../../dto/FoodResponse.tsx";
+import {useAuthContext} from "../../../Context/AuthContext/useAuthContext.tsx";
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {deleteFood, getUserFood} from "../../api/food.tsx";
+import {addFoodForUser, deleteFood, getUserFood} from "../../../api/food.tsx";
 import cx from "classnames";
-import FoodGroups from "../../enum/foodGroups.tsx";
-import Dropdown, {DropdownMenuOption} from "../../Components/Dropdown/Dropdown.tsx";
+import FoodGroups from "../../../enum/foodGroups.tsx";
+import Dropdown, {DropdownMenuOption} from "../../../Components/Dropdown/Dropdown.tsx";
 import TableData from "./TableData.tsx";
+import {FoodRequestDto} from "../../../dto/FoodRequestDto.tsx";
 
 
 const ROWS_PER_PAGE = 15
@@ -27,6 +28,9 @@ function Table() {
   const [foodSearch, setFoodSearch] = useState<string>("")
 
 
+  /**
+   * Initial data querying for when user first visits dashboard
+   */
   useEffect(() => {
     if (!accessToken) {
       return
@@ -40,6 +44,11 @@ function Table() {
         console.error(err)
       })
   }, [accessToken]);
+
+  /**
+   *
+   * Updates the food data table with the page that was selected
+   */
   async function onPageChange(page: number) {
 
     setPageSelected(page)
@@ -51,6 +60,10 @@ function Table() {
     })
   }
 
+  /**
+   *
+   * Deals with managing a change when a checkbox is checked/unchecked. Updates the checkboxes that are currently checked
+   */
   function handleCheckChange(id: number) {
     const updatedFoodCheckState = new Map(foodsChecked)
     if (updatedFoodCheckState.get(id)) {
@@ -69,6 +82,11 @@ function Table() {
     setFoodsChecked(updatedFoodCheckState)
   }
 
+  /**
+   *
+   * Deals with checking and unchecking all the checkboxes when the checkall checkbox is checked/unchecked.
+   * Updates the checkboxes that are currently checked
+   */
   function handleSelectDeselectAll(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.checked) {
       const allChecked = new Map(foods?.map(({ id }) => [id, true] ))
@@ -78,6 +96,10 @@ function Table() {
     }
   }
 
+  /**
+   *
+   * Filters the food data based on the food group that is selected
+   */
   async function handleFilterSelect(event: ChangeEvent<HTMLSelectElement>) {
     setFoodGroupFilter(event.target.value.toUpperCase() as FoodGroups)
 
@@ -90,6 +112,9 @@ function Table() {
     })
   }
 
+  /**
+   * Deletes the foods that are checked from the database
+   */
   async function handleDeleteFood() {
     try {
 
@@ -110,6 +135,9 @@ function Table() {
   }
 
   let filterFoodSearchTimeout: ReturnType<typeof setTimeout>
+  /**
+   * Filters the food data based on the search query
+   */
   function handleFoodSearch(event: ChangeEvent<HTMLInputElement>) {
     try {
       clearTimeout(filterFoodSearchTimeout)
@@ -128,7 +156,11 @@ function Table() {
       console.error(err)
     }
   }
-  
+
+  /**
+   *
+   * Get all the food data and sets the data into the usestate variables
+   */
   async function queryFoodData({ pageNumber, foodGroup, foodSearchName, accessToken }:
     {pageNumber: number, foodGroup: FoodGroups | undefined, foodSearchName?: string | null, accessToken: string | null}) {
     const {foods, count} = await getUserFood({
@@ -147,11 +179,25 @@ function Table() {
     }
   }
 
+  async function addFood({ newFoods }: {newFoods: FoodRequestDto[]}) {
+    try {
+      await addFoodForUser({foods: newFoods, token: accessToken})
+      await queryFoodData({
+        pageNumber: pageSelected,
+        foodGroup: foodGroupFilter,
+        foodSearchName: foodSearch,
+        accessToken: accessToken
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
 
 
   return (
     <div className="table">
-      <TableSettings />
+      <TableSettings addFood={addFood} />
       <div className="table__filter">
         <div>
 

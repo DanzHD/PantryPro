@@ -1,0 +1,51 @@
+
+.food-row {
+    background-color: lightblue;
+    width: 100%;
+    padding: 10px 20px;
+    min-height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &__expiry-date {
+        padding-left: 10px;
+    }
+
+    > div:first-child {
+        display: flex;
+        justify-content: space-between;
+        flex-basis: 100%;
+    }
+
+    .material-symbols-outlined {
+        cursor: pointer;
+    }
+
+}
+
+.delete-row-container {
+    width: 0;
+    height: 0;
+    position: relative;
+    left: 10px;
+
+    > .delete-row-menu {
+        position: absolute;
+        width: 90px;
+        padding: 10px 0;
+        right: -10px;
+        z-index: 100;
+        box-shadow: 0 0 2px black;
+
+        background-color: white;
+
+    }
+}
+
+.delete-row-menu__option {
+    cursor: pointer;
+
+    &:hover {
+        background-color: lightgray;
+    }
+}

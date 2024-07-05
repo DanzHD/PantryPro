@@ -1,6 +1,7 @@
 import {apiClient} from "./client.tsx";
 import FoodResponse from "../dto/FoodResponse.tsx";
 import FoodGroups from "../enum/foodGroups.tsx";
+import {FoodRequestDto} from "../dto/FoodRequestDto.tsx";
 
 export async function getUserFood({ limit, pageNumber, foodGroup, token, foodName }:
   {limit: number, pageNumber: number, token?: string | null, foodGroup?: FoodGroups, foodName?: string | null}) {
@@ -34,10 +35,26 @@ export async function getUserFood({ limit, pageNumber, foodGroup, token, foodNam
   return {foods: foods, count: count}
 }
 
+export async function addFoodForUser({ foods, token }: { foods: FoodRequestDto[], token: string | null }) {
+  if (!token) {
+    throw new Error("Invalid Token")
+
+  }
+
+  console.log(foods)
+  await apiClient.post(`/food/me`, foods, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+}
+
 export async function deleteFood({ token, foodIds }: { token?: string | null, foodIds: number[] | null}) {
   if (!token) {
     throw new Error("Invalid Token")
   }
+
 
   await apiClient.delete(`/food/me`, {
     headers: {

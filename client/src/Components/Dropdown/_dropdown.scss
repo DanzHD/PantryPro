@@ -10,6 +10,7 @@
     box-shadow: 0 0 2px lightgray;
     z-index: 1000;
 
+
     &__title {
         display: flex;
         justify-content: space-between;
@@ -20,6 +21,12 @@
         > .material-symbols-outlined {
             font-size: 18px;
             font-weight: 300;
+            color: darkgray;
+        }
+
+        > p {
+            font-size: 14px;
+            color: darkgray;
         }
     }
 

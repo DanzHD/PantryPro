@@ -24,7 +24,6 @@ public class Food {
     private String name;
     private Date expiryDate;
     private FoodGroup foodGroup;
-    private int quantity;
 
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", nullable = false)

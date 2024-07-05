@@ -1,5 +1,5 @@
-import Header from "./Header.tsx";
-import Table from "./Table.tsx";
+import Header from "./Header/Header.tsx";
+import Table from "./Table/Table.tsx";
 import "./_dashboard.scss"
 
 

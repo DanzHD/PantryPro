@@ -38,9 +38,9 @@ export default function Dropdown({
       <div className={computedClasses} ref={dropdownRef}>
         <div className="dropdown__title" >
 
-          <Text small>{placeholder}</Text>
+          <Text >{placeholder}</Text>
           <span className="material-symbols-outlined">
-            unfold_more
+            keyboard_arrow_down
           </span>
         </div>
       </div>

@@ -1,3 +1,5 @@
+@import "../../styles/vars";
+
 .dropdown {
     width: 8rem;
     height: 2.5rem;
@@ -60,5 +62,31 @@
         &__option:hover {
             background-color: lightgray;
         }
+    }
+}
+
+@media (max-width: $mobile-width - 1) {
+    .dropdown {
+        width: 7rem;
+
+        &__title {
+
+            > p {
+                font-size: 12px;
+            }
+
+            > .material-symbols-outlined {
+                font-size: 16px;
+            }
+        }
+
+        &-content-container {
+
+            .dropdown-content {
+                width: 7rem;
+            }
+        }
+
+
     }
 }

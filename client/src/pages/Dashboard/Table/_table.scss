@@ -84,26 +84,7 @@
             display: flex;
         }
 
-        div:nth-child(2) {
-            display: flex;
-            padding-right: 5px;
-        }
 
-        .pagination__index {
-            box-shadow: 0 0 2px lightgray;
-            cursor: pointer;
-            height: 35px;
-            width: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            background-color: white;
-
-            &.selected {
-                background-color: lightgray;
-            }
-        }
     }
 
     &__data {
@@ -129,8 +110,6 @@
 
         }
 
-
-
         tr:nth-child(odd) {
             background-color: white;
         }
@@ -143,14 +122,34 @@
 
     }
 
-    .search-icon__container {
-        background-color: white;
-        padding: 5.5px;
-        box-shadow: 0 0 2px lightgray;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
+    @media (min-width: $mobile-width) {
+        &__footer {
+            display: none;
+        }
+    }
 
+
+
+}
+
+@media (max-width: $mobile-width) {
+    .table {
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 100%;
+
+        &__filter {
+            justify-content: center;
+            > div.pagination {
+                display: none;
+            }
+        }
+
+        &__footer {
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
     }
 
 }

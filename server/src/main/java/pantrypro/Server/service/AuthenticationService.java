@@ -98,7 +98,7 @@ public class AuthenticationService {
 
     /**
      * Validates that the password is strong enough with the following policies:
-     * At least 8 characters and at most 20 characters
+     * At least 8 characters and at most 100 characters
      * Contains at least one digit
      * Contains at least one lower and upper alphabetical character
      * Contains at least 1 special character

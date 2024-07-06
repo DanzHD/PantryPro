@@ -2,6 +2,8 @@ import React, {createContext, useState} from "react";
 import {apiClient} from "../../api/client.tsx";
 import {TokenResponseData} from "./loginResponse.tsx";
 import {REFRESH_TOKEN_KEY} from "../../util/constants.tsx";
+import APIError from "../../util/APIError.tsx";
+import {AxiosError} from "axios";
 
 interface IAuthContext {
   loginUser: (userDetails: {email: string, password: string}) => Promise<boolean>,
@@ -49,8 +51,16 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
       return true
 
     } catch (error) {
-      console.error(error)
-      throw new Error("Failed to Register user")
+      if (error instanceof AxiosError) {
+        if (error.response) {
+
+          throw new APIError("Invalid signup", error.response.status)
+        }
+
+      }
+      return false
+
+
     }
   }
 

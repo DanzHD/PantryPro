@@ -1,5 +1,6 @@
 package pantrypro.Server.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import pantrypro.Server.dto.AuthenticationRequest;
 import pantrypro.Server.dto.AuthenticationResponse;
+import pantrypro.Server.dto.EnableAccountDto;
 import pantrypro.Server.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,7 @@ public class AuthenticationController {
      * if registration is successful, sends back access token
      */
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<HttpStatus> register(
             @RequestBody RegisterRequest request
     ) {
         try {
@@ -51,6 +53,11 @@ public class AuthenticationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PostMapping("/register_complete")
+    public ResponseEntity<AuthenticationResponse> enableUser(@RequestBody EnableAccountDto enableAccountDto) {
+        return ResponseEntity.ok(service.enableUser(enableAccountDto.getVerificationToken()));
     }
 
     /**
@@ -74,6 +81,7 @@ public class AuthenticationController {
         }
 
     }
+
 
 
 

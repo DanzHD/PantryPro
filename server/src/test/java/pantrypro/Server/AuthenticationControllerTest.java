@@ -1,6 +1,9 @@
 package pantrypro.Server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -24,8 +29,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pantrypro.Server.Enums.Role;
 import pantrypro.Server.controller.AuthenticationController;
+import pantrypro.Server.dto.AuthenticationRequest;
 import pantrypro.Server.dto.RegisterRequest;
 import pantrypro.Server.model.User;
+import pantrypro.Server.repository.UserRepository;
 import pantrypro.Server.service.AuthenticationService;
 import pantrypro.Server.service.JwtService;
 
@@ -47,12 +54,15 @@ public class AuthenticationControllerTest {
 
     @Autowired
     JwtService jwtService;
+    @Autowired
+    UserRepository userRepository;
 
     static final MySQLContainer mySQLContainer;
     static {
         mySQLContainer = new MySQLContainer("mysql:latest");
         mySQLContainer.start();
     }
+
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -64,12 +74,30 @@ public class AuthenticationControllerTest {
 
     }
 
+
+
+
+
     MockMvc mockMvc;
 
     @BeforeEach
-    void setup() {
+    public void setup() {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        User user = User
+            .builder()
+            .email("test2@gmail.com")
+            .password(passwordEncoder.encode("adwadaw1dwa@!Db"))
+            .role(Role.USER)
+            .enabled(true)
+            .build();
+        if (userRepository.findByEmail("test2@gmail.com").isPresent()) {
+            return;
+        }
+        userRepository.save(user);
+
+
     }
 
     @AfterAll
@@ -129,13 +157,28 @@ public class AuthenticationControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON);
         mockMvc.perform(request)
+            .andExpect(status().isOk());
+
+    }
+
+    @Test
+    void login_ok_ValidAccountLogin() throws Exception {
+        AuthenticationRequest authenticationRequest = AuthenticationRequest
+            .builder()
+            .email("test2@gmail.com")
+            .password("adwadaw1dwa@!Db")
+            .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/auth/authenticate")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(authenticationRequest));
+        mockMvc.perform(request)
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.access_token").exists())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.refresh_token").exists());
-
-
-
-
+            .andExpect(jsonPath("$.accessToken").exists())
+            .andExpect(jsonPath("$.refreshToken").exists());
     }
 
     @Test

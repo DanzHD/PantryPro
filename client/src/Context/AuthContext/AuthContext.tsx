@@ -27,7 +27,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
       const response = await apiClient.post("/auth/authenticate", userDetails)
 
       const tokens: TokenResponseData = await response.data
-      const {access_token: accessToken, refresh_token: refreshToken} = tokens
+      const {accessToken, refreshToken} = tokens
       setAccessToken(accessToken)
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
       return true
@@ -44,7 +44,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
       const response = await apiClient.post("/auth/register", userDetails)
 
       const tokens: TokenResponseData = await response.data
-      const {access_token: accessToken, refresh_token: refreshToken} = tokens
+      const { accessToken, refreshToken} = tokens
       setAccessToken(accessToken)
 
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
@@ -74,7 +74,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
       })
 
       const tokens: TokenResponseData = await response.data
-      const {access_token: accessToken} = tokens
+      const {accessToken} = tokens
       setAccessToken(accessToken)
 
       return true

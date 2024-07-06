@@ -58,6 +58,14 @@ public class JwtService {
     }
 
     /**
+     * Generates a verification token for confirming a user's email
+     */
+    public String generateVerificationToken(UserDetails userDetails) {
+        /* Expires in 24 hours */
+        return generateToken(new HashMap<>(), userDetails, 24 * 60 * 60 * 1000);
+    }
+
+    /**
      *
      * Creates new jwt access token
      */
@@ -115,9 +123,5 @@ public class JwtService {
 
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
-
-
 
 }

@@ -3,6 +3,7 @@ package pantrypro.Server.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import pantrypro.Server.Enums.Role;
 import pantrypro.Server.dto.AuthenticationRequest;
 import pantrypro.Server.dto.AuthenticationResponse;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.repository.UserRepository;
+import pantrypro.Server.util.AccountEnabledException;
 import pantrypro.Server.util.InvalidTokenException;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
@@ -35,11 +37,17 @@ public class AuthenticationService {
      * Registers a new user into the database and returns an access token if registration is successful
      * Throws an exception if user email is already taken or password is too weak
      */
-    public AuthenticationResponse register(RegisterRequest request)
+    public HttpStatus register(RegisterRequest request)
             throws UserAlreadyExistsException, PasswordTooWeakException {
 
         if (userExists(request.getEmail())) {
-            throw new UserAlreadyExistsException();
+            /* Check if account has been activated, if not register new account  */
+            User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow();
+            if (user.isEnabled()) {
+
+                throw new UserAlreadyExistsException();
+            }
         }
 
         if (!passwordIsValid(request.getPassword())) {
@@ -49,8 +57,34 @@ public class AuthenticationService {
         var user = User.builder()
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
+            .enabled(false)
             .role(Role.USER)
             .build();
+
+        String verificationToken = jwtService.generateVerificationToken(user);
+        user.setVerificationToken(verificationToken);
+
+        userRepository.save(user);
+
+        System.out.println("Verification token: " + verificationToken);
+
+        return HttpStatus.ACCEPTED;
+
+
+    }
+
+    public AuthenticationResponse enableUser(String verificationToken) {
+        String userEmail = jwtService.extractUsername(verificationToken);
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        if (!jwtService.isTokenValid(verificationToken, user)) {
+            throw new InvalidTokenException();
+        }
+        if (user.isEnabled()) {
+            throw new AccountEnabledException();
+        }
+
+        user.setEnabled(true);
 
         userRepository.save(user);
 
@@ -63,12 +97,14 @@ public class AuthenticationService {
             .refreshToken(refreshToken)
             .build();
 
+
     }
 
     /**
      * Validates that the user's password and email matches.
      * If matches, returns the access token
      */
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -147,5 +183,7 @@ public class AuthenticationService {
 
 
     }
+
+
 
 }

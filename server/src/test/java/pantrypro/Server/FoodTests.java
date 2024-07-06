@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -79,7 +80,6 @@ public class FoodTests {
     }
 
     MockMvc mockMvc;
-    private String accessToken;
 
     @BeforeEach
     void setup() {
@@ -91,8 +91,9 @@ public class FoodTests {
             .email(username)
             .password(password)
             .build();
-        AuthenticationResponse authenticationResponse = authenticationService.register(registerRequest);
-        accessToken = authenticationResponse.getAccessToken();
+        authenticationService.register(registerRequest);
+        User user = userRepository.findByEmail("test@gmail.com").orElseThrow();
+        user.setEnabled(true);
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(authRequest);
@@ -136,7 +137,6 @@ public class FoodTests {
             .with(user("test@gmail.com"))
             .content(objectMapper.writeValueAsString(foodRequests))
             .contentType(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -170,8 +170,9 @@ public class FoodTests {
             .email(username)
             .password(password)
             .build();
-        AuthenticationResponse authenticationResponse = authenticationService.register(registerRequest);
-        accessToken = authenticationResponse.getAccessToken();
+        authenticationService.register(registerRequest);
+        User user = userRepository.findByEmail("test2@gmail.com").orElseThrow();
+        user.setEnabled(true);
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 
@@ -179,7 +180,6 @@ public class FoodTests {
 
         List<Long> foodsIds = new ArrayList<Long>();
         foodsIds.add(1L);
-        System.out.println(foodsIds);
 
         FoodDeleteRequest foodDeleteRequest = FoodDeleteRequest
             .builder()

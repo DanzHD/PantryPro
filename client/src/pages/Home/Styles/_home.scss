@@ -1,0 +1,55 @@
+@import "../../../styles/vars";
+@import "header";
+
+@mixin section-spacing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.home {
+    background-color: $primary;
+    min-height: 100vh;
+
+    > section {
+        @media (max-width: $mobile-width) {
+            padding: 5rem 40px 0 40px;
+        }
+    }
+    &__intro {
+        @include section-spacing;
+        max-width: 600px;
+        min-height: calc(100vh - $header-height);
+        > .button {
+            margin-top: 20px;
+        }
+
+        @media (min-width: $mobile-width) {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 10rem;
+        }
+    }
+
+    &__features {
+        @include section-spacing;
+        > .heading {
+            padding-bottom: 25px;
+        }
+        margin-bottom: 10rem;
+
+        @media (min-width: $mobile-width) {
+            max-width: 1200px;
+
+        }
+    }
+
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+        width: 100%;
+    }
+}

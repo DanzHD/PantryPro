@@ -1,0 +1,45 @@
+@import "../../../styles/vars";
+
+$header-height: 5rem;
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: $header-height;
+    padding-top: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    z-index: 100;
+    background-color: white;
+    transition: all 200ms ease-in 0s;
+    transform: none;
+
+    &--sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    &__right-items {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        a {
+            font-size: 18px;
+        }
+    }
+
+
+
+    &--hidden {
+        visibility: hidden;
+        transition: all 500ms ease-out 0s;
+        transform: translate(0, -100%);
+    }
+
+
+
+
+
+}

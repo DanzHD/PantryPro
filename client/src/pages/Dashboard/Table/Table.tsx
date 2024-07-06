@@ -1,5 +1,4 @@
 import "./_table.scss"
-import Text from "../../../Components/Text/Text.tsx";
 import SearchBar from "../../../Components/SearchBar/SearchBar.tsx";
 import Select from "../../../Components/SelectInput/Select.tsx";
 import TableSettings from "./TableSettings.tsx";
@@ -8,11 +7,11 @@ import { Food } from "../../../dto/FoodResponse.tsx";
 import {useAuthContext} from "../../../Context/AuthContext/useAuthContext.tsx";
 import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {addFoodForUser, deleteFood, getUserFood} from "../../../api/food.tsx";
-import cx from "classnames";
 import FoodGroups from "../../../enum/foodGroups.tsx";
 import Dropdown, {DropdownMenuOption} from "../../../Components/Dropdown/Dropdown.tsx";
 import TableData from "./TableData.tsx";
 import {FoodRequestDto} from "../../../dto/FoodRequestDto.tsx";
+import Pagination from "../../../Components/Pagination/Pagination.tsx";
 
 
 const ROWS_PER_PAGE = 15
@@ -217,26 +216,17 @@ function Table() {
           </Dropdown>
 
         </div>
-        <div className="pagination">
-          {
-            pageSelected !== 0 &&
-              <div onClick={() => onPageChange(pageSelected - 1)} className="material-symbols-outlined pagination__index">arrow_back</div>
-          }
 
-          {
-            [...Array(Math.ceil(totalFoodCount / ROWS_PER_PAGE)).keys()].map(i => {
-              return (
-                <div key={i} onClick={() => onPageChange(i)} className={cx("pagination__index", {"selected": pageSelected === i})}>
-                  <Text>{i+1}</Text>
-                </div>
-              )
-            })
-          }
-          {
-            pageSelected !== (Math.ceil(totalFoodCount / ROWS_PER_PAGE) - 1) && totalFoodCount !== 0 &&
-              <div onClick={() => onPageChange(pageSelected + 1)} className="material-symbols-outlined pagination__index">chevron_right</div>
-          }
-        </div>
+
+          <Pagination
+            handlePageChange={onPageChange}
+            pageSelected={pageSelected}
+            numberOfPages={Math.ceil(totalFoodCount / ROWS_PER_PAGE)}
+            totalItems={totalFoodCount}
+          />
+
+
+
 
       </div>
 
@@ -248,6 +238,17 @@ function Table() {
         handleSelectDeselectAll={handleSelectDeselectAll}
         selectAllCheckBoxRef={selectAllCheckBoxRef}
       />
+      <div className="table__footer">
+
+        <Pagination
+          handlePageChange={onPageChange}
+          pageSelected={pageSelected}
+          numberOfPages={Math.ceil(totalFoodCount / ROWS_PER_PAGE)}
+          totalItems={totalFoodCount}
+        />
+      </div>
+
+
 
     </div>
   )

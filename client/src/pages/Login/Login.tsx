@@ -2,7 +2,6 @@ import Text from "../../Components/Text/Text.tsx";
 import "./_login.scss"
 import Input from "../../Components/Input/Input.tsx";
 import Button from "../../Components/Button/Button.tsx";
-import GoogleSignInButton from "../../Components/GoogleSignInButton.tsx";
 import {Link, useNavigate} from "react-router-dom";
 import {loginRoute, signupRoute} from "../../App.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
@@ -142,7 +141,6 @@ function Login({
                 "Sign up"
             }
           </Button>
-          <GoogleSignInButton />
           {
             invalidVerificationMessage &&
               <Text danger>{invalidVerificationMessage}</Text>

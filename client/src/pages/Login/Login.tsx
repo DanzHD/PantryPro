@@ -6,7 +6,7 @@ import GoogleSignInButton from "../../Components/GoogleSignInButton.tsx";
 import {Link, useNavigate} from "react-router-dom";
 import {loginRoute, signupRoute} from "../../App.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import APIError from "../../util/APIError.tsx";
 
 
@@ -15,13 +15,28 @@ function Login({
 }: {
   loggingIn?: boolean
 }) {
-  const {loginUser, registerUser} = useAuthContext()
+  const {loginUser, registerUser, getNewAccessToken} = useAuthContext()
   const navigate = useNavigate()
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null)
   const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("")
+  const [checkingLoggedInStatus, setCheckingLoggedInStatus] = useState(true)
 
   const [loading, setLoading] = useState(false)
+
+  /* Check if user is logged in. If logged in redirect the user to the dashboard */
+  useEffect(() => {
+
+    setCheckingLoggedInStatus(true)
+    getNewAccessToken()
+      .then(() => navigate("/dashboard"))
+      .catch(() => {
+        setCheckingLoggedInStatus(false)
+      })
+      
+    
+  }, [getNewAccessToken, navigate]);
+
   const onLogin = async () => {
     try {
       setLoading(true)
@@ -82,6 +97,10 @@ function Login({
     } finally {
       setLoading(false)
     }
+  }
+
+  if (checkingLoggedInStatus) {
+    return <div>Loading...</div>
   }
 
 

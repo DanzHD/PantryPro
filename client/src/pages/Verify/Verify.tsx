@@ -28,9 +28,11 @@ function Verify() {
         if (err instanceof APIError) {
           if (err.statusCode === 409) {
             setAccountAlreadyEnabled(true)
+            return
           }
           if (err.statusCode === 401) {
             setTokenExpired(true)
+            return
           }
         }
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import pantrypro.Server.repository.UserRepository;
 import pantrypro.Server.service.AuthenticationService;
 import pantrypro.Server.service.JwtService;
+import pantrypro.Server.util.AccountEnabledException;
 import pantrypro.Server.util.InvalidTokenException;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
@@ -57,7 +58,14 @@ public class AuthenticationController {
 
     @PostMapping("/register_complete")
     public ResponseEntity<AuthenticationResponse> enableUser(@RequestBody EnableAccountDto enableAccountDto) {
-        return ResponseEntity.ok(service.enableUser(enableAccountDto.getVerificationToken()));
+        try {
+
+            return ResponseEntity.ok(service.enableUser(enableAccountDto.getVerificationToken()));
+        } catch (AccountEnabledException exception) {
+            return new ResponseEntity<AuthenticationResponse>(HttpStatus.CONFLICT);
+        } catch (InvalidTokenException exception) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     /**

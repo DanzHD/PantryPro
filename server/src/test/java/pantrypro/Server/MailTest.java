@@ -13,7 +13,7 @@ public class MailTest {
 
     @Test
     void successful_EmailSend() {
-        emailService.sendMail("pantryprofood@gmail.com", "Test from springboot", "Test");
+        emailService.sendMail("daniel.d.cow@gmail.com", "Test from springboot", "Test");
     }
 
 }

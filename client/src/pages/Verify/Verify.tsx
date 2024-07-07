@@ -46,7 +46,7 @@ function Verify() {
   }
   if (tokenExpired) {
     return <Text danger>Account activation period passed.
-      Please register a new account <Link to={"/signup"}>here</Link>
+      Please register a new account <Link to={"/sign-up"}>here</Link>
     </Text>
   }
 

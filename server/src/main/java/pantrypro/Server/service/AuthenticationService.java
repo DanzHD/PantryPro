@@ -5,11 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import pantrypro.Server.Enums.Role;
+import pantrypro.Server.model.User;
 import pantrypro.Server.dto.AuthenticationRequest;
 import pantrypro.Server.dto.AuthenticationResponse;
 import pantrypro.Server.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
-import pantrypro.Server.model.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,6 +48,7 @@ public class AuthenticationService {
 
                 throw new UserAlreadyExistsException();
             }
+            userRepository.delete(user);
         }
 
         if (!passwordIsValid(request.getPassword())) {
@@ -112,7 +113,7 @@ public class AuthenticationService {
                 request.getPassword()
             )
         );
-        var user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow();
 
         var jwtToken = jwtService.generateAccessToken(user);

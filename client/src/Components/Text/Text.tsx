@@ -9,6 +9,7 @@ function Text({
     italicize,
     danger,
     small,
+    success,
     heading,
     subheading,
     className,
@@ -23,6 +24,7 @@ function Text({
     small?: boolean,
     italicize?: boolean,
     heading?: boolean,
+    success?: boolean,
     subheading?: boolean,
     className?: string,
     centered?: boolean,
@@ -42,7 +44,8 @@ function Text({
         {
             "text--small": small,
             "text--bold": bold,
-            "text--danger": danger
+            "text--danger": danger,
+            "text--success": success
         },
         className
     )

@@ -10,7 +10,8 @@ interface IAuthContext {
   registerUser: (userDetails: {email: string, password: string}) => Promise<boolean>,
   getNewAccessToken: () => Promise<boolean>,
   accessToken: string | null,
-  logout: () => void
+  logout: () => void,
+  enableAccount: (verificationToken: string) => Promise<boolean>
 }
 
 export const AuthContext = createContext<IAuthContext | null>(null)
@@ -91,11 +92,38 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
     setAccessToken(null)
   }
 
+  const enableAccount = async (verificationToken: string) => {
+    try {
+
+      const response = await apiClient.post("/auth/register_complete", {
+        verificationToken: verificationToken
+      })
+      const tokens: TokenResponseData = await response.data
+      const {accessToken, refreshToken} = tokens
+      setAccessToken(accessToken)
+      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
+      return true
+    } catch (err) {
+      if (!(err instanceof AxiosError)) {
+        throw err
+      }
+      if (!err.response) {
+        throw err
+      }
+      if (err.response.status === 409) {
+        throw new APIError("Account has already been activated", err.response.status)
+      }
+
+      throw new Error("Verification token not valid")
+    }
+  }
+
   const authContextValue: IAuthContext = {
     loginUser,
     registerUser,
     getNewAccessToken,
     logout,
+    enableAccount,
     accessToken
   }
 

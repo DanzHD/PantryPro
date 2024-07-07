@@ -150,7 +150,7 @@ public class AuthenticationControllerTest {
 
     @Test
     void register_Ok_ValidUserRegistration() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest("test@gmail.com", "Abc@20dwax");
+        RegisterRequest registerRequest = new RegisterRequest("pantryprofood@gmail.com", "Abc@20dwax");
 
         RequestBuilder request = MockMvcRequestBuilders.post("/api/v1/auth/register")
             .content(objectMapper.writeValueAsString(registerRequest))

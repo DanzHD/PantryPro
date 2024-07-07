@@ -20,6 +20,7 @@ function Login({
   const passwordRef = useRef<HTMLInputElement>(null)
   const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("")
   const [checkingLoggedInStatus, setCheckingLoggedInStatus] = useState(true)
+  const [signUpSuccessful, setSignUpSuccessFul] = useState(false)
 
   const [loading, setLoading] = useState(false)
 
@@ -70,14 +71,15 @@ function Login({
       const success = await registerUser({email: email, password: password})
 
       if (success) {
-        navigate("/dashboard")
+        setSignUpSuccessFul(true)
+        setInvalidVerificationMessage("")
       }
 
     } catch (error) {
       if (error instanceof APIError){
 
         if (error.statusCode === 409) {
-          setInvalidVerificationMessage("Registration failed: emailed already in use")
+          setInvalidVerificationMessage("Registration failed: email already in use")
         } else if (error.statusCode === 422) {
           setInvalidVerificationMessage("Password is too weak. " +
             "Password length must be between 8 and 20 characters \n" +
@@ -87,8 +89,10 @@ function Login({
             "Have no spaces"
           )
         } else {
+          setSignUpSuccessFul(false)
           setInvalidVerificationMessage("Something went wrong... Please try again later")
         }
+        setSignUpSuccessFul(false)
 
       }
 
@@ -97,10 +101,15 @@ function Login({
       setLoading(false)
     }
   }
+  function handleSignupLoginChange() {
+    setInvalidVerificationMessage("")
+    setSignUpSuccessFul(false)
+  }
 
   if (checkingLoggedInStatus) {
     return <div>Loading...</div>
   }
+
 
 
   return (
@@ -146,10 +155,14 @@ function Login({
               <Text danger>{invalidVerificationMessage}</Text>
           }
           {
+            signUpSuccessful &&
+              <Text success>Signup successful. Check your email to activate your account</Text>
+          }
+          {
             loggingIn ?
-              <Text centered>Don't have an account? <Link onClick={() => setInvalidVerificationMessage("")} to={signupRoute} >Sign Up</Link></Text>
+              <Text centered>Don't have an account? <Link onClick={handleSignupLoginChange} to={signupRoute} >Sign Up</Link></Text>
               :
-              <Text centered>Already have an account? <Link onClick={() => setInvalidVerificationMessage("")} to={loginRoute}>Login </Link></Text>
+              <Text centered>Already have an account? <Link onClick={handleSignupLoginChange} to={loginRoute}>Login </Link></Text>
           }
 
         </div>

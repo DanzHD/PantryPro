@@ -5,11 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import pantrypro.Server.Enums.Role;
+import pantrypro.Server.model.User;
 import pantrypro.Server.dto.AuthenticationRequest;
 import pantrypro.Server.dto.AuthenticationResponse;
 import pantrypro.Server.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
-import pantrypro.Server.model.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +32,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     /**
      * Registers a new user into the database and returns an access token if registration is successful
@@ -44,10 +45,11 @@ public class AuthenticationService {
             /* Check if account has been activated, if not register new account  */
             User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-            if (user.isEnabled()) {
+            if (user.isEnabled() || !jwtService.isTokenExpired(user.getVerificationToken())) {
 
                 throw new UserAlreadyExistsException();
             }
+            userRepository.delete(user);
         }
 
         if (!passwordIsValid(request.getPassword())) {
@@ -66,10 +68,19 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        System.out.println("Verification token: " + verificationToken);
+        emailService.sendMail(request.getEmail(),
+            "PantryPro - Activate Account",
+            "Dear PantryPro user,\n\n" +
+                "We have received a request to activate your pantrypro account. " +
+                "Click on the following link to activate your account:\n\n" +
+                "http://localhost:5173/verify/?token=" + verificationToken +
+                "\n\n" +
+                "Sincerely, \n\n" +
+                "PantryPro"
+        );
+
 
         return HttpStatus.ACCEPTED;
-
 
     }
 
@@ -83,6 +94,7 @@ public class AuthenticationService {
         if (user.isEnabled()) {
             throw new AccountEnabledException();
         }
+
 
         user.setEnabled(true);
 
@@ -112,7 +124,7 @@ public class AuthenticationService {
                 request.getPassword()
             )
         );
-        var user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow();
 
         var jwtToken = jwtService.generateAccessToken(user);
@@ -181,8 +193,9 @@ public class AuthenticationService {
 
         throw new InvalidTokenException();
 
-
     }
+
+
 
 
 

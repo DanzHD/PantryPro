@@ -89,9 +89,9 @@ function Login({
             "Have no spaces"
           )
         } else {
-          setSignUpSuccessFul(false)
           setInvalidVerificationMessage("Something went wrong... Please try again later")
         }
+
         setSignUpSuccessFul(false)
 
       }

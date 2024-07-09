@@ -59,7 +59,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
         }
 
       }
-      return false
+      throw new APIError("Something went wrong...", 400)
 
 
     }

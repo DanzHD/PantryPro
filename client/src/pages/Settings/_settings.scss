@@ -1,0 +1,73 @@
+@import "../../styles/vars";
+
+.settings {
+
+    &-body {
+
+        &__content {
+            box-shadow: 0 0 10px lightgray;
+            background-color: white;
+        }
+    }
+
+    &__item {
+        display: flex;
+        box-shadow: 0 0 2px lightgray;
+        padding: 1rem;
+        justify-content: space-between;
+    }
+
+    &__save {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+@media (min-width: $mobile-width) {
+
+    .settings {
+        background-color: lightgray;
+        min-height: 100vh;
+
+
+        &-body {
+            padding-left: 5rem;
+            padding-right: 5rem;
+            margin-top: -5rem;
+
+
+            &__content {
+
+                min-height: 30rem;
+                padding-left: 5rem;
+                padding-right: 5rem;
+
+
+            }
+        }
+
+        &-title {
+            padding: 10px;
+        }
+
+        &__item {
+            min-width: 20rem;
+
+        }
+
+
+    }
+}
+
+@media (max-width: $mobile-width) {
+    .settings {
+        &-body {
+            padding-left: 0;
+            padding-right: 0;
+            margin-top: -3rem;
+        }
+
+
+    }
+
+}

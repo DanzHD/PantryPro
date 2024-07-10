@@ -12,7 +12,8 @@ function Button({
     onClick,
     id,
     small,
-    disabled
+    disabled,
+    centered
 
 }: {
     children?: React.ReactNode,
@@ -23,7 +24,8 @@ function Button({
     disabled?: boolean,
     id?: string,
     small?: boolean,
-    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void,
+    centered?: boolean
 
 
 }) {
@@ -35,7 +37,8 @@ function Button({
             "button--danger": danger,
             "button--dynamic-width": dynamicWidth,
             "button--full-width": fullWidth,
-            "button--disabled": disabled
+            "button--disabled": disabled,
+            "button--centered": centered
         },
         classNames
     )

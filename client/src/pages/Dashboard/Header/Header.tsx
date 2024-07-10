@@ -2,13 +2,21 @@ import "./_header.scss"
 import Text from "../../../Components/Text/Text.tsx";
 import useModal from "../../../hooks/useModal/useModal.tsx";
 import {useRef} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import cx from "classnames";
 import {useAuthContext} from "../../../Context/AuthContext/useAuthContext.tsx";
+import {dashboardRoute, settingsRoute} from "../../../App.tsx";
+import {Page} from "../../../enum/Pages.tsx";
 
-function Header() {
+
+function Header({
+  pageSelected
+}: {
+  pageSelected: Page
+}) {
   const logoutMenuContainerRef = useRef<HTMLDivElement>(null)
   const modalContainer = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
 
   const mobileHamburgerMenuRef = useRef<HTMLDivElement>(null)
   const {open: logoutContainerOpen} = useModal(logoutMenuContainerRef)
@@ -19,9 +27,9 @@ function Header() {
     <div className="app__header">
       <div className="left-links ">
         <Text className="app__header__text " heading>PantryPro </Text>
-        <HeaderLink logo='database' name="Database" link='/dashboard' selected />
-        <HeaderLink name="Meal Scheduler" logo="schedule" link="/" />
-        <HeaderLink name="Setting" logo="settings" link="/" />
+        <HeaderLink logo='database' name="Database" link='/dashboard' selected={pageSelected === Page.DATABASE} />
+        <HeaderLink name="Meal Scheduler" logo="schedule" link="/" selected={pageSelected === Page.MEAL} />
+        <HeaderLink name="Settings" logo="settings" link={settingsRoute} selected={pageSelected === Page.SETTINGS} />
       </div>
 
       <div className="right-links" >
@@ -57,16 +65,23 @@ function Header() {
           <div className="line-horizontal" />
         </div>
         <div className="mobile-menu__items">
-          <div className="selected">
+          <div onClick={() => navigate(dashboardRoute)} className={cx({
+            "selected": pageSelected === Page.DATABASE
+          })}>
             <span className="material-symbols-outlined se">Database</span>
             <div>Database</div>
 
           </div>
-          <div>
+          <div className={cx({
+              "selected": pageSelected === Page.MEAL
+            })}>
             <span className="material-symbols-outlined">schedule</span>
             <div>Meal Scheduler</div>
           </div>
-          <div>
+
+          <div onClick={() => navigate(settingsRoute)} className={cx({
+            "selected": pageSelected === Page.SETTINGS
+          })}>
             <span className="material-symbols-outlined">settings</span>
             <div>Settings</div>
           </div>

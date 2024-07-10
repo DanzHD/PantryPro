@@ -60,6 +60,7 @@ public class AuthenticationService {
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
             .enabled(false)
+            .allowEmailNotifications(true)
             .role(Role.USER)
             .build();
 
@@ -68,16 +69,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        emailService.sendMail(request.getEmail(),
-            "PantryPro - Activate Account",
-            "Dear PantryPro user,\n\n" +
-                "We have received a request to activate your pantrypro account. " +
-                "Click on the following link to activate your account:\n\n" +
-                "http://localhost:5173/verify/?token=" + verificationToken +
-                "\n\n" +
-                "Sincerely, \n\n" +
-                "PantryPro"
-        );
+        emailService.sendEnableUserEmail(user, verificationToken);
 
 
         return HttpStatus.ACCEPTED;
@@ -88,7 +80,8 @@ public class AuthenticationService {
         String userEmail = jwtService.extractUsername(verificationToken);
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow();
-        if (!jwtService.isTokenValid(verificationToken, user)) {
+        if (!jwtService.isTokenValid(verificationToken, user)
+        ) {
             throw new InvalidTokenException();
         }
         if (user.isEnabled()) {

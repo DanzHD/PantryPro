@@ -41,7 +41,6 @@ export async function addFoodForUser({ foods, token }: { foods: FoodRequestDto[]
 
   }
 
-  console.log(foods)
   await apiClient.post(`/food/me`, foods, {
     headers: {
       Authorization: `Bearer ${token}`

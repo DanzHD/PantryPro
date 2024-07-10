@@ -1,5 +1,6 @@
 package pantrypro.Server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import pantrypro.Server.Enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +35,10 @@ public class User implements UserDetails {
     private boolean enabled = false;
 
     private String verificationToken;
+
+
+    private boolean allowEmailNotifications;
+
 
 
     @Override

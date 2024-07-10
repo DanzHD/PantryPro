@@ -67,6 +67,9 @@ public class EmailService {
         if (foods.isEmpty()) {
             return;
         }
+        if (!user.isAllowEmailNotifications()) {
+            return;
+        }
 
         String emailSubject = "Food expiry Alert";
         String emailBody = "";
@@ -91,6 +94,19 @@ public class EmailService {
         }
 
         return foodExpiryList.toString();
+    }
+
+    public void sendEnableUserEmail(User user, String verificationToken) {
+        sendMail(user.getEmail(),
+            "PantryPro - Activate Account",
+            "Dear PantryPro user,\n\n" +
+                "We have received a request to activate your pantrypro account. " +
+                "Click on the following link to activate your account:\n\n" +
+                "http://localhost:5173/verify/?token=" + verificationToken +
+                "\n\n" +
+                "Sincerely, \n\n" +
+                "PantryPro"
+        );
     }
 
 

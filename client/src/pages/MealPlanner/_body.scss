@@ -1,0 +1,18 @@
+.day-meal {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 0 2px lightgray;
+    flex: 1;
+
+    > .meal {
+        flex-grow: 1;
+        height: 5rem;
+    }
+}
+
+.weekly-meals__section {
+    padding-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}

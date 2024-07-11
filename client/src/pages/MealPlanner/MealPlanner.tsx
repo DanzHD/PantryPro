@@ -1,10 +1,16 @@
 import Header from "../Dashboard/Header/Header.tsx";
 import {Page} from "../../enum/Pages.tsx";
+import Body from "./Body.tsx";
+import "./_mealPlanner.scss"
 
 function MealPlanner() {
 
   return <>
-    <Header pageSelected={Page.MEAL} />
+    <div className="meal-planner">
+
+      <Header pageSelected={Page.MEAL} />
+      <Body />
+    </div>
   </>
 }
 

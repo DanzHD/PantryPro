@@ -2,6 +2,8 @@ import Text from "../../Components/Text/Text.tsx";
 import Input from "../../Components/Input/Input.tsx";
 import "./_body.scss"
 import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
+import useModal from "../../hooks/useModal/useModal.tsx";
+import {useRef} from "react";
 
 
 function Body() {
@@ -16,7 +18,7 @@ function Body() {
             <Text heading centered>Meal Planner</Text>
             <Input type="date" />
           </div>
-          <div className="weekly-meals__section">
+          <div className="weekly-meals-section">
             <MealsDay day={DaysOfTheWeek.MONDAY} />
             <MealsDay day={DaysOfTheWeek.TUESDAY} />
             <MealsDay day={DaysOfTheWeek.WEDNESDAY} />
@@ -24,7 +26,6 @@ function Body() {
             <MealsDay day={DaysOfTheWeek.FRIDAY} />
             <MealsDay day={DaysOfTheWeek.SATURDAY} />
             <MealsDay day={DaysOfTheWeek.SUNDAY} />
-
 
           </div>
         </div>
@@ -44,10 +45,29 @@ function MealsDay({
 }: {
   day: DaysOfTheWeek
 }) {
+  const openMealActionsRef = useRef<HTMLDivElement>(null)
+  const {open} = useModal(openMealActionsRef)
 
   return <>
     <div className="day-meal">
-      <Text subheading centered>{day}</Text>
+      <div className="day-meal__title">
+
+        <Text subheading centered>{day}</Text>
+        <span ref={openMealActionsRef} className="material-symbols-outlined">
+          more_vert
+        </span>
+        <div className="menu-container">
+          {
+            open &&
+              <ul className="menu-meal">
+                <li>
+                  <span className="material-symbols-outlined">add</span>
+                  <Text>Add Meal</Text>
+                </li>
+              </ul>
+          }
+        </div>
+      </div>
       <div className="meal">
         Break
       </div>

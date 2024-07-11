@@ -1,15 +1,23 @@
 import "./_switch.scss"
 import cx from "classnames";
+import {forwardRef} from "react";
 
-function Switch({
+interface Content {
+  checked?: boolean,
+  small?: boolean,
+  name?: string
+}
+
+const Switch = forwardRef<HTMLInputElement, Content>(function({
   checked,
   small,
-  name
+  name,
 }: {
   checked?: boolean,
   small?: boolean,
   name?: string
-}) {
+}, ref) {
+
 
   const computedClasses = cx(
     "switch",
@@ -18,12 +26,13 @@ function Switch({
     }
   )
 
+
   return <>
     <label className={computedClasses}>
-      <input name={name} type="checkbox" defaultChecked={checked}/>
+      <input ref={ref} name={name} type="checkbox" defaultChecked={checked}/>
       <span className="slider round"></span>
     </label>
   </>
-}
+})
 
 export default Switch

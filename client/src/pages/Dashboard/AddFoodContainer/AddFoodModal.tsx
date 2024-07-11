@@ -37,7 +37,6 @@ function AddFoodModal({
     if (!addFormRef.current) {
       return
     }
-    console.log(addFormRef.current)
     addFormRef.current.foodName.value = ""
     addFormRef.current.expiryDate.value = ""
   }

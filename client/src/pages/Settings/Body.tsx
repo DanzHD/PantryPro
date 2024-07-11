@@ -2,14 +2,15 @@ import "./_settings.scss"
 import Text from "../../Components/Text/Text.tsx";
 import Switch from "../../Components/Switch/Switch.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useEffect, useRef, useState} from "react";
 import {getLoggedInUser, updateUserSettings} from "../../api/user.tsx";
 import Button from "../../Components/Button/Button.tsx";
 import {UpdateSettingsDto} from "../../dto/UpdateSettingsDto.tsx";
 import {toast} from "react-toastify";
 
 function Body() {
-  const [emailAlertsAllowed, setEmailAlertsAllowed] = useState(false)
+  const emailSwitchRef = useRef<HTMLInputElement>(null)
+  const [loading, setLoading] = useState(false)
 
   const {accessToken} = useAuthContext()
 
@@ -17,12 +18,19 @@ function Body() {
     if (!accessToken) {
       return
     }
-
+    /* Getting the users current settings */
+    setLoading(true)
     getLoggedInUser({token: accessToken})
       .then(({allowEmailNotifications}) => {
-        setEmailAlertsAllowed(allowEmailNotifications)
+        if (emailSwitchRef.current) {
+
+          emailSwitchRef.current.checked = allowEmailNotifications
+        }
       })
+    setLoading(false)
   }, [accessToken]);
+
+
 
   function handleUpdateSettings(e: FormEvent) {
     e.preventDefault();
@@ -35,12 +43,17 @@ function Body() {
       })
   }
 
+  if (loading) {
+    return <Text>Loading</Text>
+  }
 
   return <div className="settings-body">
     <div className="settings-body__content">
       <div className="settings-title">
         <Text heading centered>Settings</Text>
       </div>
+
+
       <form onSubmit={handleUpdateSettings}>
 
         <div className="settings__list">
@@ -52,7 +65,7 @@ function Body() {
             </div>
             <div className="settings__switch">
 
-              <Switch name="emailAlertSetting" small checked={emailAlertsAllowed} />
+              <Switch ref={emailSwitchRef} name="emailAlertSetting" small />
             </div>
           </div>
         </div>

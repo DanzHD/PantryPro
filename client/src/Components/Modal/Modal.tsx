@@ -2,6 +2,7 @@ import {ReactNode, Ref} from "react";
 import "./_modal.scss"
 import cx from "classnames";
 
+
 function Modal({
   children,
   modalRef,

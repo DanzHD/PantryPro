@@ -11,12 +11,14 @@ import Verify from "./pages/Verify/Verify.tsx";
 import Settings from "./pages/Settings/Settings.tsx";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import MealPlanner from "./pages/MealPlanner/MealPlanner.tsx";
 
 export const loginRoute: string = "/login"
 export const signupRoute: string = "/sign-up"
 export const dashboardRoute: string = "/dashboard"
 const verifyRoute: string = "/verify"
 export const settingsRoute: string = "/settings"
+export const mealRoute: string = "/meal"
 
 function App() {
 
@@ -32,11 +34,13 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<Dashboard />} path={dashboardRoute} />
               <Route element={<Settings />} path={settingsRoute} />
+              <Route element={<MealPlanner />} path={mealRoute} />
             </Route>
             <Route element={<Login loggingIn />} path={loginRoute} />
             <Route element={<Login />} path={signupRoute} />
             <Route element={<Verify />} path={verifyRoute} />
             <Route errorElement={<Home />} element={<Home /> } path={"/"} />
+
 
           </Routes>
         </Router>

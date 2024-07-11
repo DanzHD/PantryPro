@@ -11,6 +11,7 @@ import {toast} from "react-toastify";
 function Body() {
   const emailSwitchRef = useRef<HTMLInputElement>(null)
   const [loading, setLoading] = useState(false)
+  const [errorFetchingSettings, setErrorFetchingSettings] = useState(false)
 
   const {accessToken} = useAuthContext()
 
@@ -27,7 +28,13 @@ function Body() {
           emailSwitchRef.current.checked = allowEmailNotifications
         }
       })
-    setLoading(false)
+      .catch(() => {
+        setErrorFetchingSettings(true)
+      })
+      .finally(() => {
+
+      setLoading(false)
+    })
   }, [accessToken]);
 
 
@@ -44,7 +51,10 @@ function Body() {
   }
 
   if (loading) {
-    return <Text>Loading</Text>
+    return <Text centered heading bold>Loading Settings...</Text>
+  }
+  if (errorFetchingSettings) {
+    return <Text heading bold centered>Error: Something went wrong... Please try again later</Text>
   }
 
   return <div className="settings-body">

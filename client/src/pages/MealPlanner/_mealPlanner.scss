@@ -83,3 +83,18 @@
         }
     }
 }
+
+@media (max-height: $mobile-width) {
+    .meal-planner {
+
+        &__body {
+            padding-right: 0;
+            padding-left: 0;
+
+            &__content {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+    }
+}

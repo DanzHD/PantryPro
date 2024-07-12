@@ -5,8 +5,9 @@ import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
 import useModal from "../../hooks/useModal/useModal.tsx";
 import {useRef, useState} from "react";
 import AddRecipeModal from "./AddRecipeModal.tsx";
+import {Item} from "../../Components/SearchBar/SearchBar.tsx";
 
-export class Recipe {
+export class Recipe implements Item {
   id: number
   name: string
   ingredients: string[]
@@ -24,10 +25,20 @@ export class Recipe {
 }
 
 function Body() {
-  const [recipes, setRecipes] = useState(new Map<DaysOfTheWeek, Recipe[]>())
+  const [recipes, setRecipes] = useState(new Map<DaysOfTheWeek, Recipe[]>([
+    [DaysOfTheWeek.MONDAY, []],
+    [DaysOfTheWeek.TUESDAY, []],
+    [DaysOfTheWeek.WEDNESDAY, []],
+    [DaysOfTheWeek.THURSDAY, []],
+    [DaysOfTheWeek.FRIDAY, []],
+    [DaysOfTheWeek.SATURDAY, []],
+    [DaysOfTheWeek.SUNDAY, []]
+  ]))
   const [addRecipeForDay, setAddRecipeForDay] = useState<DaysOfTheWeek>(DaysOfTheWeek.MONDAY)
 
   const addRecipeModalRef = useRef(null)
+
+
 
   function handleOpenAddRecipeModal(day: DaysOfTheWeek) {
     if (!addRecipeModalRef.current) {
@@ -51,20 +62,25 @@ function Body() {
             <Input type="date" />
           </div>
           <div className="weekly-meals-section">
-            <MealsDay day={DaysOfTheWeek.MONDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
-            <MealsDay day={DaysOfTheWeek.TUESDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
-            <MealsDay day={DaysOfTheWeek.WEDNESDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
-            <MealsDay day={DaysOfTheWeek.THURSDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
-            <MealsDay day={DaysOfTheWeek.FRIDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
-            <MealsDay day={DaysOfTheWeek.SATURDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
-            <MealsDay day={DaysOfTheWeek.SUNDAY} handleOpenAddRecipeModal={handleOpenAddRecipeModal} />
+            {
+              Object.values(DaysOfTheWeek).map(day => {
+                return <MealsDay
+                  key={day}
+                  day={day}
+                  meals={recipes.get(day)}
+                  handleOpenAddRecipeModal={handleOpenAddRecipeModal}
+                />
+              })
+            }
+
+
 
           </div>
         </div>
 
       </div>
 
-      <AddRecipeModal day={addRecipeForDay} currentRecipes={recipes} setCurrentRecipe={setRecipes} modalRef={addRecipeModalRef} />
+      <AddRecipeModal date={new Date()}  day={addRecipeForDay} currentRecipes={recipes} setCurrentRecipes={setRecipes} modalRef={addRecipeModalRef} />
 
     </>
   )
@@ -77,11 +93,11 @@ function Body() {
  */
 function MealsDay({
   day,
-  recipes,
+  meals,
   handleOpenAddRecipeModal
 }: {
   day: DaysOfTheWeek,
-  meals?: Recipe[],
+  meals: Recipe[] | undefined,
   handleOpenAddRecipeModal: ((day: DaysOfTheWeek) => void)
 }) {
   const openMealActionsRef = useRef<HTMLDivElement>(null)
@@ -109,6 +125,18 @@ function MealsDay({
           }
         </div>
       </div>
+      {
+        meals &&
+          meals.map(meal => {
+            return <div key={meal.id} className="meal">
+              <div>
+
+                <Text ellipsis bold subheading>{meal.name}</Text>
+              </div>
+              <img src={meal.image ? meal.image : ""} alt={meal.name}/>
+            </div>
+          })
+      }
 
     </div>
 

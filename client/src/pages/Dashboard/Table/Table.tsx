@@ -133,23 +133,19 @@ function Table() {
     
   }
 
-  let filterFoodSearchTimeout: ReturnType<typeof setTimeout>
   /**
    * Filters the food data based on the search query
    */
-  function handleFoodSearch(event: ChangeEvent<HTMLInputElement>) {
+  async function handleFoodSearch(event: ChangeEvent<HTMLInputElement>) {
     try {
-      clearTimeout(filterFoodSearchTimeout)
+      setFoodSearch(event.target.value)
+      await queryFoodData({
+        pageNumber: 0,
+        foodGroup: foodGroupFilter,
+        foodSearchName: event.target.value,
+        accessToken: accessToken
+      })
 
-      filterFoodSearchTimeout = setTimeout(async () => {
-        setFoodSearch(event.target.value)
-        await queryFoodData({
-          pageNumber: 0,
-          foodGroup: foodGroupFilter,
-          foodSearchName: event.target.value,
-          accessToken: accessToken
-        })
-      }, 500)
 
     } catch (err) {
       console.error(err)

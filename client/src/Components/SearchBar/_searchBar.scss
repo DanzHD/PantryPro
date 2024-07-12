@@ -6,6 +6,36 @@
     width: 10rem;
     -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+
+    &--full-width {
+        width: 100%;
+    }
+
+    &-dropdown {
+        width: 10rem;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        padding-top: 5px;
+        padding-bottom: 5px;
+        max-height: 10rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-width: 100%;
+
+        &--full-width {
+            width: 100%;
+        }
+
+    }
+
+}
+
+.dropdown-search-item {
+    padding: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: lightgray;
+    }
 }
 
 .search-bar:focus {

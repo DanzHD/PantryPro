@@ -4,7 +4,7 @@ import { RefObject, useEffect, useState} from "react";
  *
  * Returns a open boolean for whether the modal should be opened or closed.
  */
-function useModal(openModalDiv: RefObject<HTMLDivElement>) {
+function useModal(openModalDiv: RefObject<HTMLElement>) {
 
   const [open, setOpen] = useState(false)
 
@@ -29,7 +29,7 @@ function useModal(openModalDiv: RefObject<HTMLDivElement>) {
 
   }, [openModalDiv]);
 
-  return { open }
+  return { open, setOpen }
 
 }
 

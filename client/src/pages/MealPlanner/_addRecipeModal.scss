@@ -1,0 +1,14 @@
+@import "../../styles/vars";
+
+.add-recipe-modal {
+
+    .material-symbols-outlined {
+        cursor: pointer;
+    }
+
+    > .add-recipe__header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+}

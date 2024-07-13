@@ -1,12 +1,14 @@
 package pantrypro.Server.service;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.dto.AddRecipeDto;
 import pantrypro.Server.dto.IngredientDto;
 import pantrypro.Server.dto.RecipeDto;
+import pantrypro.Server.dto.RemoveScheduledMealDto;
 import pantrypro.Server.model.Ingredient;
 import pantrypro.Server.model.MealSchedule;
 import pantrypro.Server.model.Recipe;
@@ -154,6 +156,23 @@ public class MealPlanningService {
             .orElseThrow();
 
 
+    }
+
+    /**
+     *
+     * Removes a scheduled meal from a date based on removeScheduledMealDto
+     */
+    @Transactional
+    public void removeScheduledMeal(RemoveScheduledMealDto removeScheduledMealDto) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        MealSchedule schedule = mealScheduleRepository.findMealScheduleByDateAndUser(removeScheduledMealDto.getDate(), user)
+            .orElseThrow();
+        List<Recipe> scheduledRecipes = schedule.getRecipes();
+        scheduledRecipes.removeIf(recipe -> recipe.getId() == removeScheduledMealDto.getRecipeId());
+        mealScheduleRepository.save(schedule);
     }
 
 }

@@ -14,5 +14,5 @@ public interface MealScheduleRepository extends JpaRepository<pantrypro.Server.m
 
     Optional<MealSchedule> findMealScheduleByDateAndUser(Date date, User user);
 
-
+    void deleteByDateAndUserAndRecipesContaining(Date date, User user, Recipe recipe);
 }

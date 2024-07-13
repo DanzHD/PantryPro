@@ -37,9 +37,6 @@ public class MealPlanningController {
 
     }
 
-
-
-
     @GetMapping("/week")
     public ResponseEntity<WeekRecipeResponse> getScheduledRecipes(@RequestParam int week, @RequestParam int year) {
         // Todo write up code to get a week of meals
@@ -52,11 +49,16 @@ public class MealPlanningController {
      * Removes a scheduled meal for a user
      *
      */
-    @DeleteMapping
+    @DeleteMapping("/me")
     public ResponseEntity<HttpStatus> removeMeal(@RequestBody RemoveScheduledMealDto removeScheduledMealDto) {
-        // Todo write up code to remove a user's meal from a date
+        try {
+            mealPlanningService.removeScheduledMeal(removeScheduledMealDto);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 

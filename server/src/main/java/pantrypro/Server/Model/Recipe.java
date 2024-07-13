@@ -18,6 +18,8 @@ public class Recipe {
     @Id
     private long id;
 
+
+    @Column(columnDefinition = "TEXT")
     private String instructions;
     private String imageSource;
 

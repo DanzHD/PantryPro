@@ -104,7 +104,13 @@ function Body() {
 
       </div>
 
-      <AddRecipeModal week={selectedWeek}  day={addRecipeForDay} currentRecipes={recipes} setCurrentRecipes={setRecipes} modalRef={addRecipeModalRef} />
+      <AddRecipeModal
+        week={selectedWeek}
+        day={addRecipeForDay}
+        currentRecipes={recipes}
+        setCurrentRecipes={setRecipes}
+        modalRef={addRecipeModalRef}
+      />
 
     </>
   )

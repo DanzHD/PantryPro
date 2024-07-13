@@ -5,7 +5,11 @@ import Modal from "../../Components/Modal/Modal.tsx";
 import Text from "../../Components/Text/Text.tsx";
 import "./_addRecipeModal.scss"
 import SearchBar, {Item} from "../../Components/SearchBar/SearchBar.tsx";
-import {getMeal} from "../../api/meal.tsx";
+import {getMeal, scheduleNewMeals} from "../../api/meal.tsx";
+import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
+import moment from "moment";
+import {ScheduleMealsDto} from "../../dto/ScheduleMealsDto.tsx";
+import {RecipeDto} from "../../dto/RecipeDto.tsx";
 
 function AddRecipeModal({
   day,
@@ -14,13 +18,16 @@ function AddRecipeModal({
   modalRef,
   week
 
+
 }: {
   day: DaysOfTheWeek,
   currentRecipes: Map<DaysOfTheWeek, Map<number, Recipe>>,
   setCurrentRecipes: React.Dispatch<React.SetStateAction<Map<DaysOfTheWeek, Map<number, Recipe>>>>,
   modalRef: RefObject<HTMLDialogElement>,
   week: string
+
 }) {
+  const {accessToken} = useAuthContext();
 
   const [recipesQueried, setRecipesQueried] = useState<Recipe[]>([])
   const [selectedRecipes, setSelectedRecipes] = useState<Map<number, Recipe>>(new Map<number, Recipe>())
@@ -46,7 +53,8 @@ function AddRecipeModal({
 
       const ingredients: string[] = []
       for (let i = 1; i <= 20; i++) {
-        const ingredient: string | null = meal[`strIngredient${i.toString()}`]
+
+        const ingredient: string | null  = meal[`strIngredient${i.toString()}`]
         if (ingredient) {
           ingredients.push(ingredient)
         }
@@ -77,14 +85,34 @@ function AddRecipeModal({
   /**
    * Event handler when the user clicks the done button to finish off adding items
    */
-  function handleFinishAddingFood() {
+  async function handleFinishAddingFood() {
     const newMeals: Map<DaysOfTheWeek, Map<number, Recipe>> = new Map(currentRecipes)
     const mealsOnDay: Map<number, Recipe> = newMeals.get(day) as Map<number, Recipe>
     newMeals.set(day, new Map([...Array.from(mealsOnDay.entries()), ...selectedRecipes]))
 
     setCurrentRecipes(newMeals)
-    handleCloseModal()
 
+    handleCloseModal()
+    await saveNewScheduledMeals();
+
+
+  }
+
+  /**
+   * Gets all the selected meals and saves it to the database on the date specified
+   */
+  async function saveNewScheduledMeals() {
+    const [year, weekInYear] = week.split("-W")
+    const date = moment(`${year}W${weekInYear}`).format("YYYY-MM-DD")
+    const recipeDto: RecipeDto[] = []
+    Array.from(selectedRecipes.values()).forEach(recipe => {
+      recipeDto.push(new RecipeDto(recipe.id, recipe.ingredients, recipe.instructions, recipe.image))
+    })
+
+
+    const scheduleMealsDto = new ScheduleMealsDto(date, recipeDto)
+
+    await scheduleNewMeals({ accessToken, scheduleMealsDto })
   }
 
   return <>

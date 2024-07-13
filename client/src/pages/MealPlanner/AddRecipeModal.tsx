@@ -103,14 +103,20 @@ function AddRecipeModal({
    */
   async function saveNewScheduledMeals() {
     const [year, weekInYear] = week.split("-W")
-    const date = moment(`${year}W${weekInYear}`).format("YYYY-MM-DD")
+
+    /* Week starts on Sunday in momentJs, add seven to fix up Sunday */
+    let date = moment(`${year}W${weekInYear}`).day(day)
+    if (day === DaysOfTheWeek.SUNDAY) {
+      date = date.add("7", 'days')
+    }
+    const strDate: string = date.format("YYYY-MM-DD")
     const recipeDto: RecipeDto[] = []
     Array.from(selectedRecipes.values()).forEach(recipe => {
       recipeDto.push(new RecipeDto(recipe.id, recipe.ingredients, recipe.instructions, recipe.image))
     })
 
 
-    const scheduleMealsDto = new ScheduleMealsDto(date, recipeDto)
+    const scheduleMealsDto = new ScheduleMealsDto(strDate, recipeDto)
 
     await scheduleNewMeals({ accessToken, scheduleMealsDto })
   }

@@ -2,6 +2,7 @@ import {apiClient, mealClient} from "./client.tsx";
 import {MealsResponse} from "../dto/MealResponse.tsx";
 import {ScheduleMealsDto} from "../dto/ScheduleMealsDto.tsx";
 import APIError from "../util/APIError.tsx";
+import {DeleteScheduledMealDto} from "../dto/DeleteScheduledMealDto.tsx";
 
 
 
@@ -24,7 +25,6 @@ export async function scheduleNewMeals({ scheduleMealsDto, accessToken }: {sched
     throw new APIError("Invalid access token", 403);
   }
 
-  console.log(scheduleMealsDto)
 
   await apiClient.post("/meal", {
     recipes: scheduleMealsDto.recipes,
@@ -36,5 +36,23 @@ export async function scheduleNewMeals({ scheduleMealsDto, accessToken }: {sched
     }
   })
 
+
+}
+
+export async function deleteScheduledMeal({ accessToken, deleteScheduledMealDto }
+  : { accessToken: string | null, deleteScheduledMealDto: DeleteScheduledMealDto}) {
+  if (!accessToken) {
+    return
+  }
+
+  await apiClient.delete("/meal/me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: {
+      ...deleteScheduledMealDto
+
+    }
+  })
 
 }

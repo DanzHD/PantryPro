@@ -7,6 +7,10 @@ import React, {useRef, useState} from "react";
 import AddRecipeModal from "./AddRecipeModal.tsx";
 import {Item} from "../../Components/SearchBar/SearchBar.tsx";
 import {getDateWeek} from "../../util/date.tsx";
+import moment from "moment";
+import {deleteScheduledMeal} from "../../api/meal.tsx";
+import {DeleteScheduledMealDto} from "../../dto/DeleteScheduledMealDto.tsx";
+import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 
 export class Recipe implements Item {
   id: number
@@ -29,6 +33,8 @@ export class Recipe implements Item {
 
 
 function Body() {
+  const { accessToken } = useAuthContext()
+
   const [recipes, setRecipes] = useState(new Map<DaysOfTheWeek, Map<number, Recipe>>([
     [DaysOfTheWeek.MONDAY, new Map()],
     [DaysOfTheWeek.TUESDAY, new Map()],
@@ -62,11 +68,24 @@ function Body() {
    *
    * Removes a recipe for the newRecipes state variable based on the day and recipeId
    */
-  function handleRemoveRecipe(day: DaysOfTheWeek, recipeId: number) {
+  async function handleRemoveRecipe(day: DaysOfTheWeek, recipeId: number) {
     const newRecipes = new Map<DaysOfTheWeek, Map<number, Recipe>>(recipes)
     const recipesOnDay = newRecipes.get(day) as Map<number, Recipe>
     recipesOnDay.delete(recipeId)
     setRecipes(newRecipes)
+
+    const [year, week] = selectedWeek.split("-W")
+    let date = moment(`${year}-W${week}`).day(day)
+
+    if (day === DaysOfTheWeek.SUNDAY) {
+      /* Day of the week starts on Sunday, add seven to make it start on Monday */
+      date = date.add(7, "day")
+    }
+    const strDate = date.format("YYYY-MM-DD")
+    console.log(strDate)
+
+    const deleteScheduledMealDto = new DeleteScheduledMealDto(strDate, recipeId);
+    await deleteScheduledMeal({accessToken, deleteScheduledMealDto})
   }
 
   function handleWeekChange(e: React.ChangeEvent) {

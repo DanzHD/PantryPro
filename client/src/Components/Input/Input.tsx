@@ -1,6 +1,6 @@
 import "./_input.scss"
 import cx from "classnames";
-import {forwardRef} from "react";
+import React, {forwardRef} from "react";
 
 type content = {
   className?: string,
@@ -9,6 +9,10 @@ type content = {
   name?: string,
   required?: boolean
   type?: string,
+  onChange?: (e: React.ChangeEvent) => void,
+  defaultValue?: string
+
+
 }
 
 const Input = forwardRef<HTMLInputElement, content>(function Input({
@@ -17,14 +21,18 @@ const Input = forwardRef<HTMLInputElement, content>(function Input({
   fullWidth,
   name,
   required,
-  type
+  type,
+  onChange,
+  defaultValue
 }: {
   className?: string,
   placeholder?: string,
   fullWidth?: boolean,
   name?:string,
   required?: boolean,
-  type?: string
+  type?: string,
+  onChange?: (e: React.ChangeEvent) => void,
+  defaultValue?: string
 }, ref) {
 
   const computedClasses = cx(
@@ -36,7 +44,15 @@ const Input = forwardRef<HTMLInputElement, content>(function Input({
 
   )
 
-  return <input className={computedClasses} name={name} placeholder={placeholder} type={type} ref={ref} required={required} />
+  return <input
+    onChange={onChange}
+    className={computedClasses}
+    name={name}
+    placeholder={placeholder}
+    type={type} ref={ref}
+    defaultValue={defaultValue}
+    required={required}
+  />
 })
 
 export default Input

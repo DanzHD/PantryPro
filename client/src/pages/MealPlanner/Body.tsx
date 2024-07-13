@@ -3,9 +3,10 @@ import Input from "../../Components/Input/Input.tsx";
 import "./_body.scss"
 import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
 import useModal from "../../hooks/useModal/useModal.tsx";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import AddRecipeModal from "./AddRecipeModal.tsx";
 import {Item} from "../../Components/SearchBar/SearchBar.tsx";
+import {getDateWeek} from "../../util/date.tsx";
 
 export class Recipe implements Item {
   id: number
@@ -24,6 +25,9 @@ export class Recipe implements Item {
 
 }
 
+
+
+
 function Body() {
   const [recipes, setRecipes] = useState(new Map<DaysOfTheWeek, Map<number, Recipe>>([
     [DaysOfTheWeek.MONDAY, new Map()],
@@ -37,7 +41,7 @@ function Body() {
   /* For recipes inside the modal, gets the day of week adding recipes for */
   const [addRecipeForDay, setAddRecipeForDay] = useState<DaysOfTheWeek>(DaysOfTheWeek.MONDAY)
   const addRecipeModalRef = useRef(null)
-
+  const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
 
   /**
    *
@@ -54,11 +58,20 @@ function Body() {
 
   }
 
+  /**
+   *
+   * Removes a recipe for the newRecipes state variable based on the day and recipeId
+   */
   function handleRemoveRecipe(day: DaysOfTheWeek, recipeId: number) {
     const newRecipes = new Map<DaysOfTheWeek, Map<number, Recipe>>(recipes)
     const recipesOnDay = newRecipes.get(day) as Map<number, Recipe>
     recipesOnDay.delete(recipeId)
     setRecipes(newRecipes)
+  }
+
+  function handleWeekChange(e: React.ChangeEvent) {
+    const inputWeekElement = e.target as HTMLInputElement
+    setSelectedWeek(inputWeekElement.value)
   }
 
   return (
@@ -69,7 +82,7 @@ function Body() {
           <div className="meal-planner__body__content__title">
 
             <Text heading centered>Meal Planner</Text>
-            <Input type="date" />
+            <Input defaultValue={`${new Date().getFullYear()}-W${getDateWeek(new Date())}`} type="week" onChange={handleWeekChange}  />
           </div>
           <div className="weekly-meals-section">
             {
@@ -91,7 +104,7 @@ function Body() {
 
       </div>
 
-      <AddRecipeModal date={new Date()}  day={addRecipeForDay} currentRecipes={recipes} setCurrentRecipes={setRecipes} modalRef={addRecipeModalRef} />
+      <AddRecipeModal week={selectedWeek}  day={addRecipeForDay} currentRecipes={recipes} setCurrentRecipes={setRecipes} modalRef={addRecipeModalRef} />
 
     </>
   )

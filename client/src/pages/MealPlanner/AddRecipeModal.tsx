@@ -12,14 +12,14 @@ function AddRecipeModal({
   currentRecipes,
   setCurrentRecipes,
   modalRef,
-  date
+  week
 
 }: {
   day: DaysOfTheWeek,
   currentRecipes: Map<DaysOfTheWeek, Map<number, Recipe>>,
   setCurrentRecipes: React.Dispatch<React.SetStateAction<Map<DaysOfTheWeek, Map<number, Recipe>>>>,
   modalRef: RefObject<HTMLDialogElement>,
-  date: Date
+  week: string
 }) {
 
   const [recipesQueried, setRecipesQueried] = useState<Recipe[]>([])

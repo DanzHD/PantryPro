@@ -3,12 +3,12 @@ import Input from "../../Components/Input/Input.tsx";
 import "./_body.scss"
 import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
 import useModal from "../../hooks/useModal/useModal.tsx";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import AddRecipeModal from "./AddRecipeModal.tsx";
 import {Item} from "../../Components/SearchBar/SearchBar.tsx";
 import {getDateWeek} from "../../util/date.tsx";
 import moment from "moment";
-import {deleteScheduledMeal} from "../../api/meal.tsx";
+import {deleteScheduledMeal, getWeekOfScheduledMeals} from "../../api/meal.tsx";
 import {DeleteScheduledMealDto} from "../../dto/DeleteScheduledMealDto.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 
@@ -49,6 +49,23 @@ function Body() {
   const addRecipeModalRef = useRef(null)
   const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
 
+  /*
+    Query the stored weekly data
+   */
+  useEffect(() => {
+    const [year , week] = selectedWeek.split("-W")
+    const yearNumber: number = year as unknown as number
+    const weekNumber: number = week as unknown as number
+    getWeekOfScheduledMeals({ accessToken, year: yearNumber, week: weekNumber })
+      .then(weeklyScheduledMeals => {
+        if (weeklyScheduledMeals) {
+
+          setRecipes(weeklyScheduledMeals)
+        }
+      })
+  }, [accessToken, selectedWeek]);
+  
+  
   /**
    *
    * Deals with opening and closing the add recipe modal

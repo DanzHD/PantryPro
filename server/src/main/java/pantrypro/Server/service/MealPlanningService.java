@@ -39,7 +39,7 @@ public class MealPlanningService {
         List<Ingredient> ingredientsForRecipe;
         Recipe newRecipe;
         for (RecipeDto recipe: addRecipeDto.getRecipes()) {
-
+            /* Getting the recipeDto into the recipe model */
             parseAndSaveNewIngredients(recipe.getIngredients());
             ingredientsForRecipe = parseIngredientDto(recipe.getIngredients());
             newRecipe = Recipe
@@ -48,6 +48,7 @@ public class MealPlanningService {
                 .imageSource(recipe.getImageSource())
                 .instructions(recipe.getInstructions())
                 .ingredients(ingredientsForRecipe)
+                .name(recipe.getName())
                 .build();
 
             newRecipesForUser.add(addRecipeIfNonExistent(newRecipe));
@@ -126,10 +127,7 @@ public class MealPlanningService {
 
         for (IngredientDto ingredientDto: ingredientDtos) {
             ingredient = ingredientRepository.findIngredientByName(ingredientDto.getName());
-            if (ingredient.isPresent()) {
-
-                ingredients.add(ingredient.get());
-            }
+            ingredient.ifPresent(ingredients::add);
         }
 
         return ingredients;
@@ -188,7 +186,15 @@ public class MealPlanningService {
         System.out.println(toDate);
         List<MealSchedule> mealSchedules = mealScheduleRepository.findMealScheduleByDateBetweenAndUser(fromDate, toDate, user);
 
-        WeekRecipeResponse.WeekRecipeResponseBuilder weekRecipeResponseBuilder = WeekRecipeResponse.builder();
+        WeekRecipeResponse.WeekRecipeResponseBuilder weekRecipeResponseBuilder = WeekRecipeResponse
+            .builder()
+            .mondayRecipes(new ArrayList<>())
+            .tuesdayRecipes(new ArrayList<>())
+            .wednesdayRecipes(new ArrayList<>())
+            .thursdayRecipes(new ArrayList<>())
+            .fridayRecipes(new ArrayList<>())
+            .saturdayRecipes(new ArrayList<>())
+            .sundayRecipes(new ArrayList<>());
 
         for (MealSchedule mealSchedule: mealSchedules) {
             calendar.setTime(mealSchedule.getDate());
@@ -224,7 +230,8 @@ public class MealPlanningService {
                 new RecipeDto(recipe.getId(),
                     parseListOfIngredientToIngredientDto(recipe.getIngredients()),
                     recipe.getInstructions(),
-                    recipe.getImageSource()
+                    recipe.getImageSource(),
+                    recipe.getName()
                 )
             );
         }

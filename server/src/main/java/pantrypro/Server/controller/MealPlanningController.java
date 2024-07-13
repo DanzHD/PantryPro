@@ -40,7 +40,6 @@ public class MealPlanningController {
 
     @GetMapping("/week")
     public ResponseEntity<WeekRecipeResponse> getScheduledRecipes(@RequestParam int week, @RequestParam int year) {
-        // Todo write up code to get a week of meals
 
         return  ResponseEntity.ok(mealPlanningService.getWeekOfScheduledMeals(week, year));
     }

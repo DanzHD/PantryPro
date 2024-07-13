@@ -18,5 +18,6 @@ public class RecipeDto {
     private List<IngredientDto> ingredients;
     private String instructions;
     private String imageSource;
+    private String name;
 
 }

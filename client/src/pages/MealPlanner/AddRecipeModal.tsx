@@ -54,6 +54,7 @@ function AddRecipeModal({
       const ingredients: string[] = []
       for (let i = 1; i <= 20; i++) {
 
+        // @ts-ignore
         const ingredient: string | null  = meal[`strIngredient${i.toString()}`]
         if (ingredient) {
           ingredients.push(ingredient)
@@ -112,7 +113,7 @@ function AddRecipeModal({
     const strDate: string = date.format("YYYY-MM-DD")
     const recipeDto: RecipeDto[] = []
     Array.from(selectedRecipes.values()).forEach(recipe => {
-      recipeDto.push(new RecipeDto(recipe.id, recipe.ingredients, recipe.instructions, recipe.image))
+      recipeDto.push(new RecipeDto(recipe.id, recipe.ingredients, recipe.instructions, recipe.image, recipe.name))
     })
 
 

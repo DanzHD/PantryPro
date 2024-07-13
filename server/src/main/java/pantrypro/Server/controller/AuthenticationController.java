@@ -56,6 +56,10 @@ public class AuthenticationController {
 
     }
 
+    /**
+     *
+     * Validates the user's verification token and enables the user
+     */
     @PostMapping("/register_complete")
     public ResponseEntity<AuthenticationResponse> enableUser(@RequestBody EnableAccountDto enableAccountDto) {
         try {

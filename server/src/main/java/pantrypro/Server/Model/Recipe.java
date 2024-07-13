@@ -1,9 +1,6 @@
 package pantrypro.Server.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +22,7 @@ public class Recipe {
     private String imageSource;
 
 
-    @OneToMany
+    @ManyToMany
     private List<Ingredient> ingredients;
 
 

@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Primary;
 
+import java.util.Date;
+import java.util.List;
+
 @Data
 @Entity
 @Builder
@@ -22,8 +25,10 @@ public class MealSchedule {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private int week;
-    private int year;
+    private Date date;
+
+    @ManyToMany
+    private List<Recipe> recipes;
 
 
 }

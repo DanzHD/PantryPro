@@ -5,10 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import pantrypro.Server.dto.AddRecipeDto;
-import pantrypro.Server.dto.IngredientDto;
-import pantrypro.Server.dto.RecipeDto;
-import pantrypro.Server.dto.RemoveScheduledMealDto;
+import pantrypro.Server.dto.*;
 import pantrypro.Server.model.Ingredient;
 import pantrypro.Server.model.MealSchedule;
 import pantrypro.Server.model.Recipe;
@@ -18,10 +15,7 @@ import pantrypro.Server.repository.MealScheduleRepository;
 import pantrypro.Server.repository.RecipeRepository;
 import pantrypro.Server.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -174,5 +168,81 @@ public class MealPlanningService {
         scheduledRecipes.removeIf(recipe -> recipe.getId() == removeScheduledMealDto.getRecipeId());
         mealScheduleRepository.save(schedule);
     }
+
+    public WeekRecipeResponse getWeekOfScheduledMeals(int week, int year) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.WEEK_OF_YEAR, week);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, Calendar.AM);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date fromDate = calendar.getTime();
+        System.out.println(fromDate);
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        Date toDate = calendar.getTime();
+        System.out.println(toDate);
+        List<MealSchedule> mealSchedules = mealScheduleRepository.findMealScheduleByDateBetweenAndUser(fromDate, toDate, user);
+
+        WeekRecipeResponse.WeekRecipeResponseBuilder weekRecipeResponseBuilder = WeekRecipeResponse.builder();
+
+        for (MealSchedule mealSchedule: mealSchedules) {
+            calendar.setTime(mealSchedule.getDate());
+            int day = calendar.get(Calendar.DAY_OF_WEEK);
+            switch (day) {
+                case Calendar.MONDAY:
+                    weekRecipeResponseBuilder.mondayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                case Calendar.TUESDAY:
+                    weekRecipeResponseBuilder.tuesdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                case Calendar.WEDNESDAY:
+                    weekRecipeResponseBuilder.wednesdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                case Calendar.THURSDAY:
+                    weekRecipeResponseBuilder.thursdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                case Calendar.FRIDAY:
+                    weekRecipeResponseBuilder.fridayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                case Calendar.SATURDAY:
+                    weekRecipeResponseBuilder.saturdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                case Calendar.SUNDAY:
+                    weekRecipeResponseBuilder.sundayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+
+            }
+        }
+
+        return weekRecipeResponseBuilder.build();
+
+    }
+
+    /* Converts a list of recipe to list of recipeDto */
+    public List<RecipeDto> parseListOfRecipeToRecipeDto(List<Recipe> recipes) {
+        List<RecipeDto> recipeDtos = new ArrayList<>();
+        for (Recipe recipe: recipes) {
+            recipeDtos.add(
+                new RecipeDto(recipe.getId(),
+                    parseListOfIngredientToIngredientDto(recipe.getIngredients()),
+                    recipe.getInstructions(),
+                    recipe.getImageSource()
+                )
+            );
+        }
+        return recipeDtos;
+    }
+
+    /**
+     *
+     * Parses a list of ingredients into an ingredientDto
+     */
+    public List<IngredientDto> parseListOfIngredientToIngredientDto(List<Ingredient> ingredients) {
+        List<IngredientDto> ingredientDtos = new ArrayList<>();
+        for (Ingredient ingredient: ingredients) {
+            ingredientDtos.add(new IngredientDto(ingredient.getName()));
+        }
+
+        return ingredientDtos;
+    }
+
 
 }

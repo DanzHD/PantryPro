@@ -7,6 +7,7 @@ import pantrypro.Server.model.Recipe;
 import pantrypro.Server.model.User;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,5 +15,6 @@ public interface MealScheduleRepository extends JpaRepository<pantrypro.Server.m
 
     Optional<MealSchedule> findMealScheduleByDateAndUser(Date date, User user);
 
-    void deleteByDateAndUserAndRecipesContaining(Date date, User user, Recipe recipe);
+    List<MealSchedule> findMealScheduleByDateBetweenAndUser(Date fromDate, Date toDate, User user);
+
 }

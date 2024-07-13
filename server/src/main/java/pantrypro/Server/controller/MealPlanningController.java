@@ -9,6 +9,7 @@ import pantrypro.Server.dto.RemoveScheduledMealDto;
 import pantrypro.Server.dto.WeekRecipeResponse;
 import pantrypro.Server.service.MealPlanningService;
 
+
 import java.util.NoSuchElementException;
 
 @RestController
@@ -41,7 +42,7 @@ public class MealPlanningController {
     public ResponseEntity<WeekRecipeResponse> getScheduledRecipes(@RequestParam int week, @RequestParam int year) {
         // Todo write up code to get a week of meals
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return  ResponseEntity.ok(mealPlanningService.getWeekOfScheduledMeals(week, year));
     }
 
     /**

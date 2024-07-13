@@ -78,13 +78,14 @@
                 padding: 5px;
                 display: flex;
                 cursor: pointer;
+                align-items: center;
 
             }
         }
     }
 }
 
-@media (max-height: $mobile-width) {
+@media (max-width: $mobile-width) {
     .meal-planner {
 
         &__body {

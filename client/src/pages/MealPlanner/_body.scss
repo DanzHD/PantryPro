@@ -8,25 +8,33 @@
     align-self: start;
 
     > .meal {
-        width: 100%;
         height: 7.5rem;
         display: flex;
+        max-height: 7.5rem;
 
         padding-top: 10px;
         padding-bottom: 10px;
         padding-right: 10px;
-        justify-content: space-between;
+        min-width: 20rem;
+
 
         > img {
             height: 100%;
             object-fit: cover;
             border-radius: 30%;
+            margin-left: auto;
         }
 
-        > div {
-            min-width: 5rem;
-            padding-left: 1rem;
-            align-content: center;
+        > .text {
+            padding-top: 10px;
+            padding-left: 30px;
+            overflow: hidden;
+            -webkit-line-clamp: 3;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+
+
+
         }
 
         &:nth-child(even) {
@@ -35,6 +43,15 @@
 
         &:nth-child(odd) {
             background-color: $primary;
+        }
+
+        .material-symbols-outlined {
+            cursor: pointer;
+            position: relative;
+            margin-bottom: auto;
+            padding-left: 5px;
+            padding-top: 0;
+            flex: 0;
         }
     }
 }

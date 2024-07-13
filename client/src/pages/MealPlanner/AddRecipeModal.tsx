@@ -13,10 +13,11 @@ function AddRecipeModal({
   setCurrentRecipes,
   modalRef,
   date
+
 }: {
   day: DaysOfTheWeek,
-  currentRecipes: Map<DaysOfTheWeek, Recipe[]>,
-  setCurrentRecipes: React.Dispatch<React.SetStateAction<Map<DaysOfTheWeek, Recipe[]>>>,
+  currentRecipes: Map<DaysOfTheWeek, Map<number, Recipe>>,
+  setCurrentRecipes: React.Dispatch<React.SetStateAction<Map<DaysOfTheWeek, Map<number, Recipe>>>>,
   modalRef: RefObject<HTMLDialogElement>,
   date: Date
 }) {
@@ -73,14 +74,14 @@ function AddRecipeModal({
     setSelectedRecipes(newSelectedRecipes)
   }
 
+  /**
+   * Event handler when the user clicks the done button to finish off adding items
+   */
   function handleFinishAddingFood() {
-    const newMeals: Map<DaysOfTheWeek, Recipe[]> = new Map(currentRecipes)
-    if (!newMeals.get(day)) {
-      newMeals.set(day, Array.from(selectedRecipes.values()))
-    } else if (newMeals.get(day) !== undefined) {
-      const recipes: Recipe[] = newMeals.get(day) as Recipe[]
-      newMeals.set(day, [...recipes, ...Array.from(selectedRecipes.values())])
-    }
+    const newMeals: Map<DaysOfTheWeek, Map<number, Recipe>> = new Map(currentRecipes)
+    const mealsOnDay: Map<number, Recipe> = newMeals.get(day) as Map<number, Recipe>
+    newMeals.set(day, new Map([...Array.from(mealsOnDay.entries()), ...selectedRecipes]))
+
     setCurrentRecipes(newMeals)
     handleCloseModal()
 

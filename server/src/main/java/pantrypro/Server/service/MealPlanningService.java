@@ -180,10 +180,8 @@ public class MealPlanningService {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         Date fromDate = calendar.getTime();
-        System.out.println(fromDate);
         calendar.add(Calendar.DAY_OF_MONTH, 7);
         Date toDate = calendar.getTime();
-        System.out.println(toDate);
         List<MealSchedule> mealSchedules = mealScheduleRepository.findMealScheduleByDateBetweenAndUser(fromDate, toDate, user);
 
         WeekRecipeResponse.WeekRecipeResponseBuilder weekRecipeResponseBuilder = WeekRecipeResponse
@@ -202,21 +200,28 @@ public class MealPlanningService {
             switch (day) {
                 case Calendar.MONDAY:
                     weekRecipeResponseBuilder.mondayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                    break;
                 case Calendar.TUESDAY:
                     weekRecipeResponseBuilder.tuesdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                    break;
                 case Calendar.WEDNESDAY:
                     weekRecipeResponseBuilder.wednesdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                    break;
                 case Calendar.THURSDAY:
                     weekRecipeResponseBuilder.thursdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                    break;
                 case Calendar.FRIDAY:
                     weekRecipeResponseBuilder.fridayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                    break;
                 case Calendar.SATURDAY:
                     weekRecipeResponseBuilder.saturdayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
+                    break;
                 case Calendar.SUNDAY:
                     weekRecipeResponseBuilder.sundayRecipes(parseListOfRecipeToRecipeDto(mealSchedule.getRecipes()));
 
             }
         }
+
 
         return weekRecipeResponseBuilder.build();
 

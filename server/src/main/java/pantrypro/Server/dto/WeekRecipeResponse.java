@@ -14,18 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 public class WeekRecipeResponse {
 
-    private List<RecipeDto> mondayRecipes = new ArrayList<>();
-    private List<RecipeDto> tuesdayRecipes = new ArrayList<>();
+    private List<RecipeDto> mondayRecipes;
+    private List<RecipeDto> tuesdayRecipes;
 
-    private List<RecipeDto> wednesdayRecipes = new ArrayList<>();
+    private List<RecipeDto> wednesdayRecipes;
 
-    private List<RecipeDto> thursdayRecipes = new ArrayList<>();
+    private List<RecipeDto> thursdayRecipes;
 
-    private List<RecipeDto> fridayRecipes = new ArrayList<>();
+    private List<RecipeDto> fridayRecipes;
 
-    private List<RecipeDto> saturdayRecipes = new ArrayList<>();
+    private List<RecipeDto> saturdayRecipes;
 
-    private List<RecipeDto> sundayRecipes = new ArrayList<>();
+    private List<RecipeDto> sundayRecipes;
 
 
 }

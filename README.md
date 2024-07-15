@@ -9,7 +9,7 @@ Pantrypro is a meal planning, scheduling and tracking application application. I
 ## Stack
 Frontend: `react@latest`
 
-Backend: `Springboot`
+Backend: `Java Springboot`
 
 Authentication: `jwt`
 

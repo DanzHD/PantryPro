@@ -1,7 +1,7 @@
 # Pantrypro
 
-Pantrypro is a meal planning, scheduling and tracking application application. It provides the following features:
-- **Food Expiry Alerts**: Tracks food stored in the database and sends an email when your food is about to expire
+Pantrypro is a meal planning, scheduling and tracking application. It provides the following features:
+- **Food Expiry Alerts**: Tracks food stored in the database and sends an email alert when your food is about to expire
 - **Meal Scheduling**: Ability to schedule weekly meals and provides recipes associated with such meals
 - **Food Tracking**: Provides easy to use graphical interface for viewing, searching, filtering and adding food 
 

@@ -15,6 +15,8 @@ Authentication: `jwt`
 
 Database: `MySQL`
 
+APIs: [`TheMealDb`](https://www.themealdb.com/api.php)
+
 Cloud: `AWS`
 ## Screenshots
 | | |

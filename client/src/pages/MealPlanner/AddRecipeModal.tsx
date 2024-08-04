@@ -18,7 +18,9 @@ function AddRecipeModal({
   currentRecipes,
   setCurrentRecipes,
   modalRef,
-  week
+  week,
+  modalOpen,
+  setModalOpen
 
 
 }: {
@@ -26,9 +28,12 @@ function AddRecipeModal({
   currentRecipes: Map<DaysOfTheWeek, Map<number, Recipe>>,
   setCurrentRecipes: React.Dispatch<React.SetStateAction<Map<DaysOfTheWeek, Map<number, Recipe>>>>,
   modalRef: RefObject<HTMLDialogElement>,
-  week: string
+  week: string,
+  modalOpen: boolean,
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 
 }) {
+
   const {accessToken} = useAuthContext();
 
   const [recipesQueried, setRecipesQueried] = useState<Recipe[]>([])
@@ -40,6 +45,7 @@ function AddRecipeModal({
     setRecipesQueried([])
     setSelectedRecipes(new Map())
     modalRef.current.close()
+    setModalOpen(false)
   }
 
   async function handleSearchBarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -136,14 +142,18 @@ function AddRecipeModal({
           <span className="material-symbols-outlined" onClick={handleFinishAddingFood}>done</span>
         </div>
         <div>
+          {
+            /* For synchronising modal closing with searchbar text clearing */
+            modalOpen &&
 
-          <SearchBar
-            handleSelectItem={handleRecipeSelect}
-            dropdownItems={recipesQueried}
-            fullWidth
-            onChange={handleSearchBarChange}
-            placeholder="Search for Recipe"
-          />
+            <SearchBar
+              handleSelectItem={handleRecipeSelect}
+              dropdownItems={recipesQueried}
+              fullWidth
+              onChange={handleSearchBarChange}
+              placeholder="Search for Recipe"
+            />
+          }
         </div>
         <div className="selected-recipe-list">
 

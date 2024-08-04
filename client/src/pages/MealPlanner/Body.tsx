@@ -43,6 +43,7 @@ function Body() {
   ]))
   /* For recipes inside the modal, gets the day of week adding recipes for */
   const [addRecipeForDay, setAddRecipeForDay] = useState<DaysOfTheWeek>(DaysOfTheWeek.MONDAY)
+  const [addRecipeModalOpen, setAddRecipeModalOpen] = useState(false)
   const addRecipeModalRef = useRef(null)
   const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
 
@@ -75,6 +76,7 @@ function Body() {
     const dialog: HTMLDialogElement = addRecipeModalRef.current as HTMLDialogElement
     setAddRecipeForDay(day)
     dialog.showModal()
+    setAddRecipeModalOpen(true)
 
   }
 
@@ -130,8 +132,6 @@ function Body() {
               })
             }
 
-
-
           </div>
         </div>
 
@@ -143,6 +143,8 @@ function Body() {
         currentRecipes={recipes}
         setCurrentRecipes={setRecipes}
         modalRef={addRecipeModalRef}
+        modalOpen={addRecipeModalOpen}
+        setModalOpen={setAddRecipeModalOpen}
       />
 
     </>

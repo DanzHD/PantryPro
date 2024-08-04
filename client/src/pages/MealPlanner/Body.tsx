@@ -29,9 +29,6 @@ export class Recipe implements Item {
 
 }
 
-
-
-
 function Body() {
   const { accessToken } = useAuthContext()
 
@@ -50,7 +47,7 @@ function Body() {
   const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
 
   /*
-    Query the stored weekly data
+    Query the stored weekly meals
    */
   useEffect(() => {
     const [year , week] = selectedWeek.split("-W")
@@ -83,7 +80,8 @@ function Body() {
 
   /**
    *
-   * Removes a recipe for the newRecipes state variable based on the day and recipeId
+   * Removes a recipe from the newRecipes state variable based on the day and recipeId
+   * Updates the database, removes the deleted recipe from the database
    */
   async function handleRemoveRecipe(day: DaysOfTheWeek, recipeId: number) {
     const newRecipes = new Map<DaysOfTheWeek, Map<number, Recipe>>(recipes)
@@ -99,7 +97,6 @@ function Body() {
       date = date.add(7, "day")
     }
     const strDate = date.format("YYYY-MM-DD")
-    console.log(strDate)
 
     const deleteScheduledMealDto = new DeleteScheduledMealDto(strDate, recipeId);
     await deleteScheduledMeal({accessToken, deleteScheduledMealDto})

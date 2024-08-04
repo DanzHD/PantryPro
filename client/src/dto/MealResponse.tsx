@@ -2,8 +2,8 @@ export interface MealsResponse {
   meals: Meal[]
 }
 
-interface Meal {
-  idMeal: number,
+export interface Meal {
+  idMeal: string | number,
   strMeal: string,
   strInstructions: string,
   strIngredient1: string | null,
@@ -28,3 +28,4 @@ interface Meal {
   strIngredient20: string | null
   strMealThumb: string | null
 }
+

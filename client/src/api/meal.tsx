@@ -15,10 +15,15 @@ export async function getMeal({meal}: {meal: string}) {
       "Content-Type": "application/json"
     }
   })
-  let {meals} = res.data || []
+  let {meals} = res.data
   if (meals === null) {
     meals = []
   }
+
+  for (const meal of meals) {
+    meal['idMeal'] = Number(meal['idMeal'])
+  }
+
   return {meals}
 
 }

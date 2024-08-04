@@ -11,6 +11,8 @@ import moment from "moment";
 import {ScheduleMealsDto} from "../../dto/ScheduleMealsDto.tsx";
 import {RecipeDto} from "../../dto/RecipeDto.tsx";
 
+const NUMBER_INGREDIENTS_IN_RECIPE = 20
+
 function AddRecipeModal({
   day,
   currentRecipes,
@@ -47,21 +49,22 @@ function AddRecipeModal({
     }
     const meal: string = e.target.value
     const {meals} = await getMeal({meal: meal})
-    const recipes: Recipe[] = meals.filter(meal => !selectedRecipes.get(meal.idMeal))
+    const recipes: Recipe[] = meals
+      .filter(meal => !selectedRecipes.get(meal.idMeal as number) && !currentRecipes.get(day)?.get(meal.idMeal as number))
       .map(meal => {
 
 
-      const ingredients: string[] = []
-      for (let i = 1; i <= 20; i++) {
+        const ingredients: string[] = []
+        for (let i = 1; i <= NUMBER_INGREDIENTS_IN_RECIPE; i++) {
 
-        // @ts-ignore
-        const ingredient: string | null  = meal[`strIngredient${i.toString()}`]
-        if (ingredient) {
-          ingredients.push(ingredient)
+          // @ts-ignore
+          const ingredient: string | null  = meal[`strIngredient${i.toString()}`]
+          if (ingredient) {
+            ingredients.push(ingredient)
+          }
         }
-      }
 
-      return new Recipe(meal.idMeal, meal.strMeal, ingredients, meal.strInstructions, meal.strMealThumb)
+      return new Recipe(meal.idMeal as number, meal.strMeal, ingredients, meal.strInstructions, meal.strMealThumb)
     })
     setRecipesQueried(recipes)
   }

@@ -19,19 +19,14 @@ function Login({
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null)
   const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("")
-  const [checkingLoggedInStatus, setCheckingLoggedInStatus] = useState(true)
   const [signUpSuccessful, setSignUpSuccessFul] = useState(false)
-
-  const [loading, setLoading] = useState(false)
 
   /* Check if user is logged in. If logged in redirect the user to the dashboard */
   useEffect(() => {
 
-    setCheckingLoggedInStatus(true)
     getNewAccessToken()
       .then(() => navigate("/dashboard"))
       .catch(() => {
-        setCheckingLoggedInStatus(false)
       })
       
     
@@ -39,7 +34,6 @@ function Login({
 
   const onLogin = async () => {
     try {
-      setLoading(true)
       const email = emailRef.current?.value
       const password = passwordRef.current?.value
       if (!email || !password) {
@@ -53,14 +47,11 @@ function Login({
     } catch (error) {
       setInvalidVerificationMessage("Incorrect username or password. Please try again")
       console.error(error)
-    } finally {
-      setLoading(false)
     }
   }
 
   const onSignUp = async () => {
     try {
-      setLoading(true)
       const email = emailRef.current?.value
       const password = passwordRef.current?.value
 
@@ -96,9 +87,6 @@ function Login({
 
       }
 
-
-    } finally {
-      setLoading(false)
     }
   }
   function handleSignupLoginChange() {
@@ -106,20 +94,12 @@ function Login({
     setSignUpSuccessFul(false)
   }
 
-  if (checkingLoggedInStatus) {
-    return <div>Loading...</div>
-  }
-
-
 
   return (
     <>
       <div className="login">
         <div className="login__container">
-          {
-            loading &&
-              <div>Loading...</div>
-          }
+
 
           <div className="login__container__logo">
             <Text centered heading>PantryPro</Text>

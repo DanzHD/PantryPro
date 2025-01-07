@@ -137,15 +137,15 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    void passwordIsValid_False_TooLong() {
+    void passwordIsValid_True_LongPassword() {
         String password = "1!bCDdawdwankjn@#@#!#nnjdwakjnknkWNdkJWJD@#@dwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        Assertions.assertFalse(authenticationService.passwordIsValid(password));
+        Assertions.assertTrue(authenticationService.passwordIsValid(password));
     }
 
     @Test
-    void passwordIsValid_False_ContainsWhiteSpace() {
+    void passwordIsValid_True_ContainsWhiteSpace() {
         String password = "1@eR fdwadwa";
-        Assertions.assertFalse(authenticationService.passwordIsValid(password));
+        Assertions.assertTrue(authenticationService.passwordIsValid(password));
     }
 
     @Test

@@ -5,8 +5,9 @@ import Button from "../../Components/Button/Button.tsx";
 import {Link, useNavigate} from "react-router-dom";
 import {loginRoute, signupRoute} from "../../App.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
-import {useEffect, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import APIError from "../../util/APIError.tsx";
+import usePassword from "../../hooks/usePassword.tsx";
 
 
 function Login({
@@ -17,9 +18,18 @@ function Login({
     const { loginUser, registerUser, getNewAccessToken } = useAuthContext()
     const navigate = useNavigate()
     const emailRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null)
+    const [password, setPassword] = useState("")
+
     const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("")
     const [signUpSuccessful, setSignUpSuccessFul] = useState(false)
+
+    const {
+        passwordNotTooShort,
+        passwordContainsDigit,
+        passwordContainsUpperChar,
+        passwordContainsSpecialChar,
+        passwordContainsLowerChar
+    } = usePassword(password)
 
     /* Check if user is logged in. If logged in redirect the user to the dashboard */
     useEffect(() => {
@@ -36,7 +46,6 @@ function Login({
     const onLogin = async () => {
         try {
             const email = emailRef.current?.value
-            const password = passwordRef.current?.value
             if (!email || !password) {
                 return
             }
@@ -54,7 +63,6 @@ function Login({
     const onSignUp = async () => {
         try {
             const email = emailRef.current?.value
-            const password = passwordRef.current?.value
 
             if (!email || !password) {
                 return
@@ -96,6 +104,11 @@ function Login({
         setSignUpSuccessFul(false)
     }
 
+    function handlePasswordChange(e: ChangeEvent) {
+
+        setPassword((e.target as HTMLInputElement).value)
+    }
+
 
     return (
         <>
@@ -118,11 +131,52 @@ function Login({
 
                     </div>
                     <Input type="email" placeholder="Email" ref={emailRef} />
-                    <Input type="password" placeholder="Password" ref={passwordRef} />
+                    <Input onChange={handlePasswordChange} type="password" placeholder="Password" />
                     {
                         invalidVerificationMessage &&
                         <Text danger>{invalidVerificationMessage}</Text>
                     }
+                    {
+                        password.length > 0 &&
+                        <div>
+
+                            {
+                                !passwordNotTooShort && !loggingIn &&
+
+                                <Text small danger>
+
+                                    Password must be a minimum of 8 characters
+                                </Text>
+                            }
+                            {
+                                !passwordContainsLowerChar && !loggingIn &&
+
+                                <Text small danger>
+                                    Password must contain a lower case character
+                                </Text>
+                            }
+                            {
+                                !passwordContainsUpperChar && !loggingIn &&
+                                <Text small danger >
+                                    Password must contain an upper case character
+
+                                </Text>
+                            }
+                            {
+                                !passwordContainsDigit && !loggingIn &&
+                                <Text small danger>
+                                    Password must contain a digit
+                                </Text>
+                            }
+                            {
+                                !passwordContainsSpecialChar && !loggingIn &&
+                                <Text small danger>
+                                    Password must contain a special character
+                                </Text>
+                            }
+                        </div>
+                    }
+
                     <Button
                         small
                         fullWidth
@@ -147,8 +201,9 @@ function Login({
                                 <Link onClick={handleSignupLoginChange} to={signupRoute} >Sign Up</Link>
                             </Text>
                         :
-                            <Text centered>Already have an account?
-                                <Link onClick={handleSignupLoginChange} to={loginRoute}>Login </Link>
+                            <Text centered>
+                                Already have an account?
+                                <Link onClick={handleSignupLoginChange} to={loginRoute}> Login </Link>
                             </Text>
                     }
 

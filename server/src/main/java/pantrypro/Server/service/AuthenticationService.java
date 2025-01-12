@@ -149,7 +149,7 @@ public class AuthenticationService {
         Pattern pattern = Pattern.compile("^(?=.*[0-9])"
                 + "(?=.*[a-z])"
                 + "(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=])"
+                + "(?=.*[!@#$%^&*()-=+_])"
                 + "(.{8,}$)");
 
         return pattern.matcher(password).matches();

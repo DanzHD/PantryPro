@@ -39,7 +39,6 @@ public class EmailService {
      */
     public void sendMail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("pantryprofood@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);

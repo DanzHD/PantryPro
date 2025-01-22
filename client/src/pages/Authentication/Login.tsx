@@ -5,11 +5,13 @@ import Text from "../../Components/Text/Text.tsx";
 import Button from "../../Components/Button/Button.tsx";
 import { signupRoute} from "../../App.tsx";
 import AuthenticationHeader from "./AuthenticationHeader.tsx";
+import Spinner from "../../Components/Spinner/Spinner.tsx";
 
 function Login() {
     const { loginUser, getNewAccessToken } = useAuthContext();
     const navigate = useNavigate()
     const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -28,7 +30,7 @@ function Login() {
     const onLogin = async () => {
         try {
 
-
+            setLoading(true)
             const success = await loginUser({ email: email, password: password })
             if (success) {
                 navigate("/dashboard")
@@ -36,6 +38,8 @@ function Login() {
         } catch (error) {
             setInvalidVerificationMessage("Incorrect username or password. Please try again")
             console.error(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -68,14 +72,25 @@ function Login() {
                         danger>
                         { invalidVerificationMessage }
                     </Text>
+                    {
+                        loading ?
+                            <Button
+                                small
+                                fullWidth
 
-                    <Button
-                        small
-                        fullWidth
-                        onClick={onLogin}
-                    >
-                        Login
-                    </Button>
+                            >
+                                <Spinner small />
+                            </Button> :
+                            <Button
+                                small
+                                fullWidth
+                                onClick={onLogin}
+                            >
+                                Login
+                            </Button>
+
+
+                    }
 
                     <Text centered>
                         Don't have an account?

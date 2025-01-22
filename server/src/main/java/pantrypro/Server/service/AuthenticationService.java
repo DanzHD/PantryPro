@@ -80,8 +80,7 @@ public class AuthenticationService {
         String userEmail = jwtService.extractUsername(verificationToken);
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow();
-        if (!jwtService.isTokenValid(verificationToken, user)
-        ) {
+        if (!jwtService.isTokenValid(verificationToken, user)) {
             throw new InvalidTokenException();
         }
         if (user.isEnabled()) {
@@ -139,18 +138,19 @@ public class AuthenticationService {
 
     /**
      * Validates that the password is strong enough with the following policies:
-     * At least 8 characters and at most 100 characters
+     * At least 8 characters
      * Contains at least one digit
      * Contains at least one lower and upper alphabetical character
      * Contains at least 1 special character
-     * Does not contain any white space
      *
      */
     public boolean passwordIsValid(String password) {
+
         Pattern pattern = Pattern.compile("^(?=.*[0-9])"
-                + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=])"
-                + "(?=\\S+$).{8,100}$");
+                + "(?=.*[a-z])"
+                + "(?=.*[A-Z])"
+                + "(?=.*[!@#$%^&*()-=+_])"
+                + "(.{8,}$)");
 
         return pattern.matcher(password).matches();
     }
@@ -158,7 +158,6 @@ public class AuthenticationService {
     /**
      * Sends back a new access token with the refresh token
      *
-     * @return
      */
     public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

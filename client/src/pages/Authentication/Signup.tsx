@@ -7,6 +7,7 @@ import Text from "../../Components/Text/Text.tsx";
 import Button from "../../Components/Button/Button.tsx";
 import { loginRoute } from "../../App.tsx";
 import AuthenticationHeader from "./AuthenticationHeader.tsx";
+import Spinner from "../../Components/Spinner/Spinner.tsx";
 
 function Signup() {
     const { registerUser, getNewAccessToken } = useAuthContext()
@@ -149,7 +150,7 @@ function Signup() {
                                 small
                                 fullWidth
                             >
-                                Loading
+                                <Spinner small />
                             </Button>
 
                             :

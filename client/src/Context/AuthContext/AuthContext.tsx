@@ -5,7 +5,7 @@ import {REFRESH_TOKEN_KEY} from "../../util/constants.tsx";
 import APIError from "../../util/APIError.tsx";
 import {AxiosError} from "axios";
 import {CredentialResponse} from "@react-oauth/google";
-import {jwtDecode} from "jwt-decode";
+import {GoogleLoginDto} from "../../dto/GoogleLoginDto.ts";
 
 interface IAuthContext {
     loginUser: (userDetails: {email: string, password: string}) => Promise<boolean>,
@@ -22,7 +22,6 @@ export const AuthContext = createContext<IAuthContext | null>(null)
 
 export function AuthContextProvider({children}: {children: React.ReactNode}) {
 
-
     const [accessToken, setAccessToken] = useState<string | null>(null)
 
 
@@ -32,7 +31,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
             const response = await apiClient.post("/auth/authenticate", userDetails)
 
             const tokens: TokenResponseData = await response.data
-            const {accessToken, refreshToken} = tokens
+            const { accessToken, refreshToken } = tokens
             setAccessToken(accessToken)
             localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
             return true
@@ -46,13 +45,8 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
 
     const registerUser = async (userDetails: {email: string, password: string}) => {
         try {
-            const response = await apiClient.post("/auth/register", userDetails)
+            await apiClient.post("/auth/register", userDetails)
 
-            const tokens: TokenResponseData = await response.data
-            const { accessToken, refreshToken} = tokens
-            setAccessToken(accessToken)
-
-            localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
             return true
 
         } catch (error) {
@@ -74,7 +68,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
             const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
             const response = await apiClient.post("/auth/refresh-token", {}, {
                 headers: {
-                        Authorization: `Bearer ${refreshToken}`
+                    Authorization: `Bearer ${refreshToken}`
                 }
             })
 
@@ -85,7 +79,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
             return true
         } catch (err) {
             console.error(err)
-        throw new Error("Failed to assign new access token")
+            throw new Error("Failed to assign new access token")
         }
 
     }
@@ -122,19 +116,25 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
         }
     }
 
-    const handleGoogleLogin = (credentialResponse: CredentialResponse) => {
+    const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
+        console.log(credentialResponse)
+        const credential = credentialResponse.credential;
+        console.log(credentialResponse)
+        if (credential) {
 
+            const googleLoginDto: GoogleLoginDto = new GoogleLoginDto(credential)
+            const response = await apiClient.post("/auth/google-login", googleLoginDto);
 
-        const res = decodeGoogleCredential(credentialResponse.credential)
-        console.log(res)
+            const tokens: TokenResponseData = await response.data;
 
+            const { accessToken, refreshToken } = tokens;
+            setAccessToken(accessToken);
+            localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
+        }
 
     }
 
-    const decodeGoogleCredential = (token: string) => {
-        return jwtDecode(token)
 
-    }
 
     const authContextValue: IAuthContext = {
         loginUser,

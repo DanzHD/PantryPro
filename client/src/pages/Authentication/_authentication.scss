@@ -49,5 +49,15 @@
         padding: 0;
     }
 
+    .login-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        width: 100%;
+
+
+
+    }
 
 }

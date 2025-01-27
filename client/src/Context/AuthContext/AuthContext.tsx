@@ -4,17 +4,17 @@ import {TokenResponseData} from "./loginResponse.tsx";
 import {REFRESH_TOKEN_KEY} from "../../util/constants.tsx";
 import APIError from "../../util/APIError.tsx";
 import {AxiosError} from "axios";
-import {CredentialResponse} from "@react-oauth/google";
+import {TokenResponse} from "@react-oauth/google";
 import {GoogleLoginDto} from "../../dto/GoogleLoginDto.ts";
 
 interface IAuthContext {
     loginUser: (userDetails: {email: string, password: string}) => Promise<boolean>,
     registerUser: (userDetails: {email: string, password: string}) => Promise<boolean>,
-    getNewAccessToken: () => Promise<boolean>,
+    getNewAccessToken: () => Promise<void>,
     accessToken: string | null,
     logout: () => void,
     enableAccount: (verificationToken: string) => Promise<boolean>,
-    handleGoogleLogin: (credentialResponse: CredentialResponse) => void
+    handleGoogleLogin: (tokenResponse: TokenResponse) => void
 
 }
 
@@ -63,24 +63,24 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
         }
     }
 
-    const getNewAccessToken = async (): Promise<boolean> => {
-        try {
-            const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
-            const response = await apiClient.post("/auth/refresh-token", {}, {
-                headers: {
-                    Authorization: `Bearer ${refreshToken}`
-                }
-            })
+    const getNewAccessToken = async () => {
 
-            const tokens: TokenResponseData = await response.data
-            const {accessToken} = tokens
-            setAccessToken(accessToken)
-
-            return true
-        } catch (err) {
-            console.error(err)
-            throw new Error("Failed to assign new access token")
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
+        if (!refreshToken) {
+            throw new Error("No refresh token")
         }
+
+        const response = await apiClient.post("/auth/refresh-token", {}, {
+            headers: {
+                Authorization: `Bearer ${refreshToken}`
+            }
+        })
+
+        const tokens: TokenResponseData = await response.data
+        const {accessToken} = tokens
+        setAccessToken(accessToken)
+
+
 
     }
 
@@ -116,13 +116,11 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
         }
     }
 
-    const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
-        console.log(credentialResponse)
-        const credential = credentialResponse.credential;
-        console.log(credentialResponse)
-        if (credential) {
+    const handleGoogleLogin = async (tokenResponse: TokenResponse) => {
+        const token = tokenResponse.access_token
+        if (token) {
 
-            const googleLoginDto: GoogleLoginDto = new GoogleLoginDto(credential)
+            const googleLoginDto: GoogleLoginDto = new GoogleLoginDto(token)
             const response = await apiClient.post("/auth/google-login", googleLoginDto);
 
             const tokens: TokenResponseData = await response.data;

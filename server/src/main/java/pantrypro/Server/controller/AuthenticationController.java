@@ -99,7 +99,6 @@ public class AuthenticationController {
         try {
             return ResponseEntity.ok(service.googleAuthenticate(googleLoginDto));
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
             return new ResponseEntity<>(HttpStatus.valueOf(400));
         }
     }

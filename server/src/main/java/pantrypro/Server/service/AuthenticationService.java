@@ -1,21 +1,30 @@
 package pantrypro.Server.service;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.google.api.client.auth.oauth2.BearerToken;
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.openidconnect.IdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import pantrypro.Server.Enums.Role;
-import pantrypro.Server.dto.GoogleLoginDto;
+import pantrypro.Server.dto.*;
 import pantrypro.Server.model.User;
-import pantrypro.Server.dto.AuthenticationRequest;
-import pantrypro.Server.dto.AuthenticationResponse;
-import pantrypro.Server.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -210,19 +219,20 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse googleAuthenticate(GoogleLoginDto googleLoginDto) throws GeneralSecurityException, IOException {
-        HttpTransport transport = new NetHttpTransport();
-        GsonFactory jsonFactory = new GsonFactory();
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-            .setAudience(Collections.singletonList(System.getenv("GOOGLE_CLIENT_ID")))
-            .build();
 
-        System.out.println(googleLoginDto.getGoogleToken());
-        GoogleIdToken idToken = verifier.verify(googleLoginDto.getGoogleToken());
-        if (idToken == null) {
-            throw new InvalidTokenException();
-        }
-        Payload payload = idToken.getPayload();
-        String userEmail = payload.getEmail();
+        Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod());
+        credential.setAccessToken(googleLoginDto.getGoogleToken());
+
+        HttpTransport transport = new NetHttpTransport();
+        HttpRequestFactory requestFactory = transport.createRequestFactory(credential);
+
+        GenericUrl url = new GenericUrl("https://www.googleapis.com/oauth2/v1/userinfo");
+        HttpResponse res = requestFactory.buildGetRequest(url).execute();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        GoogleUserResponse resObject = gson.fromJson(res.parseAsString(), GoogleUserResponse.class);
+        String userEmail = resObject.getEmail();
 
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
         User user;

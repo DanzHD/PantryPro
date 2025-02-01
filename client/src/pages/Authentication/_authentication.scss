@@ -13,7 +13,6 @@
     &__container {
         display: flex;
         flex-direction: column;
-        height: 30rem;
         min-width: 20rem;
         max-width: 30rem;
         padding: 20px;
@@ -49,5 +48,15 @@
         padding: 0;
     }
 
+    &-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        width: 100%;
+
+
+
+    }
 
 }

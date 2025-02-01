@@ -13,7 +13,7 @@ function usePassword(password: string) {
             const containDigitRegex = /\d/
             const containLowerCaseRegex = /[a-z]/
             const containsUpperCaseRegex = /[A-Z]/
-            const containsSpecialCharRegex = /[!@#$%^&*()-=+_]/
+            const containsSpecialCharRegex = /[!@#$%^&*()=+_-]/
 
             setPasswordNotTooShort(password.length >= 8)
             setPasswordContainsDigit(containDigitRegex.test(password))

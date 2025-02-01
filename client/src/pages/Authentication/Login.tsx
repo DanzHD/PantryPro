@@ -6,14 +6,22 @@ import Button from "../../Components/Button/Button.tsx";
 import { signupRoute} from "../../App.tsx";
 import AuthenticationHeader from "./AuthenticationHeader.tsx";
 import Spinner from "../../Components/Spinner/Spinner.tsx";
+import { useGoogleLogin } from "@react-oauth/google";
+import GoogleLoginButton from "../../GoogleLoginButton/GoogleLoginButton.tsx";
+
 
 function Login() {
-    const { loginUser, getNewAccessToken } = useAuthContext();
+    const { loginUser, getNewAccessToken, handleGoogleLogin } = useAuthContext();
     const navigate = useNavigate()
+
     const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const googleLogin = useGoogleLogin({
+        onSuccess: tokenResponse => handleGoogleLogin(tokenResponse)
+    })
+
 
     /* Check if user is logged in. If logged in redirect the user to the dashboard */
     useEffect(() => {
@@ -70,33 +78,37 @@ function Login() {
                         centered
                         small
                         danger>
-                        { invalidVerificationMessage }
+                        {invalidVerificationMessage}
                     </Text>
-                    {
-                        loading ?
-                            <Button
-                                small
-                                fullWidth
+                    <div className="authentication-buttons">
 
-                            >
-                                <Spinner small />
-                            </Button> :
-                            <Button
-                                small
-                                fullWidth
-                                onClick={onLogin}
-                            >
-                                Login
-                            </Button>
+                        {
+                            loading ?
+                                <Button
+                                    small
+                                    fullWidth
+
+                                >
+                                    <Spinner small/>
+                                </Button> :
+                                <Button
+                                    small
+                                    fullWidth
+                                    onClick={onLogin}
+                                >
+                                    Login
+                                </Button>
 
 
-                    }
+                        }
+
+                        <GoogleLoginButton onClick={() => googleLogin()} />
+                    </div>
 
                     <Text centered>
                         Don't have an account?
                         <Link onClick={() => navigate("sign-up")} to={signupRoute}> Sign Up </Link>
                     </Text>
-
 
 
                 </div>

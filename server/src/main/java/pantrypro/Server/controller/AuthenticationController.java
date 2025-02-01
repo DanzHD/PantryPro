@@ -8,10 +8,8 @@ import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import pantrypro.Server.dto.AuthenticationRequest;
-import pantrypro.Server.dto.AuthenticationResponse;
-import pantrypro.Server.dto.EnableAccountDto;
-import pantrypro.Server.dto.RegisterRequest;
+import org.springframework.security.core.Authentication;
+import pantrypro.Server.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +22,7 @@ import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -51,6 +50,7 @@ public class AuthenticationController {
         } catch (PasswordTooWeakException exception) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -94,7 +94,14 @@ public class AuthenticationController {
 
     }
 
-
+    @PostMapping("/google-login")
+    public ResponseEntity<AuthenticationResponse> googleAuthentication(@RequestBody GoogleLoginDto googleLoginDto) {
+        try {
+            return ResponseEntity.ok(service.googleAuthenticate(googleLoginDto));
+        } catch (Exception exception) {
+            return new ResponseEntity<>(HttpStatus.valueOf(400));
+        }
+    }
 
 
 }

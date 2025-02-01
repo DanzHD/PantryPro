@@ -39,6 +39,8 @@ public class User implements UserDetails {
 
     private boolean allowEmailNotifications;
 
+    private boolean useOtherLogin = false;
+
 
 
     @Override

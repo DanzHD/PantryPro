@@ -8,6 +8,8 @@ import Button from "../../Components/Button/Button.tsx";
 import { loginRoute } from "../../App.tsx";
 import AuthenticationHeader from "./AuthenticationHeader.tsx";
 import Spinner from "../../Components/Spinner/Spinner.tsx";
+import GoogleLoginButton from "../../GoogleLoginButton/GoogleLoginButton.tsx";
+import {useGoogleLogin} from "@react-oauth/google";
 
 function Signup() {
     const { registerUser, getNewAccessToken } = useAuthContext()
@@ -25,6 +27,12 @@ function Signup() {
         passwordContainsSpecialChar,
         passwordContainsLowerChar
     } = usePassword(password)
+
+    const { handleGoogleLogin } = useAuthContext()
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: tokenResponse => handleGoogleLogin(tokenResponse)
+    })
 
     /* Check if user is logged in. If logged in redirect the user to the dashboard */
     useEffect(() => {
@@ -144,27 +152,31 @@ function Signup() {
                     >
                         {invalidVerificationMessage}
                     </Text>
-                    {
-                        signingUp ?
-                            <Button
-                                small
-                                fullWidth
-                            >
-                                <Spinner small />
-                            </Button>
+                    <div className="authentication-buttons">
 
-                            :
-                            <Button
-                                small
-                                fullWidth
-                                onClick={onSignUp}
+                        {
+                            signingUp ?
+                                <Button
+                                    small
+                                    fullWidth
+                                >
+                                    <Spinner small />
+                                </Button>
 
-                            >
-                                Sign up
+                                :
+                                <Button
+                                    small
+                                    fullWidth
+                                    onClick={onSignUp}
 
-                            </Button>
+                                >
+                                    Sign up
 
-                    }
+                                </Button>
+
+                        }
+                        <GoogleLoginButton onClick={() => googleLogin()} />
+                    </div>
                     {
                         signUpSuccessful &&
                         <Text success>Signup successful. Check your email to activate your account</Text>

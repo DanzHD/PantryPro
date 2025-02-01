@@ -1,14 +1,30 @@
 package pantrypro.Server.service;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.google.api.client.auth.oauth2.BearerToken;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.openidconnect.IdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import pantrypro.Server.Enums.Role;
+import pantrypro.Server.dto.*;
 import pantrypro.Server.model.User;
-import pantrypro.Server.dto.AuthenticationRequest;
-import pantrypro.Server.dto.AuthenticationResponse;
-import pantrypro.Server.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,8 +35,14 @@ import pantrypro.Server.util.AccountEnabledException;
 import pantrypro.Server.util.InvalidTokenException;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -41,40 +63,54 @@ public class AuthenticationService {
     public HttpStatus register(RegisterRequest request)
             throws UserAlreadyExistsException, PasswordTooWeakException {
 
-        if (userExists(request.getEmail())) {
-            /* Check if account has been activated, if not register new account  */
-            User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-            if (user.isEnabled() || !jwtService.isTokenExpired(user.getVerificationToken())) {
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
 
-                throw new UserAlreadyExistsException();
-            }
-            userRepository.delete(user);
+        if (user.isPresent() && (user.get().isEnabled()
+            || (user.get().getVerificationToken() != null) && !jwtService.isTokenExpired(user.get().getVerificationToken()))) {
+            throw new UserAlreadyExistsException();
         }
 
         if (!passwordIsValid(request.getPassword())) {
             throw new PasswordTooWeakException();
         }
 
-        var user = User.builder()
+        if (user.isPresent() && user.get().isUseOtherLogin()) {
+            String verificationToken = jwtService.generateVerificationToken(user.get());
+
+            user.get()
+                .setPassword(passwordEncoder.encode(request.getPassword()));
+            user.get()
+                .setVerificationToken(verificationToken);
+            emailService.sendEnableUserEmail(user.get(), verificationToken);
+            userRepository.save(user.get());
+
+            return HttpStatus.ACCEPTED;
+
+        }
+
+        /* Previous user taken too long to verify account and hasn't signed up using other login methods */
+        user.ifPresent(userRepository::delete);
+
+        var newUser = User.builder()
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
             .enabled(false)
             .allowEmailNotifications(true)
             .role(Role.USER)
+            .useOtherLogin(false)
             .build();
 
-        String verificationToken = jwtService.generateVerificationToken(user);
-        user.setVerificationToken(verificationToken);
-
-        userRepository.save(user);
-
-        emailService.sendEnableUserEmail(user, verificationToken);
-
-
+        String verificationToken = jwtService.generateVerificationToken(newUser);
+        newUser.setVerificationToken(verificationToken);
+        emailService.sendEnableUserEmail(newUser, verificationToken);
+        userRepository.save(newUser);
         return HttpStatus.ACCEPTED;
 
+
     }
+
+
+
 
     public AuthenticationResponse enableUser(String verificationToken) {
         String userEmail = jwtService.extractUsername(verificationToken);
@@ -118,6 +154,9 @@ public class AuthenticationService {
         );
         User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow();
+        if (!user.isEnabled()) {
+            throw new AccountEnabledException();
+        }
 
         var jwtToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -128,13 +167,7 @@ public class AuthenticationService {
             .build();
     }
 
-    /**
-     * Checks that an email exists within the database
-     */
-    public boolean userExists(String email) {
-        Optional<User> userContainer = userRepository.findByEmail(email);
-        return userContainer.isPresent();
-    }
+
 
     /**
      * Validates that the password is strong enough with the following policies:
@@ -160,12 +193,10 @@ public class AuthenticationService {
      *
      */
     public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new InvalidTokenException();
-        }
+
+        final String authHeader = validateAuthHeader(request);
         refreshToken = authHeader.substring(7);
 
 
@@ -185,6 +216,59 @@ public class AuthenticationService {
 
         throw new InvalidTokenException();
 
+    }
+
+    public AuthenticationResponse googleAuthenticate(GoogleLoginDto googleLoginDto) throws GeneralSecurityException, IOException {
+
+        Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod());
+        credential.setAccessToken(googleLoginDto.getGoogleToken());
+
+        HttpTransport transport = new NetHttpTransport();
+        HttpRequestFactory requestFactory = transport.createRequestFactory(credential);
+
+        GenericUrl url = new GenericUrl("https://www.googleapis.com/oauth2/v1/userinfo");
+        HttpResponse res = requestFactory.buildGetRequest(url).execute();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        GoogleUserResponse resObject = gson.fromJson(res.parseAsString(), GoogleUserResponse.class);
+        String userEmail = resObject.getEmail();
+
+        Optional<User> userOptional = userRepository.findByEmail(userEmail);
+        User user;
+
+        if (userOptional.isEmpty()) {
+            user = User.builder()
+                .verificationToken(null)
+                .email(userEmail)
+                .role(Role.USER)
+                .useOtherLogin(true)
+                .password(null)
+                .build();
+            userRepository.save(user);
+        } else {
+            user = userOptional.get();
+            user.setUseOtherLogin(true);
+        }
+
+
+        var jwtToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        return AuthenticationResponse.builder()
+            .accessToken(jwtToken)
+            .refreshToken(refreshToken)
+            .build();
+    }
+
+    public String validateAuthHeader(HttpServletRequest request) {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new InvalidTokenException();
+        }
+
+        return authHeader;
     }
 
 

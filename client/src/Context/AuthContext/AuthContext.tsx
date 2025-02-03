@@ -14,7 +14,8 @@ interface IAuthContext {
     accessToken: string | null,
     logout: () => void,
     enableAccount: (verificationToken: string) => Promise<boolean>,
-    handleGoogleLogin: (tokenResponse: TokenResponse) => void
+    handleGoogleLogin: (tokenResponse: TokenResponse) => void,
+    sendConfirmationEmail: (email: string) => void
 
 }
 
@@ -132,6 +133,13 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
 
     }
 
+    const sendConfirmationEmail = async (email: string) => {
+        console.log(email)
+        return await apiClient.post("/auth/resend-validation-email", {
+            email: email
+        })
+    }
+
 
 
     const authContextValue: IAuthContext = {
@@ -141,7 +149,9 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
         logout,
         enableAccount,
         accessToken,
-        handleGoogleLogin
+        handleGoogleLogin,
+        sendConfirmationEmail
+
     }
 
     return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>

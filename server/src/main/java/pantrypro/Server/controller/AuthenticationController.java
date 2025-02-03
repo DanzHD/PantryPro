@@ -56,6 +56,19 @@ public class AuthenticationController {
 
     }
 
+    @PostMapping("/resend-validation-email")
+    public ResponseEntity<HttpStatus> resendConfirmationEmail(
+        @RequestBody ConfirmationEmailRequest request
+    ) {
+        try {
+            System.out.println("request sent");
+            return ResponseEntity.ok(service.resendConfirmationEmail(request));
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     /**
      *
      * Validates the user's verification token and enables the user

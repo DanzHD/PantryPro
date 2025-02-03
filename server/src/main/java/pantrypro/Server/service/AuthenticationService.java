@@ -109,6 +109,14 @@ public class AuthenticationService {
 
     }
 
+    public HttpStatus resendConfirmationEmail(ConfirmationEmailRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow();
+        emailService.sendEnableUserEmail(user, user.getVerificationToken());
+
+        return HttpStatus.ACCEPTED;
+    }
+
 
 
 

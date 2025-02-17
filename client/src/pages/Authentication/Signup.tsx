@@ -69,9 +69,7 @@ function Signup() {
                 if (error.statusCode === 409) {
                     setInvalidVerificationMessage("Registration failed: email already in use")
                 } else if (error.statusCode === 422) {
-                    setInvalidVerificationMessage("Password is too weak. "
-
-                    )
+                    setInvalidVerificationMessage("Password is too weak. ")
                 } else {
                     setInvalidVerificationMessage("Something went wrong... Please try again later")
                 }

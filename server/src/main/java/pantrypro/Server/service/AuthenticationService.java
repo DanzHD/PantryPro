@@ -15,6 +15,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.coyote.Response;
@@ -64,10 +65,14 @@ public class AuthenticationService {
             throws UserAlreadyExistsException, PasswordTooWeakException {
 
         Optional<User> user = userRepository.findByEmail(request.getEmail());
+        try {
 
-        if (user.isPresent() && (user.get().isEnabled()
-            || (user.get().getVerificationToken() != null) && !jwtService.isTokenExpired(user.get().getVerificationToken()))) {
-            throw new UserAlreadyExistsException();
+            if (user.isPresent() && (user.get().isEnabled()
+                || (user.get().getVerificationToken() != null) && !jwtService.isTokenExpired(user.get().getVerificationToken()))) {
+                throw new UserAlreadyExistsException();
+            }
+        } catch (ExpiredJwtException exception) {
+            System.out.println("Jwt has expired for email validation");
         }
 
         if (!passwordIsValid(request.getPassword())) {

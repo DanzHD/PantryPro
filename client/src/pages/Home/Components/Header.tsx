@@ -7,38 +7,40 @@ import {Link, useNavigate} from "react-router-dom";
 import {loginRoute, signupRoute} from "../../../App.tsx";
 
 function Header({
-  classNames,
-  sticky
+    classNames,
+    sticky
 }: {
-  classNames?: string,
-  sticky?: boolean
+    classNames?: string,
+    sticky?: boolean
 }) {
 
-  const navigate = useNavigate()
+    const navigate = useNavigate()
 
-  const {scrollDirection} = useScroll()
-  const computedClasses = cx(
-    "header",
-    {
-      "header--sticky": sticky,
-      "header--hidden": scrollDirection == ScrollDirection.DOWN
-    },
-    classNames
-  )
+    const {scrollDirection} = useScroll()
+    const computedClasses = cx(
+        "header",
+        {
+            "header--sticky": sticky,
+            "header--hidden": scrollDirection == ScrollDirection.DOWN
+        },
+        classNames
+    )
 
-  return <>
-    <div className={computedClasses}>
-      <div className="header__logo">
-        <Text heading><Link to={"/"}>PantryPro</Link></Text>
+    return (
+        <>
+            <div className={computedClasses}>
+                <div className="header__logo">
+                    <Text heading><Link to={"/"}>PantryPro</Link></Text>
 
-      </div>
-      <div className="header__right-items">
-        <Text styles={{color: 'white'}}><Link to={loginRoute}>Log in</Link></Text>
-        <Button small onClick={() => navigate(signupRoute)}>Sign up</Button>
-      </div>
+                </div>
+                <div className="header__right-items">
+                    <Text styles={{color: 'white'}}><Link to={loginRoute}>Log in</Link></Text>
+                    <Button small onClick={() => navigate(signupRoute)}>Sign up</Button>
+                </div>
 
-    </div>
-  </>
+            </div>
+        </>
+    )
 }
 
 

@@ -7,15 +7,15 @@ function Settings() {
 
 
   
-  return (
-    <>
-      <div className="settings">
+    return (
+        <>
+            <div className="settings">
 
-        <Header pageSelected={Page.SETTINGS} />
-        <Body />
-      </div>
-    </>
-  )
+                <Header pageSelected={Page.SETTINGS} />
+                <Body />
+            </div>
+        </>
+    )
 }
 
 export default Settings

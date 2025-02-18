@@ -1,5 +1,5 @@
 export interface FoodRequestDto {
-  expiryDate: string,
-  group: string,
-  name: string
+    expiryDate: string,
+    group: string,
+    name: string
 }

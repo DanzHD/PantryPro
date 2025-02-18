@@ -1,10 +1,10 @@
 export class UpdateSettingsDto {
-  constructor(allowEmailAlert: boolean) {
+    constructor(allowEmailAlert: boolean) {
 
-    this.allowEmailAlert = allowEmailAlert
-  }
+        this.allowEmailAlert = allowEmailAlert
+    }
 
-  allowEmailAlert: boolean | undefined
+    allowEmailAlert: boolean | undefined
 
 
 }

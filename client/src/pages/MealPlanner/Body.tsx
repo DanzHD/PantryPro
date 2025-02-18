@@ -13,142 +13,142 @@ import {DeleteScheduledMealDto} from "../../dto/DeleteScheduledMealDto.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 
 export class Recipe implements Item {
-  id: number
-  name: string
-  ingredients: string[]
-  instructions: string
-  image: string | null
+    id: number
+    name: string
+    ingredients: string[]
+    instructions: string
+    image: string | null
 
-  constructor(id: number, name: string, ingredients: string[], instructions: string, image: string | null) {
-    this.id = id
-    this.name = name
-    this.ingredients = ingredients
-    this.instructions = instructions
-    this.image = image
-  }
+    constructor(id: number, name: string, ingredients: string[], instructions: string, image: string | null) {
+        this.id = id
+        this.name = name
+        this.ingredients = ingredients
+        this.instructions = instructions
+        this.image = image
+    }
 
 }
 
 function Body() {
-  const { accessToken } = useAuthContext()
+    const { accessToken } = useAuthContext()
 
-  const [recipes, setRecipes] = useState(new Map<DaysOfTheWeek, Map<number, Recipe>>([
-    [DaysOfTheWeek.MONDAY, new Map()],
-    [DaysOfTheWeek.TUESDAY, new Map()],
-    [DaysOfTheWeek.WEDNESDAY, new Map()],
-    [DaysOfTheWeek.THURSDAY, new Map()],
-    [DaysOfTheWeek.FRIDAY, new Map()],
-    [DaysOfTheWeek.SATURDAY, new Map()],
-    [DaysOfTheWeek.SUNDAY, new Map()]
-  ]))
-  /* For recipes inside the modal, gets the day of week adding recipes for */
-  const [addRecipeForDay, setAddRecipeForDay] = useState<DaysOfTheWeek>(DaysOfTheWeek.MONDAY)
-  const [addRecipeModalOpen, setAddRecipeModalOpen] = useState(false)
-  const addRecipeModalRef = useRef(null)
-  const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
+    const [recipes, setRecipes] = useState(new Map<DaysOfTheWeek, Map<number, Recipe>>([
+        [DaysOfTheWeek.MONDAY, new Map()],
+        [DaysOfTheWeek.TUESDAY, new Map()],
+        [DaysOfTheWeek.WEDNESDAY, new Map()],
+        [DaysOfTheWeek.THURSDAY, new Map()],
+        [DaysOfTheWeek.FRIDAY, new Map()],
+        [DaysOfTheWeek.SATURDAY, new Map()],
+        [DaysOfTheWeek.SUNDAY, new Map()]
+    ]))
+    /* For recipes inside the modal, gets the day of week adding recipes for */
+    const [addRecipeForDay, setAddRecipeForDay] = useState<DaysOfTheWeek>(DaysOfTheWeek.MONDAY)
+    const [addRecipeModalOpen, setAddRecipeModalOpen] = useState(false)
+    const addRecipeModalRef = useRef(null)
+    const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
 
-  /*
+    /*
     Query the stored weekly meals
-   */
-  useEffect(() => {
-    const [year , week] = selectedWeek.split("-W")
-    const yearNumber: number = year as unknown as number
-    const weekNumber: number = week as unknown as number
-    getWeekOfScheduledMeals({ accessToken, year: yearNumber, week: weekNumber })
-      .then(weeklyScheduledMeals => {
-        if (weeklyScheduledMeals) {
+    */
+    useEffect(() => {
+        const [year , week] = selectedWeek.split("-W")
+        const yearNumber: number = year as unknown as number
+        const weekNumber: number = week as unknown as number
+        getWeekOfScheduledMeals({ accessToken, year: yearNumber, week: weekNumber })
+            .then(weeklyScheduledMeals => {
+                if (weeklyScheduledMeals) {
 
-          setRecipes(weeklyScheduledMeals)
-        }
-      })
-  }, [accessToken, selectedWeek]);
+                    setRecipes(weeklyScheduledMeals)
+                }
+            })
+    }, [accessToken, selectedWeek]);
   
   
-  /**
-   *
-   * Deals with opening and closing the add recipe modal
-   */
-  function handleOpenAddRecipeModal(day: DaysOfTheWeek) {
+    /**
+    *
+    * Deals with opening and closing the add recipe modal
+    */
+    function handleOpenAddRecipeModal(day: DaysOfTheWeek) {
     if (!addRecipeModalRef.current) {
-      return
+        return
     }
 
-    const dialog: HTMLDialogElement = addRecipeModalRef.current as HTMLDialogElement
-    setAddRecipeForDay(day)
-    dialog.showModal()
-    setAddRecipeModalOpen(true)
+        const dialog: HTMLDialogElement = addRecipeModalRef.current as HTMLDialogElement
+        setAddRecipeForDay(day)
+        dialog.showModal()
+        setAddRecipeModalOpen(true)
 
-  }
-
-  /**
-   *
-   * Removes a recipe from the newRecipes state variable based on the day and recipeId
-   * Updates the database, removes the deleted recipe from the database
-   */
-  async function handleRemoveRecipe(day: DaysOfTheWeek, recipeId: number) {
-    const newRecipes = new Map<DaysOfTheWeek, Map<number, Recipe>>(recipes)
-    const recipesOnDay = newRecipes.get(day) as Map<number, Recipe>
-    recipesOnDay.delete(recipeId)
-    setRecipes(newRecipes)
-
-    const [year, week] = selectedWeek.split("-W")
-    let date = moment(`${year}-W${week}`).day(day)
-
-    if (day === DaysOfTheWeek.SUNDAY) {
-      /* Day of the week starts on Sunday, add seven to make it start on Monday */
-      date = date.add(7, "day")
     }
-    const strDate = date.format("YYYY-MM-DD")
 
-    const deleteScheduledMealDto = new DeleteScheduledMealDto(strDate, recipeId);
-    await deleteScheduledMeal({accessToken, deleteScheduledMealDto})
-  }
+    /**
+    *
+    * Removes a recipe from the newRecipes state variable based on the day and recipeId
+    * Updates the database, removes the deleted recipe from the database
+    */
+    async function handleRemoveRecipe(day: DaysOfTheWeek, recipeId: number) {
+        const newRecipes = new Map<DaysOfTheWeek, Map<number, Recipe>>(recipes)
+        const recipesOnDay = newRecipes.get(day) as Map<number, Recipe>
+        recipesOnDay.delete(recipeId)
+        setRecipes(newRecipes)
 
-  function handleWeekChange(e: React.ChangeEvent) {
-    const inputWeekElement = e.target as HTMLInputElement
-    setSelectedWeek(inputWeekElement.value)
-  }
+        const [year, week] = selectedWeek.split("-W")
+        let date = moment(`${year}-W${week}`).day(day)
 
-  return (
-    <>
+        if (day === DaysOfTheWeek.SUNDAY) {
+            /* Day of the week starts on Sunday, add seven to make it start on Monday */
+            date = date.add(7, "day")
+        }
+        const strDate = date.format("YYYY-MM-DD")
 
-      <div className="meal-planner__body">
-        <div className="meal-planner__body__content">
-          <div className="meal-planner__body__content__title">
+        const deleteScheduledMealDto = new DeleteScheduledMealDto(strDate, recipeId);
+        await deleteScheduledMeal({accessToken, deleteScheduledMealDto})
+    }
 
-            <Text heading centered>Meal Planner</Text>
-            <Input defaultValue={`${new Date().getFullYear()}-W${getDateWeek(new Date())}`} type="week" onChange={handleWeekChange}  />
-          </div>
-          <div className="weekly-meals-section">
-            {
-              Object.values(DaysOfTheWeek).map(day => {
-                return <MealsDay
-                  key={day}
-                  day={day}
-                  meals={recipes.get(day)}
-                  handleOpenAddRecipeModal={handleOpenAddRecipeModal}
-                  handleRemoveRecipe={handleRemoveRecipe}
-                />
-              })
-            }
+    function handleWeekChange(e: React.ChangeEvent) {
+        const inputWeekElement = e.target as HTMLInputElement
+        setSelectedWeek(inputWeekElement.value)
+    }
 
-          </div>
-        </div>
+    return (
+        <>
 
-      </div>
+            <div className="meal-planner__body">
+                <div className="meal-planner__body__content">
+                    <div className="meal-planner__body__content__title">
 
-      <AddRecipeModal
-        week={selectedWeek}
-        day={addRecipeForDay}
-        currentRecipes={recipes}
-        setCurrentRecipes={setRecipes}
-        modalRef={addRecipeModalRef}
-        modalOpen={addRecipeModalOpen}
-        setModalOpen={setAddRecipeModalOpen}
-      />
+                        <Text heading centered>Meal Planner</Text>
+                        <Input defaultValue={`${new Date().getFullYear()}-W${getDateWeek(new Date())}`} type="week" onChange={handleWeekChange}  />
+                    </div>
+                    <div className="weekly-meals-section">
+                        {
+                            Object.values(DaysOfTheWeek).map(day => {
+                                return <MealsDay
+                                    key={day}
+                                    day={day}
+                                    meals={recipes.get(day)}
+                                    handleOpenAddRecipeModal={handleOpenAddRecipeModal}
+                                    handleRemoveRecipe={handleRemoveRecipe}
+                                />
+                            })
+                        }
 
-    </>
-  )
+                    </div>
+                </div>
+
+            </div>
+
+            <AddRecipeModal
+                week={selectedWeek}
+                day={addRecipeForDay}
+                currentRecipes={recipes}
+                setCurrentRecipes={setRecipes}
+                modalRef={addRecipeModalRef}
+                modalOpen={addRecipeModalOpen}
+                setModalOpen={setAddRecipeModalOpen}
+            />
+
+        </>
+    )
 
 }
 
@@ -157,55 +157,55 @@ function Body() {
  * Creates a card which contains 3 cards for breakfast, lunch and dinner
  */
 function MealsDay({
-  day,
-  meals,
-  handleOpenAddRecipeModal,
-  handleRemoveRecipe
+    day,
+    meals,
+    handleOpenAddRecipeModal,
+    handleRemoveRecipe
 }: {
-  day: DaysOfTheWeek,
-  meals: Map<number, Recipe> | undefined,
-  handleOpenAddRecipeModal: ((day: DaysOfTheWeek) => void),
-  handleRemoveRecipe: (day: DaysOfTheWeek, recipeId: number) => void
+    day: DaysOfTheWeek,
+    meals: Map<number, Recipe> | undefined,
+    handleOpenAddRecipeModal: ((day: DaysOfTheWeek) => void),
+    handleRemoveRecipe: (day: DaysOfTheWeek, recipeId: number) => void
 }) {
-  const openMealActionsRef = useRef<HTMLDivElement>(null)
-  const {open} = useModal(openMealActionsRef)
+    const openMealActionsRef = useRef<HTMLDivElement>(null)
+    const {open} = useModal(openMealActionsRef)
 
-  return <>
-    <div className="day-meal">
-      <div className="day-meal__title">
+    return <>
+        <div className="day-meal">
+            <div className="day-meal__title">
 
-        <Text subheading centered>{day}</Text>
-        <span ref={openMealActionsRef} className="material-symbols-outlined">
-          more_vert
-        </span>
-        <div className="menu-container">
-          {
-            open &&
-              <ul className="menu-meal">
-                <li onClick={() => handleOpenAddRecipeModal(day)}>
-                  <span className="material-symbols-outlined">add</span>
-                  <Text>Add Meal</Text>
-                </li>
-              </ul>
-          }
-        </div>
-      </div>
-      {
-        meals &&
-          Array.from(meals.values()).map(meal => {
-            return <div key={meal.id} className="meal">
-              <div className="material-symbols-outlined" onClick={() => handleRemoveRecipe(day, meal.id)}>close</div>
-
-              <Text ellipsis bold >{meal.name}</Text>
-
-              <img src={meal.image ? meal.image : ""} alt={meal.name}/>
+                <Text subheading centered>{day}</Text>
+                <span ref={openMealActionsRef} className="material-symbols-outlined">
+                    more_vert
+                </span>
+                <div className="menu-container">
+                    {
+                        open &&
+                            <ul className="menu-meal">
+                                <li onClick={() => handleOpenAddRecipeModal(day)}>
+                                    <span className="material-symbols-outlined">add</span>
+                                    <Text>Add Meal</Text>
+                                </li>
+                            </ul>
+                    }
+                </div>
             </div>
-          })
-      }
+            {
+                meals &&
+                    Array.from(meals.values()).map(meal => {
+                    return <div key={meal.id} className="meal">
+                        <div className="material-symbols-outlined" onClick={() => handleRemoveRecipe(day, meal.id)}>close</div>
 
-    </div>
+                        <Text ellipsis bold >{meal.name}</Text>
 
-  </>
+                        <img src={meal.image ? meal.image : ""} alt={meal.name}/>
+                    </div>
+                })
+            }
+
+        </div>
+
+    </>
 }
 
 export default Body

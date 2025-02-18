@@ -5,52 +5,52 @@ import Text from "../../Components/Text/Text.tsx";
 import APIError from "../../util/APIError.tsx";
 
 function Verify() {
-  const [searchParams] = useSearchParams()
-  const { enableAccount } = useAuthContext()
-  const [accountAlreadyEnabled, setAccountAlreadyEnabled] = useState(false)
-  const [tokenExpired, setTokenExpired] = useState(false)
+    const [searchParams] = useSearchParams()
+    const { enableAccount } = useAuthContext()
+    const [accountAlreadyEnabled, setAccountAlreadyEnabled] = useState(false)
+    const [tokenExpired, setTokenExpired] = useState(false)
 
-  const token = searchParams.get("token")
-  const navigate = useNavigate()
+    const token = searchParams.get("token")
+    const navigate = useNavigate()
   
-  useEffect(() => {
+    useEffect(() => {
 
     if (!token) {
-      navigate("/login")
-      return
-    }
-      
-    enableAccount(token)
-      .then(() => {
-        navigate("/dashboard")
-      })
-      .catch((err) => {
-        if (err instanceof APIError) {
-          if (err.statusCode === 409) {
-            setAccountAlreadyEnabled(true)
-            return
-          }
-          if (err.statusCode === 401) {
-            setTokenExpired(true)
-            return
-          }
-        }
-
         navigate("/login")
-      })
+        return
+    }
 
-  }, [enableAccount, navigate, token]);
+    enableAccount(token)
+        .then(() => {
+            navigate("/dashboard")
+        })
+        .catch((err) => {
+            if (err instanceof APIError) {
+                if (err.statusCode === 409) {
+                    setAccountAlreadyEnabled(true)
+                    return
+                }
+                if (err.statusCode === 401) {
+                    setTokenExpired(true)
+                    return
+                }
+            }
 
-  if (accountAlreadyEnabled) {
-    return <Text>Account has already been activated. <Link to={"/login"}>Click here to login</Link></Text>
-  }
-  if (tokenExpired) {
-    return <Text danger>Account activation period passed.
-      Please register a new account <Link to={"/sign-up"}>here</Link>
-    </Text>
-  }
+            navigate("/login")
+        })
 
-  return <Text>Activating Account...</Text>
+    }, [enableAccount, navigate, token]);
+
+    if (accountAlreadyEnabled) {
+        return <Text>Account has already been activated. <Link to={"/login"}>Click here to login</Link></Text>
+    }
+    if (tokenExpired) {
+        return <Text danger>Account activation period passed.
+            Please register a new account <Link to={"/sign-up"}>here</Link>
+        </Text>
+    }
+
+    return <Text>Activating Account...</Text>
 }
 
 export default Verify

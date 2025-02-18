@@ -24,32 +24,32 @@ export const mealRoute: string = "/meal"
 function App() {
 
 
-  return (
-    <>
-      <ToastContainer />
+    return (
+        <>
+        <ToastContainer />
 
-      <AuthContextProvider>
+            <AuthContextProvider>
 
-        <Router>
-          <Routes>
-            <Route element={<ProtectedRoute />}>
-              <Route element={<Dashboard />} path={dashboardRoute} />
-              <Route element={<Settings />} path={settingsRoute} />
-              <Route element={<MealPlanner />} path={mealRoute} />
-            </Route>
-            <Route element={<Login />} path={loginRoute} />
-            <Route element={<Signup />} path={signupRoute} />
-            <Route element={<Verify />} path={verifyRoute} />
-            <Route errorElement={<Home />} element={<Home /> } path={"/"} />
-
-
-          </Routes>
-        </Router>
-      </AuthContextProvider>
+                <Router>
+                    <Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route element={<Dashboard />} path={dashboardRoute} />
+                            <Route element={<Settings />} path={settingsRoute} />
+                            <Route element={<MealPlanner />} path={mealRoute} />
+                        </Route>
+                        <Route element={<Login />} path={loginRoute} />
+                        <Route element={<Signup />} path={signupRoute} />
+                        <Route element={<Verify />} path={verifyRoute} />
+                        <Route errorElement={<Home />} element={<Home /> } path={"/"} />
 
 
-    </>
-  )
+                    </Routes>
+                </Router>
+            </AuthContextProvider>
+
+
+        </>
+    )
 
 }
 

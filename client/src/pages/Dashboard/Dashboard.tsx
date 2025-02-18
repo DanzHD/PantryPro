@@ -6,15 +6,15 @@ import {Page} from "../../enum/Pages.tsx";
 
 function Dashboard() {
 
-  return (
-    <>
-      <div id="dashboard">
+    return (
+        <>
+            <div id="dashboard">
 
-        <Header pageSelected={Page.DATABASE} />
-        <Table />
-      </div>
-    </>
-  )
+                <Header pageSelected={Page.DATABASE} />
+                <Table />
+            </div>
+        </>
+    )
 }
 
 export default Dashboard

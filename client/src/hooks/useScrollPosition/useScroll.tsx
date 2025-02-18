@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 
 export enum ScrollDirection {
-  UP = "UP",
-  DOWN = "DOWN"
+    UP = "UP",
+    DOWN = "DOWN"
 }
 
 /**
@@ -11,23 +11,23 @@ export enum ScrollDirection {
  */
 function useScroll() {
 
-  const [scrollPosition, setScrollPosition] = useState(window.scrollY)
-  const [scrollDirection, setScrollDirection] = useState(ScrollDirection.UP)
+    const [scrollPosition, setScrollPosition] = useState(window.scrollY)
+    const [scrollDirection, setScrollDirection] = useState(ScrollDirection.UP)
 
-  useEffect(() => {
+    useEffect(() => {
 
-    const handleScroll = () => {
+        const handleScroll = () => {
 
-      setScrollDirection((window.scrollY - scrollPosition) <= 0 ? ScrollDirection.UP : ScrollDirection.DOWN)
-      setScrollPosition(window.scrollY)
-    }
+            setScrollDirection((window.scrollY - scrollPosition) <= 0 ? ScrollDirection.UP : ScrollDirection.DOWN)
+            setScrollPosition(window.scrollY)
+        }
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+        window.addEventListener("scroll", handleScroll)
+        return () => window.removeEventListener("scroll", handleScroll)
 
-  }, [scrollPosition]);
+    }, [scrollPosition]);
 
-  return { scrollDirection, scrollPosition }
+    return { scrollDirection, scrollPosition }
 
 }
 

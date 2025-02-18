@@ -6,52 +6,50 @@ import AddFoodModal from "../AddFoodContainer/AddFoodModal.tsx";
 import {FoodRequestDto} from "../../../dto/FoodRequestDto.tsx";
 
 function TableSettings({
-  addFood
+    addFood
 }: {
-  addFood: ({ newFoods }: { newFoods: FoodRequestDto[]}) => void
+    addFood: ({ newFoods }: { newFoods: FoodRequestDto[]}) => void
 }) {
 
 
-  const addFoodModalRef = useRef<HTMLDialogElement>(null)
+    const addFoodModalRef = useRef<HTMLDialogElement>(null)
 
-  function handleModalOpen() {
-    if (!addFoodModalRef.current) {
-      return
+    function handleModalOpen() {
+        if (!addFoodModalRef.current) {
+            return
+        }
+        addFoodModalRef.current.showModal()
     }
-    addFoodModalRef.current.showModal()
-  }
 
 
 
 
-  return <div className="table__setting">
-    <Modal modalRef={addFoodModalRef} >
-      <AddFoodModal addFood={addFood} modalRef={addFoodModalRef} />
+    return (
+        <div className="table__setting">
+            <Modal modalRef={addFoodModalRef} >
+                <AddFoodModal addFood={addFood} modalRef={addFoodModalRef} />
 
-    </Modal>
-
-
-    <div className="table__setting__tabs">
-      <div className="table__setting__tab selected-tab">
-        <Text>Food</Text>
-      </div>
+            </Modal>
 
 
-      <Text className="table__setting__title" subheading>Food Database</Text>
+            <div className="table__setting__tabs">
+                <div className="table__setting__tab selected-tab">
+                    <Text>Food</Text>
+                </div>
+                    <Text className="table__setting__title" subheading>Food Database</Text>
+                </div>
 
+            <div className="add-food">
 
-    </div>
-
-    <div className="add-food">
-
-      <Button id="add-button__override" onClick={handleModalOpen}>
-        <span className="material-symbols-outlined">
-          add
-        </span>
-        New Food
-      </Button>
-    </div>
-  </div>
+                <Button id="add-button__override" onClick={handleModalOpen}>
+                    <span className="material-symbols-outlined">
+                        add
+                    </span>
+                    New Food
+                </Button>
+                </div>
+        </div>
+    )
 
 }
 

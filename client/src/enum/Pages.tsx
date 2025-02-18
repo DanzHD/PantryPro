@@ -1,5 +1,5 @@
 export enum Page {
-  DATABASE,
-  MEAL,
-  SETTINGS
+    DATABASE,
+    MEAL,
+    SETTINGS
 }

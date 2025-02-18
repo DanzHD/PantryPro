@@ -6,26 +6,26 @@ import { RefObject, useEffect, useState} from "react";
  */
 function useModal(openModalDiv: RefObject<HTMLElement>) {
 
-  const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false)
 
-  useEffect(() => {
-    function closeModal(e: Event) {
+    useEffect(() => {
+        function closeModal(e: Event) {
 
-      if (openModalDiv?.current?.contains( e.target as Node)) {
-        setOpen(open => !open)
-        return
-      }
+            if (openModalDiv?.current?.contains( e.target as Node)) {
+                setOpen(open => !open)
+                return
+            }
 
-      setOpen(false)
+            setOpen(false)
 
 
-    }
+        }
 
-    document.addEventListener('click', closeModal)
+        document.addEventListener('click', closeModal)
 
-    return () => {
-      document.removeEventListener('click', closeModal)
-    }
+        return () => {
+            document.removeEventListener('click', closeModal)
+        }
 
   }, [openModalDiv]);
 

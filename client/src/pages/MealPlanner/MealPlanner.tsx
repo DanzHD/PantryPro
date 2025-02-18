@@ -5,13 +5,13 @@ import "./_mealPlanner.scss"
 
 function MealPlanner() {
 
-  return <>
-    <div className="meal-planner">
+    return <>
+        <div className="meal-planner">
 
-      <Header pageSelected={Page.MEAL} />
-      <Body />
-    </div>
-  </>
+            <Header pageSelected={Page.MEAL} />
+            <Body />
+        </div>
+    </>
 }
 
 export default MealPlanner

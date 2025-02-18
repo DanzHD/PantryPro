@@ -4,31 +4,31 @@ import cx from "classnames";
 
 
 function Modal({
-  children,
-  modalRef,
-  className,
-  id,
+    children,
+    modalRef,
+    className,
+    id,
 
 }: {
-  children: ReactNode,
-  modalRef: Ref<HTMLDialogElement>,
-  className?: string,
-  id?: string
+    children: ReactNode,
+    modalRef: Ref<HTMLDialogElement>,
+    className?: string,
+    id?: string
 }) {
 
-  const computedClasses = cx(
-    "modal",
-    className
-  )
+    const computedClasses = cx(
+        "modal",
+        className
+    )
 
 
-  return (
-    <>
-      <dialog className={computedClasses} id={id} ref={modalRef}>
-        {children}
-      </dialog>
-    </>
-  )
+    return (
+        <>
+            <dialog className={computedClasses} id={id} ref={modalRef}>
+                {children}
+            </dialog>
+        </>
+    )
 }
 
 export default Modal

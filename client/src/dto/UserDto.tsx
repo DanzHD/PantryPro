@@ -1,4 +1,4 @@
 export interface UserDto {
-  userEmail: string,
-  allowEmailNotifications: boolean
+    userEmail: string,
+    allowEmailNotifications: boolean
 }

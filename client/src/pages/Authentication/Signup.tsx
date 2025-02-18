@@ -1,15 +1,16 @@
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 import {Link, useNavigate,} from "react-router-dom";
 import {ChangeEvent, useEffect, useState} from "react";
-import usePassword from "../../hooks/usePassword.tsx";
+import usePassword from "../../hooks/usePassword/usePassword.tsx";
 import APIError from "../../util/APIError.tsx";
 import Text from "../../Components/Text/Text.tsx";
 import Button from "../../Components/Button/Button.tsx";
-import { loginRoute } from "../../App.tsx";
+import {loginRoute} from "../../App.tsx";
 import AuthenticationHeader from "./AuthenticationHeader.tsx";
 import Spinner from "../../Components/Spinner/Spinner.tsx";
 import GoogleLoginButton from "../../GoogleLoginButton/GoogleLoginButton.tsx";
 import {useGoogleLogin} from "@react-oauth/google";
+import EmailValidation from "./EmailValidation.tsx";
 
 function Signup() {
     const { registerUser, getNewAccessToken } = useAuthContext()
@@ -17,7 +18,10 @@ function Signup() {
     const [password, setPassword] = useState("")
     const navigate = useNavigate()
     const [invalidVerificationMessage, setInvalidVerificationMessage] = useState("")
-    const [signUpSuccessful, setSignUpSuccessFul] = useState(false)
+    const [isValidatingEmail, setIsValidatingEmail] = useState({
+        email: "",
+        successSignUp: false
+    })
     const [signingUp, setSigningUp] = useState(false)
 
     const {
@@ -51,9 +55,11 @@ function Signup() {
 
             setSigningUp(true)
             const success = await registerUser({email: email, password: password})
-
             if (success) {
-                setSignUpSuccessFul(true)
+                setIsValidatingEmail({
+                    email: email,
+                    successSignUp: true
+                })
                 setInvalidVerificationMessage("")
             }
 
@@ -63,14 +69,15 @@ function Signup() {
                 if (error.statusCode === 409) {
                     setInvalidVerificationMessage("Registration failed: email already in use")
                 } else if (error.statusCode === 422) {
-                    setInvalidVerificationMessage("Password is too weak. "
-
-                    )
+                    setInvalidVerificationMessage("Password is too weak. ")
                 } else {
                     setInvalidVerificationMessage("Something went wrong... Please try again later")
                 }
 
-                setSignUpSuccessFul(false)
+                setIsValidatingEmail({
+                    email: "",
+                    successSignUp: false
+                })
 
             }
 
@@ -92,6 +99,16 @@ function Signup() {
         if (invalidVerificationMessage) {
             setInvalidVerificationMessage("")
         }
+    }
+
+    if (isValidatingEmail.successSignUp) {
+        return <EmailValidation
+            email={isValidatingEmail.email}
+            onBack={() => setIsValidatingEmail({
+                email: "",
+                successSignUp: false
+            })}
+        />
     }
 
     return (
@@ -177,10 +194,7 @@ function Signup() {
                         }
                         <GoogleLoginButton onClick={() => googleLogin()} />
                     </div>
-                    {
-                        signUpSuccessful &&
-                        <Text success>Signup successful. Check your email to activate your account</Text>
-                    }
+
 
 
                         <Text centered>

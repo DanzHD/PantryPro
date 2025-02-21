@@ -5,7 +5,7 @@ import {useRef} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import cx from "classnames";
 import {useAuthContext} from "../../../Context/AuthContext/useAuthContext.tsx";
-import {dashboardRoute, mealRoute, settingsRoute} from "../../../App.tsx";
+import {dashboardRoute, mealGeneratorRoute, mealRoute, settingsRoute} from "../../../App.tsx";
 import {Page} from "../../../enum/Pages.tsx";
 
 
@@ -28,7 +28,8 @@ function Header({
             <div className="left-links ">
                 <Text className="app__header__text " heading>PantryPro </Text>
                 <HeaderLink logo='database' name="Database" link='/dashboard' selected={pageSelected === Page.DATABASE} />
-                <HeaderLink name="Meal Scheduler" logo="schedule" link={mealRoute} selected={pageSelected === Page.MEAL} />
+                <HeaderLink name="Meal Scheduler" logo="schedule" link={mealRoute} selected={pageSelected === Page.MEAL_SCHEDULER} />
+                <HeaderLink name="Meal Generator" logo="menu_book" link={mealGeneratorRoute} selected={pageSelected === Page.MEAL_GENERATOR} />
                 <HeaderLink name="Settings" logo="settings" link={settingsRoute} selected={pageSelected === Page.SETTINGS} />
             </div>
 
@@ -74,7 +75,7 @@ function Header({
 
                 </div>
                 <div onClick={() => navigate(mealRoute)} className={cx({
-                        "selected": pageSelected === Page.MEAL
+                        "selected": pageSelected === Page.MEAL_SCHEDULER
                     })}>
                         <span className="material-symbols-outlined">schedule</span>
                         <div>Meal Scheduler</div>

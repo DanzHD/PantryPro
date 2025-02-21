@@ -8,7 +8,7 @@ function MealPlanner() {
     return <>
         <div className="meal-planner">
 
-            <Header pageSelected={Page.MEAL} />
+            <Header pageSelected={Page.MEAL_SCHEDULER} />
             <Body />
         </div>
     </>

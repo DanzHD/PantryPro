@@ -1,5 +1,6 @@
 export enum Page {
     DATABASE,
-    MEAL,
-    SETTINGS
+    MEAL_SCHEDULER,
+    SETTINGS,
+    MEAL_GENERATOR
 }

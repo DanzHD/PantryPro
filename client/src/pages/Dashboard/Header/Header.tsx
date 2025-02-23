@@ -81,9 +81,17 @@ function Header({
                         <div>Meal Scheduler</div>
                 </div>
 
+
+                <div onClick={() => navigate(mealGeneratorRoute)} className={cx({
+                    "selected": pageSelected === Page.MEAL_GENERATOR
+                })}>
+                    <span className="material-symbols-outlined">menu_book</span>
+                    <div>Meal Generator</div>
+                </div>
+
                 <div onClick={() => navigate(settingsRoute)} className={cx({
                     "selected": pageSelected === Page.SETTINGS
-                    })}>
+                })}>
                     <span className="material-symbols-outlined">settings</span>
                     <div>Settings</div>
                 </div>

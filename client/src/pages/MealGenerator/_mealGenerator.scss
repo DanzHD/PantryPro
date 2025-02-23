@@ -1,0 +1,51 @@
+@use "../../styles/vars";
+
+.meal-generator {
+    background-color: vars.$emerald-green;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    &__body {
+        flex-grow: 1;
+        margin-top: -5rem;
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-bottom: 5rem;
+        display: flex;
+        flex-direction: column;
+
+
+
+        &__content {
+            flex-grow: 1;
+            outline: lightgrey;
+            display: flex;
+            justify-content: space-around;
+
+
+            &__ingredients, &__recipe {
+                background-color: white;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                flex-grow: 0.4;
+                box-shadow: 0 0 5px lightgrey;
+
+            }
+
+
+        }
+    }
+}
+
+@media screen and (max-width: vars.$mobile-width) {
+    .meal-generator {
+        background-color: white;
+
+        &__body {
+            padding-left: 0;
+            padding-right: 0;
+
+        }
+    }
+}

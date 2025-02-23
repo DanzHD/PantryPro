@@ -4,7 +4,7 @@ import cx from "classnames";
 import useModal from "../../hooks/useModal/useModal.tsx";
 import Text from "../Text/Text.tsx";
 
-export interface Item {
+export type Item = {
     id: number,
     name: string
 }

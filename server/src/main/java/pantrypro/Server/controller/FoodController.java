@@ -5,10 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pantrypro.Server.Enums.FoodGroup;
-import pantrypro.Server.dto.FoodCountResponse;
-import pantrypro.Server.dto.FoodDeleteRequest;
-import pantrypro.Server.dto.FoodRequest;
-import pantrypro.Server.dto.FoodResponse;
+import pantrypro.Server.dto.Food.FoodDeleteRequest;
+import pantrypro.Server.dto.Food.FoodRequest;
+import pantrypro.Server.dto.Food.FoodResponse;
 import pantrypro.Server.model.Food;
 import pantrypro.Server.service.FoodService;
 

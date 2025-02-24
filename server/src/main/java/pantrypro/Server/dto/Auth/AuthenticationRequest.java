@@ -1,4 +1,4 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfirmationEmailRequest {
+public class AuthenticationRequest {
 
     private String email;
+    private String password;
+
+
 }

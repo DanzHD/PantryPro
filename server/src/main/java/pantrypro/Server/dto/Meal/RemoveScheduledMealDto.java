@@ -1,16 +1,19 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Meal;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.sql.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FoodDeleteRequest {
-    List<Long> foodIds;
+public class RemoveScheduledMealDto {
+
+    private Long recipeId;
+    private Date date;
+
 }

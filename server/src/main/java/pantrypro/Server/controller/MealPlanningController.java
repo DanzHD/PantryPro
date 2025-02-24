@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pantrypro.Server.dto.AddRecipeDto;
-import pantrypro.Server.dto.RemoveScheduledMealDto;
-import pantrypro.Server.dto.WeekRecipeResponse;
+import pantrypro.Server.dto.Recipe.AddRecipeDto;
+import pantrypro.Server.dto.Meal.RemoveScheduledMealDto;
+import pantrypro.Server.dto.Meal.WeekRecipeResponse;
 import pantrypro.Server.service.MealPlanningService;
 
 

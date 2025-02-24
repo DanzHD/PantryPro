@@ -1,30 +1,21 @@
 package pantrypro.Server.service;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.openidconnect.IdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import pantrypro.Server.Enums.Role;
-import pantrypro.Server.dto.*;
+import pantrypro.Server.dto.Auth.*;
 import pantrypro.Server.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,14 +27,9 @@ import pantrypro.Server.util.AccountEnabledException;
 import pantrypro.Server.util.InvalidTokenException;
 import pantrypro.Server.util.PasswordTooWeakException;
 import pantrypro.Server.util.UserAlreadyExistsException;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.regex.Pattern;
 

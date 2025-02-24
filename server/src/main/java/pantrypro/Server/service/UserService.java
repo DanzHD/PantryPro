@@ -3,8 +3,8 @@ package pantrypro.Server.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import pantrypro.Server.dto.UpdateUserSettingDto;
-import pantrypro.Server.dto.UserResponseDto;
+import pantrypro.Server.dto.Settings.UpdateUserSettingDto;
+import pantrypro.Server.dto.User.UserResponseDto;
 import pantrypro.Server.model.User;
 import pantrypro.Server.repository.UserRepository;
 

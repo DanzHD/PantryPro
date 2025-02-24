@@ -1,4 +1,4 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
-
-    private String email;
-    private String password;
-
-
+public class GoogleLoginDto {
+    private String googleToken;
 }

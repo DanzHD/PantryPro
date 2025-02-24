@@ -1,4 +1,5 @@
 import {Ingredients} from "./Ingredients.tsx";
+import {Recipe} from "./Recipe.tsx";
 
 
 export function Body() {
@@ -7,9 +8,8 @@ export function Body() {
         <div className="meal-generator__body">
             <div className="meal-generator__body__content">
                 <Ingredients />
+                <Recipe />
 
-                <div className="meal-generator__body__content__recipe">
-                </div>
             </div>
         </div>
     )

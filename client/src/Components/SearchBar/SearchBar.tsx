@@ -5,7 +5,7 @@ import useModal from "../../hooks/useModal/useModal.tsx";
 import Text from "../Text/Text.tsx";
 
 export type Item = {
-    id: number,
+    id: number | string,
     name: string
 }
 

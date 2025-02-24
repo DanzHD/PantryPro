@@ -152,6 +152,7 @@ function AddRecipeModal({
                             fullWidth
                             onChange={handleSearchBarChange}
                             placeholder="Search for Recipe"
+                            noItemsMessage="No Recipes Found"
                         />
                     }
                 </div>

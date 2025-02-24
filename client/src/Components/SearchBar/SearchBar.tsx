@@ -14,13 +14,15 @@ function SearchBar({
     placeholder,
     onChange,
     fullWidth,
-    handleSelectItem
+    handleSelectItem,
+    noItemsMessage
 }: {
     dropdownItems?: Item[],
     placeholder?: string,
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void,
     fullWidth?: boolean,
-    handleSelectItem?: (item: Item) => void
+    handleSelectItem?: (item: Item) => void,
+    noItemsMessage: string
 }) {
     let searchTimeout: ReturnType<typeof setTimeout>
     const searchBarRef = useRef<HTMLInputElement>(null)
@@ -100,7 +102,7 @@ function SearchBar({
 
                     <div className={computedClassesDropdown}>
 
-                        <div className="dropdown-search-item"><Text bold>No recipes found</Text></div>
+                        <div className="dropdown-search-item"><Text bold>{noItemsMessage}</Text></div>
                     </div>
                 </div>
             }

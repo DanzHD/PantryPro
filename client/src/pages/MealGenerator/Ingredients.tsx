@@ -33,7 +33,6 @@ export function Ingredients() {
             }
             newIngredientsSearched.set(ingredient.name, ingredient)
         }
-        console.log(newIngredientsSearched)
         setIngredientsSearched(newIngredientsSearched)
 
     }
@@ -57,6 +56,7 @@ export function Ingredients() {
                 onChange={handleSearchChange}
                 dropdownItems={Array.from(ingredientsSearched.values())}
                 handleSelectItem={handleIngredientSelection}
+                noItemsMessage="No ingredients found"
 
             />
             <div className="meal-generator__body__content__ingredients__selected-ingredients">

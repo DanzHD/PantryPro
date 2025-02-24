@@ -37,6 +37,8 @@ export function Ingredients() {
 
     }
 
+
+
     const handleIngredientSelection = (ingredient: Item) => {
         const newIngredientsSelected = new Map(ingredientsSelected)
         newIngredientsSelected.set(ingredient.id.toString(), ingredient)
@@ -45,6 +47,14 @@ export function Ingredients() {
         const newIngredientsSearched = new Map(ingredientsSearched)
         newIngredientsSearched.delete(ingredient.name)
         setIngredientsSearched(newIngredientsSearched)
+    }
+
+    const handleDeselectIngredient = (ingredient: Item) => {
+        const newIngredientsSelected = new Map(ingredientsSelected)
+        newIngredientsSelected.delete(ingredient.id.toString())
+        setIngredientsSelected(newIngredientsSelected)
+
+
     }
 
     return (
@@ -63,7 +73,17 @@ export function Ingredients() {
                 {
                     Array.from(ingredientsSelected.values()).map(ingredient => {
 
-                        return <div key={ingredient.id} className="ingredient">{ingredient.name}</div>
+                        return <div
+                            onClick={() => handleDeselectIngredient(ingredient)}
+                            key={ingredient.id} className="ingredient">
+                            <Text>
+
+                                {ingredient.name}
+                            </Text>
+                            <div className="material-symbols-outlined">
+                                close
+                            </div>
+                        </div>
 
 
                     })

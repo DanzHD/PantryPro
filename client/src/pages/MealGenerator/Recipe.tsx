@@ -13,7 +13,8 @@ export function Recipe({
                 <Text centered heading>Recipe</Text>
             </div>
             <div className="meal-generator__body__content__recipe__body">
-                <Text>
+                <Text preWrap>
+
                     {recipe}
                 </Text>
             </div>

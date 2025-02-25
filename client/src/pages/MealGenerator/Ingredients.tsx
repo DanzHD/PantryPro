@@ -4,8 +4,13 @@ import SearchBar, {Item} from "../../Components/SearchBar/SearchBar.tsx";
 import React, {useState} from "react";
 import {getIngredientList} from "../../api/ingredient.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
+import Button from "../../Components/Button/Button.tsx";
 
-export function Ingredients() {
+export function Ingredients({
+    handleGenerateRecipe
+}: {
+    handleGenerateRecipe: ({ ingredients }: { ingredients: string[] }) => void
+}) {
     const { accessToken } = useAuthContext();
     const [ingredientsSearched, setIngredientsSearched] = useState<Map<string, Item>>(new Map())
     const [ingredientsSelected, setIngredientsSelected] = useState<Map<string, Item>>(new Map())
@@ -35,6 +40,11 @@ export function Ingredients() {
         }
         setIngredientsSearched(newIngredientsSearched)
 
+    }
+
+    function handleRecipeGeneration() {
+        const ingredients = Array.from(ingredientsSelected.values()).map(item => item.name);
+        handleGenerateRecipe({ ingredients })
     }
 
 
@@ -89,6 +99,7 @@ export function Ingredients() {
                     })
                 }
             </div>
+            <Button onClick={handleRecipeGeneration}>Generate Recipe</Button>
 
         </div>
     )

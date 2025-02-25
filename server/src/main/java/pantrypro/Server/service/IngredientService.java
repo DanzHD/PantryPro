@@ -2,50 +2,40 @@ package pantrypro.Server.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pantrypro.Server.dto.Ingredient.IngredientJSON;
 import pantrypro.Server.dto.Ingredient.SpoonacularIngredientResponse;
+import pantrypro.Server.util.HTTPProperty;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
+
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class IngredientService {
     @Value("${SPOONACULAR_API_KEY}")
     private String spoonacularAPIKey;
+
+    private final HttpService httpService;
+
     public SpoonacularIngredientResponse findIngredients(String ingredient) throws IOException, URISyntaxException {
 
         /* Executing http request to spoonacular */
         String urlString = "https://api.spoonacular.com/food/ingredients/autocomplete?query=" + ingredient;
-        URL url = new URI(urlString).toURL();
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("x-api-key", spoonacularAPIKey);
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
-        con.connect();
-
-        /* Parsing spoonacular response */
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((con.getInputStream())));
-        StringBuilder sb = new StringBuilder();
-        String output;
-
-        while ((output = bufferedReader.readLine()) != null) {
-            sb.append(output);
-        }
+        ArrayList<HTTPProperty> httpProperties = new ArrayList<>();
+        httpProperties.add(new HTTPProperty("x-api-key", spoonacularAPIKey));
+        httpProperties.add(new HTTPProperty("Content-Type", "application/json"));
+        String output = httpService.performRequest(urlString, httpProperties, "GET");
 
         ObjectMapper mapper = new ObjectMapper();
-        List<IngredientJSON> ingredients = mapper.readValue(sb.toString(),
+        List<IngredientJSON> ingredients = mapper.readValue(output,
             new TypeReference<ArrayList<IngredientJSON>>() {});
 
 

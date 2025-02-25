@@ -1,6 +1,10 @@
 import Text from "../../Components/Text/Text.tsx";
 import "./_recipe.scss"
-export function Recipe() {
+export function Recipe({
+    recipe
+}: {
+    recipe: string
+}) {
 
     return (
         <div className="meal-generator__body__content__recipe">
@@ -10,6 +14,7 @@ export function Recipe() {
             </div>
             <div className="meal-generator__body__content__recipe__body">
                 <Text>
+                    {recipe}
                 </Text>
             </div>
 

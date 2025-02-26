@@ -2,7 +2,6 @@ import {apiClient} from "./client.tsx";
 import {AiRecipeResponse} from "../dto/AiRecipeResponse.tsx";
 
 export async function generateRecipe({ ingredients, accessToken }: { ingredients: string[], accessToken: string }) {
-    console.log(ingredients.toString())
     const response = await apiClient.get<AiRecipeResponse>("/ai/recipe", {
 
         headers: {

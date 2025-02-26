@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import {getIngredientList} from "../../api/ingredient.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 import Button from "../../Components/Button/Button.tsx";
+import Spinner from "../../Components/Spinner/Spinner.tsx";
 
 export function Ingredients({
     handleGenerateRecipe
@@ -14,6 +15,7 @@ export function Ingredients({
     const { accessToken } = useAuthContext();
     const [ingredientsSearched, setIngredientsSearched] = useState<Map<string, Item>>(new Map())
     const [ingredientsSelected, setIngredientsSelected] = useState<Map<string, Item>>(new Map())
+    const [loading, setLoading] = useState(false)
 
     const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target || !e.target.value || !accessToken) {
@@ -42,9 +44,12 @@ export function Ingredients({
 
     }
 
-    function handleRecipeGeneration() {
+    async function handleRecipeGeneration() {
+        setLoading(true)
         const ingredients = Array.from(ingredientsSelected.values()).map(item => item.name);
-        handleGenerateRecipe({ ingredients })
+        await handleGenerateRecipe({ingredients})
+
+        setLoading(false)
     }
 
 
@@ -99,7 +104,16 @@ export function Ingredients({
                     })
                 }
             </div>
-            <Button onClick={handleRecipeGeneration}>Generate Recipe</Button>
+            <Button onClick={handleRecipeGeneration}>
+                {
+                    loading ?
+                        <Spinner small /> :
+
+                        <div>Generate Recipe</div>
+
+                }
+
+            </Button>
 
         </div>
     )

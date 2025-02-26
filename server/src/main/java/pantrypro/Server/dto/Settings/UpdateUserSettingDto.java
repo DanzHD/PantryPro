@@ -1,19 +1,16 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Settings;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RemoveScheduledMealDto {
+public class UpdateUserSettingDto {
 
-    private Long recipeId;
-    private Date date;
+    private boolean allowEmailAlert;
 
 }

@@ -1,4 +1,4 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FoodCountResponse {
+public class AuthenticationResponse {
+    @JsonProperty("accessToken")
+    private String accessToken;
 
-    @JsonProperty("foodCount")
-    private int foodCount;
+    @JsonProperty("refreshToken")
+    private String refreshToken;
+
+
 
 }

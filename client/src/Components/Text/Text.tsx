@@ -15,7 +15,8 @@ function Text({
     className,
     centered,
     bold,
-    styles
+    styles,
+    preWrap
 
 }: {
     children?: React.ReactNode,
@@ -29,13 +30,15 @@ function Text({
     className?: string,
     centered?: boolean,
     bold?: boolean,
-    styles?: React.CSSProperties
+    styles?: React.CSSProperties,
+    preWrap?: boolean
 }) {
 
     const textStyles: React.CSSProperties = {
         textAlign: centered ? "center" : "start",
         textOverflow: ellipsis ? "ellipsis" : "none",
         fontStyle: italicize ? "italic" : "normal",
+        whiteSpace: preWrap ? "pre-wrap" : "none",
         ...styles
     }
 

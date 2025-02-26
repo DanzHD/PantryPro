@@ -13,13 +13,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import MealPlanner from "./pages/MealPlanner/MealPlanner.tsx";
 import Login from "./pages/Authentication/Login.tsx";
 import Signup from "./pages/Authentication/Signup.tsx";
+import {MealGenerator} from "./pages/MealGenerator/MealGenerator.tsx";
 
 export const loginRoute: string = "/login"
 export const signupRoute: string = "/sign-up"
 export const dashboardRoute: string = "/dashboard"
 const verifyRoute: string = "/verify"
 export const settingsRoute: string = "/settings"
-export const mealRoute: string = "/meal"
+export const mealRoute: string = "/meal-schedule"
+export const mealGeneratorRoute: string = "/meal-generator"
 
 function App() {
 
@@ -36,6 +38,7 @@ function App() {
                             <Route element={<Dashboard />} path={dashboardRoute} />
                             <Route element={<Settings />} path={settingsRoute} />
                             <Route element={<MealPlanner />} path={mealRoute} />
+                            <Route element={<MealGenerator />} path={mealGeneratorRoute} />
                         </Route>
                         <Route element={<Login />} path={loginRoute} />
                         <Route element={<Signup />} path={signupRoute} />

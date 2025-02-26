@@ -1,0 +1,12 @@
+.meal-generator__body__content__recipe {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+
+    &__body {
+        flex-grow: 1;
+        height: 0;
+        overflow-y: auto;
+        white-space: pre-wrap;
+    }
+}

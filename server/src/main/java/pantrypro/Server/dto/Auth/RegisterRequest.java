@@ -1,20 +1,18 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pantrypro.Server.model.Food;
-
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FoodResponse {
+public class RegisterRequest {
 
-    List<Food> foods;
-    int count;
+    private String email;
+    private String password;
+
 
 }

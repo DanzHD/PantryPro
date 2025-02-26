@@ -1,4 +1,4 @@
-@import "../../styles/vars";
+@use "../../styles/vars";
 
 .day-meal {
     display: flex;
@@ -38,11 +38,11 @@
         }
 
         &:nth-child(even) {
-            background-color: $secondary;
+            background-color: vars.$secondary;
         }
 
         &:nth-child(odd) {
-            background-color: $primary;
+            background-color: vars.$primary;
         }
 
         .material-symbols-outlined {
@@ -65,7 +65,7 @@
     row-gap: 4rem;
 }
 
-@media (max-width: $mobile-width - 1) {
+@media (max-width: vars.$mobile-width - 1) {
     .day-meal {
         flex-basis: 100%;
     }

@@ -1,4 +1,4 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Food;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,11 +1,11 @@
-package pantrypro.Server.dto;
+package pantrypro.Server.dto.Meal;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pantrypro.Server.dto.Recipe.RecipeDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

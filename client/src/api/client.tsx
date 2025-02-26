@@ -1,6 +1,6 @@
 import axios from "axios";
 export const apiClient = axios.create({
-    baseURL: "http://localhost:8080/api/v1"
+    baseURL: `${import.meta.env.VITE_BACKEND_SERVER}/api/v1`
 })
 
 export const mealClient = axios.create({

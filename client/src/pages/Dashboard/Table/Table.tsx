@@ -196,7 +196,7 @@ function Table() {
             <div className="table__filter">
                 <div>
 
-                    <SearchBar onChange={handleFoodSearch} placeholder={"Search"}/>
+                    <SearchBar noItemsMessage="No food found" onChange={handleFoodSearch} placeholder={"Search"}/>
 
                     <Select onChange={handleFilterSelect} placeholder="Filter">
                         {

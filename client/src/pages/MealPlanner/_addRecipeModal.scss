@@ -1,4 +1,4 @@
-@import "../../styles/vars";
+@use "../../styles/vars";
 
 .add-recipe-modal {
 
@@ -17,7 +17,7 @@
     height: 7.5rem;
     width: 100%;
     padding: 10px 5px;
-    background-color: $secondary;
+    background-color: vars.$secondary;
     border-radius: 5px;
     display: flex;
     align-items: center;
@@ -51,4 +51,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+@media screen and (max-width: vars.$mobile-width) {
+    .add-recipe-modal {
+        padding-top: 2.5rem;
+    }
 }

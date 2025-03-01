@@ -1,4 +1,4 @@
-@import "../../../styles/vars";
+@use "../../../styles/vars";
 
 .add-food-container {
     display: flex;
@@ -39,5 +39,12 @@
         overflow-y: auto;
         padding-top: 20px;
         gap: 20px;
+    }
+}
+
+@media screen and (max-width: vars.$mobile-width) {
+    .add-food-container {
+        padding-top: 1rem;
+
     }
 }

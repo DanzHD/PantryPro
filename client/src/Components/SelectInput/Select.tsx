@@ -10,8 +10,8 @@ function Select({
     required,
     disabled,
     className,
-    selected
-
+    selected,
+    fullWidth
 
 }: {
     children?: ReactNode,
@@ -21,7 +21,8 @@ function Select({
     required?: boolean,
     selected?: boolean,
     disabled?: boolean,
-    className?: string
+    className?: string,
+    fullWidth?: boolean
 }) {
 
     const [filterSelected, setFilterSelected] = useState<boolean>(false)
@@ -30,7 +31,8 @@ function Select({
         className,
         "select",
         {
-            "select--none": !filterSelected
+            "select--none": !filterSelected,
+            "select--full-width": fullWidth
         }
     )
 

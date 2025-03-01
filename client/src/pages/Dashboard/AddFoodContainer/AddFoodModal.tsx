@@ -107,7 +107,7 @@ function AddFoodModal({
                 <div className="input-group">
 
                     <label><Text bold>Food Group</Text></label>
-                    <Select disabled={true} name="group" placeholder="Food Group">
+                    <Select fullWidth disabled={true} name="group" placeholder="Food Group">
                         {
                             Object.values(foodGroups).map(foodGroup => {
                                 return <option value={foodGroup} key={foodGroup}>{foodGroup}</option>
@@ -118,7 +118,7 @@ function AddFoodModal({
                 </div>
                 <div className="input-group">
                     <label><Text bold>Expiry Date</Text></label>
-                    <Input name="expiryDate" type="date" placeholder="Enter expiry date" required />
+                    <Input fullWidth name="expiryDate" type="date" placeholder="Enter expiry date" required />
                 </div>
                 <Button fullWidth>Add</Button>
             </form>

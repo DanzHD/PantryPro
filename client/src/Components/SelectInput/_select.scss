@@ -11,6 +11,8 @@
     font-size: 14px;
     font-weight: 400;
     border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 
     option {
         padding: 100px;
@@ -19,6 +21,10 @@
 
     &--none {
         color: darkgray;
+    }
+
+    &--full-width {
+        width: 100% !important;
     }
 }
 

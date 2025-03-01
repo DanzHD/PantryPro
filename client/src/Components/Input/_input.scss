@@ -21,7 +21,9 @@
     }
 
     &[type="date"] {
-        color: darkgray;
+        background-color: white;
+        -webkit-appearance: none;
+        -moz-appearance: none;
     }
 
 

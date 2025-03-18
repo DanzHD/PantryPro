@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pantrypro.Server.dto.Auth.*;
 import pantrypro.Server.service.AuthenticationService;
 import pantrypro.Server.util.AccountEnabledException;
@@ -30,7 +32,7 @@ public class AuthenticationController {
      * if registration is successful, sends back access token
      */
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> register(
+    public ResponseEntity<?> register(
             @RequestBody RegisterRequest request
     ) {
         try {
@@ -39,7 +41,11 @@ public class AuthenticationController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         } catch (PasswordTooWeakException exception) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>("INVALID PASSWORD", HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (MailSendException mailSendException) {
+            return new ResponseEntity<>(
+                "INVALID EMAIL", HttpStatus.UNPROCESSABLE_ENTITY
+            );
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

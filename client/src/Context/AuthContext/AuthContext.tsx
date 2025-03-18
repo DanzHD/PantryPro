@@ -53,8 +53,7 @@ export function AuthContextProvider({children}: {children: React.ReactNode}) {
         } catch (error) {
             if (error instanceof AxiosError) {
                 if (error.response) {
-
-                    throw new APIError("Invalid signup", error.response.status)
+                    throw new APIError(error.response.data, error.response.status)
                 }
 
             }

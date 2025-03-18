@@ -12,6 +12,9 @@ import GoogleLoginButton from "../../GoogleLoginButton/GoogleLoginButton.tsx";
 import {useGoogleLogin} from "@react-oauth/google";
 import EmailValidation from "./EmailValidation.tsx";
 
+const INVALID_PASSWORD = "INVALID PASSWORD"
+const INVALID_EMAIL = "INVALID EMAIL"
+
 function Signup() {
     const { registerUser, getNewAccessToken } = useAuthContext()
     const [email, setEmail] = useState("")
@@ -69,7 +72,15 @@ function Signup() {
                 if (error.statusCode === 409) {
                     setInvalidVerificationMessage("Registration failed: email already in use")
                 } else if (error.statusCode === 422) {
-                    setInvalidVerificationMessage("Password is too weak. ")
+                    if (error.message === INVALID_PASSWORD) {
+
+                        setInvalidVerificationMessage("Password is too weak. ")
+                    } else if (error.message === INVALID_EMAIL) {
+                        setInvalidVerificationMessage("Invalid email: Please enter a valid email")
+                    } else {
+                        setInvalidVerificationMessage("Something went wrong... Please try again later")
+
+                    }
                 } else {
                     setInvalidVerificationMessage("Something went wrong... Please try again later")
                 }

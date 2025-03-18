@@ -29,6 +29,7 @@ public class EmailService {
     @Autowired
     FoodRepository foodRepository;
 
+    private final String CLIENT = System.getenv("CLIENT");
 
 
     /**
@@ -101,7 +102,7 @@ public class EmailService {
             "Dear PantryPro user,\n\n" +
                 "We have received a request to activate your pantrypro account. " +
                 "Click on the following link to activate your account:\n\n" +
-                "http://localhost:5173/verify/?token=" + verificationToken +
+                CLIENT + "/verify/?token=" + verificationToken +
                 "\n\n" +
                 "Sincerely, \n\n" +
                 "PantryPro"

@@ -52,10 +52,17 @@
     }
 }
 
-.search-bar:focus {
+.search-bar {
     border: none;
     outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+        box-sizing: border-box;
+        border: 1px solid lightgrey;
+    }
 }
+
 
 input[type="text"] {
     font-family: "Circular Std", roboto, sans-serif;

@@ -65,8 +65,8 @@ function Table() {
     */
     function handleCheckChange(id: number) {
         const updatedFoodCheckState = new Map(foodsChecked)
-            if (updatedFoodCheckState.get(id)) {
-        updatedFoodCheckState.delete(id)
+        if (updatedFoodCheckState.get(id)) {
+            updatedFoodCheckState.delete(id)
         } else {
             updatedFoodCheckState.set(id, true)
 

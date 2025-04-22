@@ -1,0 +1,50 @@
+@import "../../styles/vars";
+.carousel {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+
+    &__previous {
+        margin-right: 1rem;
+    }
+
+    &__next {
+        margin-left: 1rem;
+    }
+
+    &__slider {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: content-box;
+        position: relative;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        white-space: nowrap;
+        scroll-behavior: smooth;
+        columns: 1;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+    }
+
+    &__item {
+        display: inline-block;
+        flex: 1;
+        list-style-type: none;
+        scroll-snap-align: center;
+        text-align: left;
+        padding: 20px;
+    }
+
+
+
+}
+

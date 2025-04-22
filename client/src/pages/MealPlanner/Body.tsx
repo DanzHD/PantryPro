@@ -194,11 +194,12 @@ function MealsDay({
                 meals &&
                     Array.from(meals.values()).map(meal => {
                     return <div key={meal.id} className="meal">
-                        <div className="material-symbols-outlined" onClick={() => handleRemoveRecipe(day, meal.id)}>close</div>
-
-                        <Text ellipsis bold >{meal.name}</Text>
 
                         <img src={meal.image ? meal.image : ""} alt={meal.name}/>
+                        <Text heading ellipsis bold >{meal.name}</Text>
+                        <div className="material-symbols-outlined" onClick={() => handleRemoveRecipe(day, meal.id)}>close</div>
+
+
                     </div>
                 })
             }

@@ -11,28 +11,22 @@
         height: 7.5rem;
         display: flex;
         max-height: 7.5rem;
-
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-right: 10px;
+        padding: 10px 10px 10px 5px;
         min-width: 20rem;
-
 
         > img {
             height: 100%;
             object-fit: cover;
             border-radius: 30%;
-            margin-left: auto;
         }
 
         > .text {
-            padding-top: 10px;
-            padding-left: 30px;
             overflow: hidden;
             -webkit-line-clamp: 3;
             display: -webkit-box;
             -webkit-box-orient: vertical;
-
+            padding-left: 1rem;
+            padding-top: 0.2rem;
 
 
         }
@@ -52,6 +46,7 @@
             padding-left: 5px;
             padding-top: 0;
             flex: 0;
+            margin-left: auto;
         }
     }
 }

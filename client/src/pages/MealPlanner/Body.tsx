@@ -11,6 +11,7 @@ import moment from "moment";
 import {deleteScheduledMeal, getWeekOfScheduledMeals} from "../../api/meal.tsx";
 import {DeleteScheduledMealDto} from "../../dto/DeleteScheduledMealDto.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
+import {Carousel, CarouselItem} from "../../Components/Carousel/Carousel.tsx";
 
 export class Recipe implements Item {
     id: number
@@ -46,6 +47,7 @@ function Body() {
     const [addRecipeModalOpen, setAddRecipeModalOpen] = useState(false)
     const addRecipeModalRef = useRef(null)
     const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
+    const NUMBER_DAYS_VISIBLE = 3;
 
     /*
     Query the stored weekly meals
@@ -69,9 +71,9 @@ function Body() {
     * Deals with opening and closing the add recipe modal
     */
     function handleOpenAddRecipeModal(day: DaysOfTheWeek) {
-    if (!addRecipeModalRef.current) {
-        return
-    }
+        if (!addRecipeModalRef.current) {
+            return
+        }
 
         const dialog: HTMLDialogElement = addRecipeModalRef.current as HTMLDialogElement
         setAddRecipeForDay(day)
@@ -119,20 +121,29 @@ function Body() {
                         <Text heading centered>Meal Planner</Text>
                         <Input defaultValue={`${new Date().getFullYear()}-W${getDateWeek(new Date())}`} type="week" onChange={handleWeekChange}  />
                     </div>
-                    <div className="weekly-meals-section">
-                        {
-                            Object.values(DaysOfTheWeek).map(day => {
-                                return <MealsDay
-                                    key={day}
-                                    day={day}
-                                    meals={recipes.get(day)}
-                                    handleOpenAddRecipeModal={handleOpenAddRecipeModal}
-                                    handleRemoveRecipe={handleRemoveRecipe}
-                                />
-                            })
-                        }
 
+                    <div className="weekly-meals-section">
+                        <Carousel itemsVisible={NUMBER_DAYS_VISIBLE}>
+
+
+                            {
+                                Object.values(DaysOfTheWeek).map(day => {
+                                    return <CarouselItem key={day}>
+
+                                        <MealsDay
+                                            key={day}
+                                            day={day}
+                                            meals={recipes.get(day)}
+                                            handleOpenAddRecipeModal={handleOpenAddRecipeModal}
+                                            handleRemoveRecipe={handleRemoveRecipe}
+                                        />
+                                    </CarouselItem>
+                                })
+                            }
+                        </Carousel>
                     </div>
+
+
                 </div>
 
             </div>
@@ -146,6 +157,8 @@ function Body() {
                 modalOpen={addRecipeModalOpen}
                 setModalOpen={setAddRecipeModalOpen}
             />
+
+
 
         </>
     )
@@ -205,6 +218,7 @@ function MealsDay({
             }
 
         </div>
+
 
     </>
 }

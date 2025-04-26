@@ -3,7 +3,6 @@
     display: flex;
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap;
     overflow-x: hidden;
 
     &__previous {
@@ -12,6 +11,11 @@
 
     &__next {
         margin-left: 1rem;
+    }
+
+    &__previous, &__next {
+        align-self: center;
+        cursor: pointer;
     }
 
     &__slider {
@@ -24,10 +28,11 @@
         -ms-overflow-style: none;
         white-space: nowrap;
         scroll-behavior: smooth;
-        columns: 1;
         text-align: center;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 0;
+        columns: 1;
+
+
 
         &::-webkit-scrollbar {
             display: none;
@@ -36,12 +41,13 @@
     }
 
     &__item {
+        padding: 0;
         display: inline-block;
         flex: 1;
         list-style-type: none;
         scroll-snap-align: center;
         text-align: left;
-        padding: 20px;
+        margin-right: 2rem;
     }
 
 

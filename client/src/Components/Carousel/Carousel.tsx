@@ -113,12 +113,23 @@ export function Carousel({
     }, [handleKeyPress]);
 
     useEffect(() => {
-        const carouselSlider = carouselSliderRef.current;
-        if (!carouselSlider) {
-            throw new Error("Carousel Slider should not be null");
+
+        function checkElementsInView() {
+            console.log("Test")
+            const carouselSlider = carouselSliderRef.current;
+            if (!carouselSlider) {
+                throw new Error("Carousel Slider should not be null");
+            }
+            const inView = isAllElementsInView(carouselSlider.children)
+            setAllItemsInView(inView)
         }
-        const inView = isAllElementsInView(carouselSlider.children)
-        setAllItemsInView(inView)
+
+        checkElementsInView()
+
+        window.addEventListener("resize", checkElementsInView)
+        return () => window.removeEventListener("resize", checkElementsInView)
+
+
     }, [isAllElementsInView]);
 
     

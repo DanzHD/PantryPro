@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useRef, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useRef, useState} from "react";
 import "./_carousel.scss"
 import cx from "classnames";
 
@@ -35,7 +35,77 @@ export function Carousel({
     })
 
     const carouselSliderRef = useRef<HTMLUListElement>(null);
-    let [allItemsInView, setAllItemsInView] = useState(false)
+    const [allItemsInView, setAllItemsInView] = useState(false)
+    const isAllElementsInView = useCallback((items: HTMLCollection | Array<HTMLElement>) => {
+        let inView;
+        for (const item of items) {
+            inView = isElementInView(item)
+            if (!inView) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }, [])
+
+    /**
+     *
+     * @param carouselItems
+     * Finds first element that is in view within carouselItems. Then returns the next item that is not in view in
+     * carousel Items
+     */
+    const findItemToScroll = useCallback((carouselItems: HTMLCollection | Array<HTMLElement>) => {
+        let foundItemInView = false;
+        let inView;
+        for (const carouselItem of carouselItems) {
+            inView = isElementInView(carouselItem);
+            if (!inView && foundItemInView) {
+                return carouselItem;
+            }
+            /* Avoiding scrolling backwards */
+            if (inView) {
+                foundItemInView = true;
+            }
+        }
+
+        return carouselItems[0]
+    }, [])
+
+    const handleMoveNextItem = useCallback(() => {
+        if (!carouselSliderRef.current) {
+            throw Error("Carousel Slider ref should not be null");
+
+        }
+        const carouselSlider = carouselSliderRef.current
+        const scrollToElement = findItemToScroll(carouselSlider.children)
+        scrollToElement.scrollIntoView()
+
+    }, [findItemToScroll])
+
+    const handleMovePreviousItem = useCallback(() => {
+        if (!carouselSliderRef.current) {
+            throw Error("Carousel Slider ref should not be null");
+
+        }
+        const carouselSlider = carouselSliderRef.current
+        const carouselItems = Array.prototype.slice.apply(carouselSlider.children).reverse()
+        const scrollToElement = findItemToScroll(carouselItems)
+        scrollToElement.scrollIntoView()
+    }, [findItemToScroll])
+
+    const handleKeyPress = useCallback((e: KeyboardEvent) => {
+        const LEFT_KEY = "ArrowLeft"
+        const RIGHT_KEY = "ArrowRight"
+        const keyPressed = e.code;
+        e.preventDefault();
+        if (keyPressed === LEFT_KEY) {
+            handleMovePreviousItem();
+        } else if (keyPressed === RIGHT_KEY) {
+            handleMoveNextItem();
+        }
+    }, [handleMoveNextItem, handleMovePreviousItem])
+
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress)
 
@@ -51,6 +121,7 @@ export function Carousel({
         setAllItemsInView(inView)
     }, [isAllElementsInView]);
 
+    
     const draggableFunctions = {
 
         onMouseLeave: handleMouseLeave,
@@ -91,53 +162,6 @@ export function Carousel({
         const horizontalMovement = event.clientX - position.x
         carouselSlider.scrollLeft = position.left - horizontalMovement
 
-
-
-    }
-
-    function handleMoveNextItem() {
-        if (!carouselSliderRef.current) {
-            throw Error("Carousel Slider ref should not be null");
-
-        }
-        const carouselSlider = carouselSliderRef.current
-        const scrollToElement = findItemToScroll(carouselSlider.children)
-        scrollToElement.scrollIntoView()
-
-    }
-
-    function handleMovePreviousItem() {
-        if (!carouselSliderRef.current) {
-            throw Error("Carousel Slider ref should not be null");
-
-        }
-        const carouselSlider = carouselSliderRef.current
-        const carouselItems = Array.prototype.slice.apply(carouselSlider.children).reverse()
-        const scrollToElement = findItemToScroll(carouselItems)
-        scrollToElement.scrollIntoView()
-    }
-
-    /**
-     *
-     * @param carouselItems
-     * Finds first element that is in view within carouselItems. Then returns the next item that is not in view in
-     * carousel Items
-     */
-    function findItemToScroll(carouselItems: HTMLCollection | Array<HTMLElement>) {
-        let foundItemInView = false;
-        let inView;
-        for (const carouselItem of carouselItems) {
-            inView = isElementInView(carouselItem);
-            if (!inView && foundItemInView) {
-                return carouselItem;
-            }
-            /* Avoiding scrolling backwards */
-            if (inView) {
-                foundItemInView = true;
-            }
-        }
-
-        return carouselItems[0]
     }
 
 
@@ -151,36 +175,12 @@ export function Carousel({
         );
     }
 
-    function isAllElementsInView(items: HTMLCollection | Array<HTMLElement>) {
-        let inView;
-        for (const item of items) {
-            inView = isElementInView(item)
-            if (!inView) {
-                return false;
-            }
-        }
-        
-        return true;
-        
-    }
+
 
     function handleMouseLeave() {
         setMouseDown(false)
         setCursor(cursorStates.GRAB)
     }
-
-    function handleKeyPress(e: KeyboardEvent) {
-        const LEFT_KEY = "ArrowLeft"
-        const RIGHT_KEY = "ArrowRight"
-        const keyPressed = e.code;
-        e.preventDefault();
-        if (keyPressed === LEFT_KEY) {
-            handleMovePreviousItem();
-        } else if (keyPressed === RIGHT_KEY) {
-            handleMoveNextItem();
-        }
-    }
-
 
 
     return <div className="carousel">

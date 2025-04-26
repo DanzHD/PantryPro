@@ -1,7 +1,6 @@
-import React, {ReactNode, useRef, useState} from "react";
+import React, {ReactNode, useEffect, useRef, useState} from "react";
 import "./_carousel.scss"
 import cx from "classnames";
-import Button from "../Button/Button.tsx";
 
 enum cursorStates {
     GRAB = "grab",
@@ -36,6 +35,21 @@ export function Carousel({
     })
 
     const carouselSliderRef = useRef<HTMLUListElement>(null);
+    let [allItemsInView, setAllItemsInView] = useState(false)
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyPress)
+
+        return () => window.removeEventListener("keydown", handleKeyPress)
+    }, [handleKeyPress]);
+
+    useEffect(() => {
+        const carouselSlider = carouselSliderRef.current;
+        if (!carouselSlider) {
+            throw new Error("Carousel Slider should not be null");
+        }
+        const inView = isAllElementsInView(carouselSlider.children)
+        setAllItemsInView(inView)
+    }, [isAllElementsInView]);
 
     const draggableFunctions = {
 
@@ -137,12 +151,48 @@ export function Carousel({
         );
     }
 
+    function isAllElementsInView(items: HTMLCollection | Array<HTMLElement>) {
+        let inView;
+        for (const item of items) {
+            inView = isElementInView(item)
+            if (!inView) {
+                return false;
+            }
+        }
+        
+        return true;
+        
+    }
+
     function handleMouseLeave() {
         setMouseDown(false)
         setCursor(cursorStates.GRAB)
     }
 
+    function handleKeyPress(e: KeyboardEvent) {
+        const LEFT_KEY = "ArrowLeft"
+        const RIGHT_KEY = "ArrowRight"
+        const keyPressed = e.code;
+        e.preventDefault();
+        if (keyPressed === LEFT_KEY) {
+            handleMovePreviousItem();
+        } else if (keyPressed === RIGHT_KEY) {
+            handleMoveNextItem();
+        }
+    }
+
+
+
     return <div className="carousel">
+        {
+
+            !allItemsInView &&
+            <div
+                className="carousel__previous material-symbols-outlined"
+                onClick={handleMovePreviousItem}>
+                arrow_back
+            </div>
+        }
         <ul
             style={{cursor: cursor}}
             {...(draggable ? draggableFunctions : {})}
@@ -153,9 +203,14 @@ export function Carousel({
             }
 
         </ul>
-        <Button onClick={handleMovePreviousItem} classNames="carousel__previous">Previous</Button>
-        <Button onClick={handleMoveNextItem} classNames="carousel__next">Next</Button>
-
+        {
+            !allItemsInView &&
+            <div
+                className="carousel__next material-symbols-outlined"
+                onClick={handleMoveNextItem}>
+                arrow_forward
+            </div>
+        }
 
     </div>
 }

@@ -93,11 +93,13 @@ export function Carousel({
         scrollToElement.scrollIntoView()
     }, [findItemToScroll])
 
-    const handleKeyPress = useCallback((e: KeyboardEvent) => {
+    const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLElement>) => {
         const LEFT_KEY = "ArrowLeft"
         const RIGHT_KEY = "ArrowRight"
         const keyPressed = e.code;
-        e.preventDefault();
+        console.log("test")
+        e.preventDefault()
+
         if (keyPressed === LEFT_KEY) {
             handleMovePreviousItem();
         } else if (keyPressed === RIGHT_KEY) {
@@ -106,15 +108,8 @@ export function Carousel({
     }, [handleMoveNextItem, handleMovePreviousItem])
 
     useEffect(() => {
-        window.addEventListener("keydown", handleKeyPress)
-
-        return () => window.removeEventListener("keydown", handleKeyPress)
-    }, [handleKeyPress]);
-
-    useEffect(() => {
 
         function checkElementsInView() {
-            console.log("Test")
             const carouselSlider = carouselSliderRef.current;
             if (!carouselSlider) {
                 throw new Error("Carousel Slider should not be null");
@@ -204,6 +199,8 @@ export function Carousel({
             </div>
         }
         <ul
+            onKeyDown={handleKeyPress}
+            tabIndex={0}
             style={{cursor: cursor}}
             {...(draggable ? draggableFunctions : {})}
             ref={carouselSliderRef}

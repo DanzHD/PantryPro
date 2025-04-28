@@ -14,8 +14,7 @@ export function Carousel({
 
 }: {
     children: ReactNode,
-    draggable?: boolean,
-    itemsVisible: number
+    draggable?: boolean
 
 }) {
     const [mouseDown, setMouseDown] = useState(false)

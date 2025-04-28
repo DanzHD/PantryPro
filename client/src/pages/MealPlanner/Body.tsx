@@ -1,9 +1,8 @@
 import Text from "../../Components/Text/Text.tsx";
-import Input from "../../Components/Input/Input.tsx";
 import "./_body.scss"
 import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
 import useModal from "../../hooks/useModal/useModal.tsx";
-import React, {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import AddRecipeModal from "./AddRecipeModal.tsx";
 import {Item} from "../../Components/SearchBar/SearchBar.tsx";
 import {getDateWeek} from "../../util/date.tsx";
@@ -12,6 +11,8 @@ import {deleteScheduledMeal, getWeekOfScheduledMeals} from "../../api/meal.tsx";
 import {DeleteScheduledMealDto} from "../../dto/DeleteScheduledMealDto.tsx";
 import {useAuthContext} from "../../Context/AuthContext/useAuthContext.tsx";
 import {Carousel, CarouselItem} from "../../Components/Carousel/Carousel.tsx";
+import WeekInput from "../../Components/WeekInput/WeekInput.tsx";
+import {WEEKS_PER_YEAR} from "../../util/constants.tsx";
 
 export class Recipe implements Item {
     id: number
@@ -46,14 +47,13 @@ function Body() {
     const [addRecipeForDay, setAddRecipeForDay] = useState<DaysOfTheWeek>(DaysOfTheWeek.MONDAY)
     const [addRecipeModalOpen, setAddRecipeModalOpen] = useState(false)
     const addRecipeModalRef = useRef(null)
-    const [selectedWeek, setSelectedWeek] = useState(`${new Date().getFullYear()}-W${getDateWeek(new Date())}`)
-    const NUMBER_DAYS_VISIBLE = 3;
+    const [week, setWeek] = useState(`${getDateWeek(new Date())}`)
+    const [year, setYear] = useState(`${new Date().getFullYear()}`)
 
     /*
     Query the stored weekly meals
     */
     useEffect(() => {
-        const [year , week] = selectedWeek.split("-W")
         const yearNumber: number = year as unknown as number
         const weekNumber: number = week as unknown as number
         getWeekOfScheduledMeals({ accessToken, year: yearNumber, week: weekNumber })
@@ -63,7 +63,7 @@ function Body() {
                     setRecipes(weeklyScheduledMeals)
                 }
             })
-    }, [accessToken, selectedWeek]);
+    }, [accessToken, week, year]);
   
   
     /**
@@ -93,7 +93,6 @@ function Body() {
         recipesOnDay.delete(recipeId)
         setRecipes(newRecipes)
 
-        const [year, week] = selectedWeek.split("-W")
         let date = moment(`${year}-W${week}`).day(day)
 
         if (day === DaysOfTheWeek.SUNDAY) {
@@ -106,9 +105,17 @@ function Body() {
         await deleteScheduledMeal({accessToken, deleteScheduledMealDto})
     }
 
-    function handleWeekChange(e: React.ChangeEvent) {
-        const inputWeekElement = e.target as HTMLInputElement
-        setSelectedWeek(inputWeekElement.value)
+    function handleWeekChange(week: string, year: string) {
+        if (week === "0") {
+
+            setYear(String(Number(year) - 1))
+            setWeek(String(WEEKS_PER_YEAR))
+        } else if (week === "52") {
+            setYear(String(Number(year) + 1))
+            setWeek("1")
+        } else {
+            setWeek(week)
+        }
     }
 
     return (
@@ -119,7 +126,15 @@ function Body() {
                     <div className="meal-planner__body__content__title">
 
                         <Text heading centered>Meal Planner</Text>
-                        <Input defaultValue={`${new Date().getFullYear()}-W${getDateWeek(new Date())}`} type="week" onChange={handleWeekChange}  />
+                    </div>
+                    <div className="meal-planner__body__content__week-picker">
+
+                        <WeekInput
+                            week={week}
+                            year={year}
+                            handleWeekChange={handleWeekChange}
+
+                        />
                     </div>
 
                     <div className="weekly-meals-section">
@@ -149,7 +164,8 @@ function Body() {
             </div>
 
             <AddRecipeModal
-                week={selectedWeek}
+                week={week}
+                year={year}
                 day={addRecipeForDay}
                 currentRecipes={recipes}
                 setCurrentRecipes={setRecipes}

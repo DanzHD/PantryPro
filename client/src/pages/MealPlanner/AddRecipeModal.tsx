@@ -19,6 +19,7 @@ function AddRecipeModal({
     setCurrentRecipes,
     modalRef,
     week,
+    year,
     modalOpen,
     setModalOpen
 
@@ -29,6 +30,7 @@ function AddRecipeModal({
     setCurrentRecipes: React.Dispatch<React.SetStateAction<Map<DaysOfTheWeek, Map<number, Recipe>>>>,
     modalRef: RefObject<HTMLDialogElement>,
     week: string,
+    year: string,
     modalOpen: boolean,
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 
@@ -112,10 +114,9 @@ function AddRecipeModal({
     * Gets all the selected meals and saves it to the database on the date specified
     */
     async function saveNewScheduledMeals() {
-        const [year, weekInYear] = week.split("-W")
 
         /* Week starts on Sunday in momentJs, add seven to fix up Sunday */
-        let date = moment(`${year}W${weekInYear}`).day(day)
+        let date = moment(`${year}W${week}`).day(day)
         if (day === DaysOfTheWeek.SUNDAY) {
             date = date.add("7", 'days')
         }
@@ -124,7 +125,6 @@ function AddRecipeModal({
         Array.from(selectedRecipes.values()).forEach(recipe => {
             recipeDto.push(new RecipeDto(recipe.id, recipe.ingredients, recipe.instructions, recipe.image, recipe.name))
         })
-
 
         const scheduleMealsDto = new ScheduleMealsDto(strDate, recipeDto)
 

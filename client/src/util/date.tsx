@@ -16,3 +16,9 @@ export function getDateWeek(date: Date) {
         (currentDate > nextMonday ? Math.ceil(
             (+currentDate - +nextMonday) / (24 * 3600 * 1000) / 7) : 1);
 }
+
+export function addDate(date: Date, days: number) {
+    const result = new Date(date)
+    result.setDate(result.getDate() + days)
+    return result
+}

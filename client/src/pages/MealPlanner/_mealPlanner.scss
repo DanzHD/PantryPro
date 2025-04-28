@@ -18,6 +18,12 @@
             z-index: 100;
             padding: 1rem 5rem 5rem 5rem;
 
+            &__week-picker {
+                display: flex;
+                justify-content: center;
+
+            }
+
             &__title {
                 justify-content: center;
                 align-items: center;
@@ -26,6 +32,8 @@
             }
         }
     }
+
+
 }
 
 .day-meal {

@@ -1,34 +1,75 @@
-import React from "react";
-import Input from "../Input/Input.tsx";
+import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
+import Text from "../Text/Text.tsx";
+import "./_weekInput.scss"
+import moment from "moment/moment";
+import {addDate} from "../../util/date.tsx";
 
 function WeekInput({
-   className,
-   placeholder,
-   fullWidth,
-   name,
-   required,
-   onChange,
-   defaultValue
+    week,
+    year,
+    handleWeekChange
 }: {
-    className?: string,
-    placeholder?: string,
-    fullWidth?: boolean,
-    name?:string,
-    required?: boolean,
-    onChange?: (e: React.ChangeEvent) => void,
-    defaultValue?: string
+    week: string,
+    year: string,
+    handleWeekChange: (week: string, year: string) => void
 }) {
+    let date;
+    if (Number(week) >= 10) {
 
-    return <Input
-        type="week"
-        className={className}
-        placeholder={placeholder}
-        fullWidth={fullWidth}
-        name={name}
-        required={required}
-        onChange={onChange}
-        defaultValue={defaultValue}
-    />
+        date = moment(`${year}W${week}`).add("7", "days").toDate()
+    } else {
+        date = moment(`${year}W0${week}`).add("7", "days").toDate()
+
+    }
+
+
+    return (
+       <>
+           <div className="week-picker">
+               <div onClick={() => handleWeekChange(String(Number(week) - 1), year)} className="week-picker__previous-week material-symbols-outlined">arrow_back</div>
+               <div className="days">
+
+                   {
+                       Object.keys(DaysOfTheWeek).map((day, i) => {
+                           console.log(date)
+                           console.log(year)
+                           console.log(week)
+                           return (
+                               <div key={day} className="week-picker__day">
+
+                                   <div className="week-picker__day__heading">
+
+                                        <Text>{day}</Text>
+                                   </div>
+                                   <div className="week-picker__day__body">
+                                       <Text subheading>
+
+                                           {
+
+                                               addDate(date, i).getDate()
+                                           }
+                                       </Text>
+                                       <Text>
+
+                                           {
+                                                addDate(date, i).toLocaleString('default', { month: 'long'})
+                                           }
+                                       </Text>
+
+
+                                   </div>
+                               </div>
+                        )})
+
+                   }
+               </div>
+               <div onClick={() => handleWeekChange(String(Number(week) + 1), year)} className="week-picker__next-week material-symbols-outlined">arrow_forward</div>
+
+           </div>
+       </>
+   )
+
+
 }
 
 export default WeekInput

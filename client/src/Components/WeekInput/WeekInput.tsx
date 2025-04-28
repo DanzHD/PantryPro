@@ -1,34 +1,51 @@
-import React from "react";
-import Input from "../Input/Input.tsx";
+import {useState} from "react";
+import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
+import Text from "../Text/Text.tsx";
+import "./_weekInput.scss"
 
 function WeekInput({
-   className,
-   placeholder,
-   fullWidth,
-   name,
-   required,
-   onChange,
-   defaultValue
+    startingWeek,
+    startingYear,
+    handleWeekChange
 }: {
-    className?: string,
-    placeholder?: string,
-    fullWidth?: boolean,
-    name?:string,
-    required?: boolean,
-    onChange?: (e: React.ChangeEvent) => void,
-    defaultValue?: string
+    startingWeek: number,
+    startingYear: number,
+    handleWeekChange: () => void
 }) {
+    const [week, setWeek] = useState(startingWeek)
+    const [year, setYear] = useState(startingYear)
 
-    return <Input
-        type="week"
-        className={className}
-        placeholder={placeholder}
-        fullWidth={fullWidth}
-        name={name}
-        required={required}
-        onChange={onChange}
-        defaultValue={defaultValue}
-    />
+   return (
+       <>
+           <div className="week-picker">
+               <div className="week-picker__previous-week material-symbols-outlined">arrow_back</div>
+               <div className="days">
+
+                   {
+                       Object.keys(DaysOfTheWeek).map(day => {
+                           return (
+                               <div className="week-picker__day">
+
+                                   <div className="week-picker__day__heading">
+
+                                        <Text>{day}</Text>
+                                   </div>
+                                   <div className="week-picker__day__body">
+                                       <Text>11</Text>
+                                       <Text>Sep</Text>
+                                   </div>
+                               </div>
+                        )})
+
+                   }
+               </div>
+               <div className="week-picker__next-week material-symbols-outlined">arrow_forward</div>
+
+           </div>
+       </>
+   )
+
+
 }
 
 export default WeekInput

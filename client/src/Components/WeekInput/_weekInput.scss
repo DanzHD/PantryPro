@@ -1,0 +1,33 @@
+.week-picker {
+    display: flex;
+    border-radius: 15px;
+    align-items: center;
+    gap: 1rem;
+
+    .days {
+        display: flex;
+        outline: 1px solid grey;
+    }
+
+    &__day {
+
+        &__heading {
+
+            padding: 1rem;
+            background-color: lightblue;
+            display: flex;
+        }
+
+        &__body {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    &__previous-week, &__next-week {
+        cursor: pointer;
+    }
+}

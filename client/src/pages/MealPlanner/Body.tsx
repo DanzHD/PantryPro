@@ -123,7 +123,7 @@ function Body() {
                     </div>
 
                     <div className="weekly-meals-section">
-                        <Carousel itemsVisible={NUMBER_DAYS_VISIBLE}>
+                        <Carousel>
 
 
                             {

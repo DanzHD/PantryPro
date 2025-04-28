@@ -1,3 +1,5 @@
+@use "../../styles/vars";
+
 .week-picker {
     display: flex;
     border-radius: 15px;
@@ -20,6 +22,8 @@
             padding: 0.75rem 1rem 0.75rem 1rem;
             background-color: lightblue;
             display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         &__body {
@@ -33,5 +37,15 @@
 
     &__previous-week, &__next-week {
         cursor: pointer;
+    }
+}
+
+@media screen and (max-width: vars.$mobile-width){
+    .week-picker {
+        .days {
+            flex-direction: column;
+
+        }
+
     }
 }

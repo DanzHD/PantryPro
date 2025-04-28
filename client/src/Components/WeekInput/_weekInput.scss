@@ -7,13 +7,17 @@
     .days {
         display: flex;
         outline: 1px solid grey;
+        border-radius: 15px;
+        overflow: hidden;
+
     }
 
     &__day {
 
+
         &__heading {
 
-            padding: 1rem;
+            padding: 0.75rem 1rem 0.75rem 1rem;
             background-color: lightblue;
             display: flex;
         }

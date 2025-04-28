@@ -1,45 +1,69 @@
-import {useState} from "react";
 import DaysOfTheWeek from "../../enum/DaysOfTheWeek.tsx";
 import Text from "../Text/Text.tsx";
 import "./_weekInput.scss"
+import moment from "moment/moment";
+import {addDate} from "../../util/date.tsx";
 
 function WeekInput({
-    startingWeek,
-    startingYear,
+    week,
+    year,
     handleWeekChange
 }: {
-    startingWeek: number,
-    startingYear: number,
-    handleWeekChange: () => void
+    week: string,
+    year: string,
+    handleWeekChange: (week: string, year: string) => void
 }) {
-    const [week, setWeek] = useState(startingWeek)
-    const [year, setYear] = useState(startingYear)
+    let date;
+    if (Number(week) >= 10) {
 
-   return (
+        date = moment(`${year}W${week}`).add("7", "days").toDate()
+    } else {
+        date = moment(`${year}W0${week}`).add("7", "days").toDate()
+
+    }
+
+
+    return (
        <>
            <div className="week-picker">
-               <div className="week-picker__previous-week material-symbols-outlined">arrow_back</div>
+               <div onClick={() => handleWeekChange(String(Number(week) - 1), year)} className="week-picker__previous-week material-symbols-outlined">arrow_back</div>
                <div className="days">
 
                    {
-                       Object.keys(DaysOfTheWeek).map(day => {
+                       Object.keys(DaysOfTheWeek).map((day, i) => {
+                           console.log(date)
+                           console.log(year)
+                           console.log(week)
                            return (
-                               <div className="week-picker__day">
+                               <div key={day} className="week-picker__day">
 
                                    <div className="week-picker__day__heading">
 
                                         <Text>{day}</Text>
                                    </div>
                                    <div className="week-picker__day__body">
-                                       <Text>11</Text>
-                                       <Text>Sep</Text>
+                                       <Text subheading>
+
+                                           {
+
+                                               addDate(date, i).getDate()
+                                           }
+                                       </Text>
+                                       <Text>
+
+                                           {
+                                                addDate(date, i).toLocaleString('default', { month: 'long'})
+                                           }
+                                       </Text>
+
+
                                    </div>
                                </div>
                         )})
 
                    }
                </div>
-               <div className="week-picker__next-week material-symbols-outlined">arrow_forward</div>
+               <div onClick={() => handleWeekChange(String(Number(week) + 1), year)} className="week-picker__next-week material-symbols-outlined">arrow_forward</div>
 
            </div>
        </>

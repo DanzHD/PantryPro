@@ -21,13 +21,11 @@ function Body() {
         /* Getting the users current settings */
         getLoggedInUser({token: accessToken})
             .then(({allowEmailNotifications}) => {
-                console.log(allowEmailNotifications)
                 if (emailSwitchRef.current) {
 
 
                     emailSwitchRef.current.checked = allowEmailNotifications
                 }
-                console.log(allowEmailNotifications)
             })
             .catch(() => {
                 setErrorFetchingSettings(true)

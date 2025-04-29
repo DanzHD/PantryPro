@@ -31,9 +31,7 @@ function WeekInput({
 
                    {
                        Object.keys(DaysOfTheWeek).map((day, i) => {
-                           console.log(date)
-                           console.log(year)
-                           console.log(week)
+
                            return (
                                <div key={day} className="week-picker__day">
 

@@ -1,6 +1,7 @@
 import Text from "../../../Components/Text/Text.tsx";
 import {Food} from "../../../dto/FoodResponse.tsx";
 import {ChangeEvent, RefObject} from "react";
+import {MONTH_MAPPING} from "../../../util/constants.tsx";
 
 function TableData({
     foodsChecked,
@@ -33,6 +34,7 @@ function TableData({
                 <tbody>
                 {
                     foods?.map(food => {
+                        const date = new Date(food.expiryDate)
                         return (
 
                             <tr key={food.id} style={foodsChecked.get(food.id) ? {backgroundColor: "lightblue"} : {}}>
@@ -40,7 +42,7 @@ function TableData({
                             type="checkbox"/></td>
                                 <td><Text>{food.name}</Text></td>
                                 <td><Text>{food.foodGroup}</Text></td>
-                                <td><Text>{food.expiryDate}</Text></td>
+                                <td><Text>{date.getDate()} {MONTH_MAPPING[date.getMonth()]}, {date.getFullYear()}</Text></td>
                             </tr>
                         )
                     })

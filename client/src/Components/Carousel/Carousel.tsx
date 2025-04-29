@@ -97,7 +97,6 @@ export function Carousel({
         const LEFT_KEY = "ArrowLeft"
         const RIGHT_KEY = "ArrowRight"
         const keyPressed = e.code;
-        console.log("test")
         e.preventDefault()
 
         if (keyPressed === LEFT_KEY) {

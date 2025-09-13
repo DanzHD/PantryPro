@@ -1,7 +1,5 @@
 # Pantrypro
 
-https://lemon-mushroom-006b90600.4.azurestaticapps.net
-
 ## About
 
 Pantrypro is a meal planning, scheduling and tracking application. It provides the following features:
